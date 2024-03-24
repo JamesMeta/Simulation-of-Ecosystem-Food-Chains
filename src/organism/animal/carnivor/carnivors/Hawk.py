@@ -1,7 +1,9 @@
 from typing import List, Any
-import Carnivor
+import sys
+sys.path.append("src/organism/animal/carnivor")
+from Carnivor import Carnivor
 
-class Hawk(Carnivor.Carnivor):
+class Hawk(Carnivor):
     
         def __init__(self, species_id: int, alive_status: bool, 
                     procreate_cool_down: float, organism_position: List[float],

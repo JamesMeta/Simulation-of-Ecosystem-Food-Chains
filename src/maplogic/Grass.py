@@ -1,4 +1,6 @@
-from World import Resource
+import sys
+sys.path.append("src/maplogic")
+from Resource import Resource
 from typing import List, Any
 
 class Grass(Resource):

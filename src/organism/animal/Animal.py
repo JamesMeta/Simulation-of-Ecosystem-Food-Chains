@@ -1,4 +1,6 @@
-from Organism import Organism
+import sys
+sys.path.append("src")
+from organism.Organism import Organism
 from typing import List, Any
 
 class Animal(Organism):

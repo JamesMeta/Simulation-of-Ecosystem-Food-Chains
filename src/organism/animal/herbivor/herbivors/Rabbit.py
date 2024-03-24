@@ -1,5 +1,7 @@
-import Herbivor
 from typing import List, Any
+import sys
+sys.path.append("src/organism/animal/herbivor")
+from Herbivor import Herbivor
 
 class Rabbit(Herbivor):
 

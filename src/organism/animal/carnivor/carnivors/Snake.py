@@ -1,7 +1,9 @@
+import sys
+sys.path.append("src/organism/animal/carnivor")
+from Carnivor import Carnivor
 from typing import List, Any
-import Carnivor
 
-class SmallBird(Carnivor.Carnivor):
+class Snake(Carnivor):
     
         def __init__(self, species_id: int, alive_status: bool, 
                     procreate_cool_down: float, organism_position: List[float],
@@ -15,5 +17,5 @@ class SmallBird(Carnivor.Carnivor):
             
             super().__init__(species_id, alive_status, procreate_cool_down, organism_position, animal_id, hunger, max_hunger, thirst, max_thirst, speed, mass, exhaustion, max_exhaustion, visibility_range, detection_range, feeding_range, sleep_duration, detection_multiplier, warned, in_danger, ready_to_mate, consumable_organisms, consumable_resources, all_known_resources, decision_duration)
 
-            self.name = "SmallBird"
+            self.name = "Snake"
 

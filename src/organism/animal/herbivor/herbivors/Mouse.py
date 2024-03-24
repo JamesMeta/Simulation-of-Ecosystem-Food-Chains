@@ -1,4 +1,6 @@
-import Herbivor
+import sys
+sys.path.append("src/organism/animal/herbivor")
+from Herbivor import Herbivor
 from typing import List, Any
 
 class Mouse(Herbivor):

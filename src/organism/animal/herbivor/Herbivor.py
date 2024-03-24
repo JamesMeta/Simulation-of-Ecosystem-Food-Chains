@@ -1,3 +1,5 @@
+import sys
+sys.path.append("src/organism/animal")
 from Animal import Animal
 from typing import List, Any
 
