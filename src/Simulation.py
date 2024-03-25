@@ -26,14 +26,15 @@ class Simulation:
         self.screen = pg.display.set_mode((1820, 980))
         self.clock = pg.time.Clock()
 
-        self.organism_list = []
+        self.organism_map = {}
         self.world = World()
 
         self.organism_population_over_time = []
 
         self.debug_mode = True
 
-    def spawn_organisms(self, organism_list: List[Any]) -> None:
+    #Organism Types: 1 = Fox 2 = Owl 3 = Frog 4 = Snake 5 = Hawk 6 = Small Bird 7 = Rabbit 8 = Grass Hopper 9 = Mouse
+    def spawn_organisms(self, organism_type: int) -> None:
         pass
 
     #Resource IDs: 1 = Grass, 2 = Water, 3 = Forest
@@ -41,7 +42,8 @@ class Simulation:
         self.world.spawn_resource(resource_id, resource_radius, resource_position, resource_type_id)
 
     def update_all_Objects(self) -> None:
-        pass
+        for organism in self.organism_map.values():
+            organism.update()
 
     def draw_all_objects(self) -> None:
 
@@ -55,6 +57,9 @@ class Simulation:
                     pg.draw.circle(self.screen, (150, 75, 0), resource.resource_position, resource.resource_radius)
                 else:
                     print("Invalid Resource Type ID")
+        
+        for organism in self.organism_map.values():
+            pg.draw.circle(self.screen, "red", organism.position, 5)
 
     def test_one(self) -> None:
         grass = 1
