@@ -72,8 +72,40 @@ class Simulation:
     def update_all_Objects(self) -> None:
         for organism in self.organism_map.values():
             organism.update()
+        self.world.update()
 
+    
     def draw_all_objects(self) -> None:
+
+        def interpolate_color(color1, color2, ratio):
+            r = int(color1[0] * (1 - ratio) + color2[0] * ratio)
+            g = int(color1[1] * (1 - ratio) + color2[1] * ratio)
+            b = int(color1[2] * (1 - ratio) + color2[2] * ratio)
+            return (r, g, b)
+        
+        def get_current_color(current_time):
+
+            time_intervals = [(4, (255, 218, 185)),    # Morning
+                  (8, (255, 240, 165)),    # Late Morning
+                  (12, (173, 216, 230)),    # Afternoon
+                  (16, (255, 192, 203)),   # Evening
+                  (20, (47, 79, 79))]      # Night
+
+            # Find the current time interval
+            for i in range(len(time_intervals) - 1):
+                if time_intervals[i][0] <= current_time < time_intervals[i + 1][0]:
+                    start_time, start_color = time_intervals[i]
+                    end_time, end_color = time_intervals[i + 1]
+                    # Calculate ratio of time elapsed in the current interval
+                    ratio = (current_time - start_time) / (end_time - start_time)
+                    return interpolate_color(start_color, end_color, ratio)
+
+            # If current time is beyond the defined intervals, return last color
+            return time_intervals[-1][1]
+
+        time = self.world.time_of_day
+        
+        self.screen.fill(get_current_color(time[1]))
 
         if self.debug_mode:
             for resource in self.world.resource_map.values():
@@ -88,6 +120,13 @@ class Simulation:
         
         for organism in self.organism_map.values():
             pg.draw.circle(self.screen, organism.color, organism.organism_position, organism.radius)
+        
+        font = pg.font.Font(None, 36)
+        text = font.render(f"Day: {self.world.time_of_day[0]} Time: {self.world.time_of_day[1]}:{self.world.time_of_day[2]}:{self.world.time_of_day[3]}", 1, (255, 255, 255))
+        self.screen.blit(text, (10, 10))
+
+            
+        
 
     def test_one(self) -> None:
         grass = 1
@@ -98,53 +137,36 @@ class Simulation:
         self.spawn_resources(2, 100, [1720, 880], water)
         self.spawn_resources(3, 100, [1720, 100], forest)
 
-        self.spawn_organism(1)
-        self.spawn_organism(1)
-        self.spawn_organism(1)
-        self.spawn_organism(1)
-        self.spawn_organism(1)
-        self.spawn_organism(1)
-        self.spawn_organism(1)
-        self.spawn_organism(1)
-        self.spawn_organism(2)
-        self.spawn_organism(2)
-        self.spawn_organism(2)
-        self.spawn_organism(2)
-        self.spawn_organism(2)
-        self.spawn_organism(2)
-        self.spawn_organism(2)
-        self.spawn_organism(3)
-        self.spawn_organism(3)
-        self.spawn_organism(3)
-        self.spawn_organism(3)
-        self.spawn_organism(3)
-        self.spawn_organism(4)
-        self.spawn_organism(4)
-        self.spawn_organism(4)
-        self.spawn_organism(4)
-        self.spawn_organism(5)
-        self.spawn_organism(5)
-        self.spawn_organism(5)
-        self.spawn_organism(5)
-        self.spawn_organism(5)
-        self.spawn_organism(6)
-        self.spawn_organism(6)
-        self.spawn_organism(6)
-        self.spawn_organism(6)
-        self.spawn_organism(6)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(8)
-        self.spawn_organism(8)
-        self.spawn_organism(8)
-        self.spawn_organism(8)
-        self.spawn_organism(8)
-        self.spawn_organism(9)
-        self.spawn_organism(9)
-        self.spawn_organism(9)  
+        #Spawn 10 of each organism
+
+        #Organism Types: 1 = Fox, 2 = Owl, 3 = Frog, 4 = Snake, 5 = Hawk, 6 = Small Bird, 7 = Rabbit, 8 = Grass Hopper, 9 = Mouse
+        for i in range(10):
+            self.spawn_organism(1) 
+
+        for i in range(10):
+            self.spawn_organism(2) 
+
+        for i in range(10):
+            self.spawn_organism(3) 
+
+        for i in range(10):
+            self.spawn_organism(4) 
+
+        for i in range(10):
+            self.spawn_organism(5) 
+
+        for i in range(10):
+            self.spawn_organism(6) 
+
+        for i in range(10):
+            self.spawn_organism(7) 
+
+        for i in range(10):
+            self.spawn_organism(8) 
+
+        for i in range(10):
+            self.spawn_organism(9)
+
 
 
 
@@ -156,7 +178,7 @@ class Simulation:
                     running = False
 
 
-            self.screen.fill((141, 240, 98))
+            
             self.update_all_Objects()
             self.draw_all_objects()
             pg.display.flip()

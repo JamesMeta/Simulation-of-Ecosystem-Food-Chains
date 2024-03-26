@@ -8,3 +8,6 @@ class Resource:
         self.resource_position = resource_position
         self.resource_radius = resource_radius
         self.resource_type_id = resource_type_id
+    
+    def update(self) -> None:
+        pass
