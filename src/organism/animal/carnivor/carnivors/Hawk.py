@@ -5,16 +5,44 @@ from Carnivor import Carnivor
 
 class Hawk(Carnivor):
     
-        def __init__(self, species_id: int, alive_status: bool, 
-                    procreate_cool_down: float, organism_position: List[float],
-                    animal_id: int, hunger: float, max_hunger: float,
-                    thirst: float, max_thirst: float, speed: float, mass: float, exhaustion: float, max_exhaustion: float, 
-                    visibility_range: float, detection_range: float, feeding_range: float, sleep_duration: int, 
-                    detection_multiplier: float, warned: bool, in_danger: bool, ready_to_mate: bool,
-                    consumable_organisms: List[int], consumable_resources: List[int], all_known_resources: List[Any],
-                    decision_duration: int
-                    ):
-            
-            super().__init__(species_id, alive_status, procreate_cool_down, organism_position, animal_id, hunger, max_hunger, thirst, max_thirst, speed, mass, exhaustion, max_exhaustion, visibility_range, detection_range, feeding_range, sleep_duration, detection_multiplier, warned, in_danger, ready_to_mate, consumable_organisms, consumable_resources, all_known_resources, decision_duration)
+        def __init__(self, organism_position: List[float], animal_id: int):
+                super().__init__(organism_position, animal_id)
 
-            self.name = "Hawk"
+                # inherited variables
+                
+                # self.organism_position = organism_position
+                # self.animal_id = animal_id
+                # self.all_known_resources = []
+                # self.all_known_organisms = []
+                # self.alive_status = True
+                # self.hunger = 0
+                # self.thirst = 0
+                # self.exhaustion = 0
+                # self.warned = False
+                # self.in_danger = False
+                # self.ready_to_mate = False
+                # self.current_target = None
+                # self.progress_left_on_decision = 0
+                # self.stalking = False
+
+                self.name = "Hawk"
+                self.species_id = 5
+                self.procreate_cool_down = 10000     #ticks
+                self.max_hunger = 2000               #ticks
+                self.max_thirst = 1000               #ticks
+                self.max_exhaustion = 5000           #ticks
+                self.speed = 1                       #pixels per tick
+                self.mass = 1
+                self.visibility_range = 50          #pixels
+                self.detection_range = 50           #pixels
+                self.feeding_range = 5              #pixels
+                self.sleep_duration = 100           #ticks
+                self.detection_multiplier = 1       #constant
+                self.consumable_organisms = {4,9}   #species_id
+                self.decision_duration = 10         #ticks
+
+                self.debug_mode = True
+                
+                if self.debug_mode:
+                        self.color = "white"
+                        self.radius = 8

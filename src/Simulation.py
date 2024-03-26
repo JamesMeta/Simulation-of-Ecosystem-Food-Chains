@@ -1,4 +1,5 @@
 import pygame as pg
+import random
 from typing import List, Any
 from organism import Organism
 from organism.animal import Animal
@@ -33,14 +34,41 @@ class Simulation:
 
         self.debug_mode = True
 
-    #Organism Types: 1 = Fox 2 = Owl 3 = Frog 4 = Snake 5 = Hawk 6 = Small Bird 7 = Rabbit 8 = Grass Hopper 9 = Mouse
-    def spawn_organisms(self, organism_type: int) -> None:
-        pass
+    #Organism Types: 1 = Fox, 2 = Owl, 3 = Frog, 4 = Snake, 5 = Hawk, 6 = Small Bird, 7 = Rabbit, 8 = Grass Hopper, 9 = Mouse
+    def spawn_organism(self, species_id: int) -> None:
+        x = random.randint(0, 1820)
+        y = random.randint(0, 980)
+        position = [x, y]
+        animal_id = self.get_unique_animal_id()
+
+        if species_id == 1:
+            self.organism_map[animal_id] = Fox(position, animal_id)
+        elif species_id == 2:
+            self.organism_map[animal_id] = Owl(position, animal_id)
+        elif species_id == 3:
+            self.organism_map[animal_id] = Frog(position, animal_id)
+        elif species_id == 4:
+            self.organism_map[animal_id] = Snake(position, animal_id)
+        elif species_id == 5:
+            self.organism_map[animal_id] = Hawk(position, animal_id)
+        elif species_id == 6:
+            self.organism_map[animal_id] = SmallBird(position, animal_id)
+        elif species_id == 7:
+            self.organism_map[animal_id] = Rabbit(position, animal_id)
+        elif species_id == 8:
+            self.organism_map[animal_id] = GrassHopper(position, animal_id)
+        elif species_id == 9:
+            self.organism_map[animal_id] = Mouse(position, animal_id)
+        else:
+            print("Invalid Species ID")
+
+    def get_unique_animal_id(self) -> int:
+        return len(self.organism_map) + 1
 
     #Resource IDs: 1 = Grass, 2 = Water, 3 = Forest
     def spawn_resources(self, resource_id: int, resource_radius: float, resource_position: List[Any], resource_type_id: int) -> None:
         self.world.spawn_resource(resource_id, resource_radius, resource_position, resource_type_id)
-
+ 
     def update_all_Objects(self) -> None:
         for organism in self.organism_map.values():
             organism.update()
@@ -59,7 +87,7 @@ class Simulation:
                     print("Invalid Resource Type ID")
         
         for organism in self.organism_map.values():
-            pg.draw.circle(self.screen, "red", organism.position, 5)
+            pg.draw.circle(self.screen, organism.color, organism.organism_position, organism.radius)
 
     def test_one(self) -> None:
         grass = 1
@@ -70,6 +98,56 @@ class Simulation:
         self.spawn_resources(2, 100, [1720, 880], water)
         self.spawn_resources(3, 100, [1720, 100], forest)
 
+        self.spawn_organism(1)
+        self.spawn_organism(1)
+        self.spawn_organism(1)
+        self.spawn_organism(1)
+        self.spawn_organism(1)
+        self.spawn_organism(1)
+        self.spawn_organism(1)
+        self.spawn_organism(1)
+        self.spawn_organism(2)
+        self.spawn_organism(2)
+        self.spawn_organism(2)
+        self.spawn_organism(2)
+        self.spawn_organism(2)
+        self.spawn_organism(2)
+        self.spawn_organism(2)
+        self.spawn_organism(3)
+        self.spawn_organism(3)
+        self.spawn_organism(3)
+        self.spawn_organism(3)
+        self.spawn_organism(3)
+        self.spawn_organism(4)
+        self.spawn_organism(4)
+        self.spawn_organism(4)
+        self.spawn_organism(4)
+        self.spawn_organism(5)
+        self.spawn_organism(5)
+        self.spawn_organism(5)
+        self.spawn_organism(5)
+        self.spawn_organism(5)
+        self.spawn_organism(6)
+        self.spawn_organism(6)
+        self.spawn_organism(6)
+        self.spawn_organism(6)
+        self.spawn_organism(6)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(8)
+        self.spawn_organism(8)
+        self.spawn_organism(8)
+        self.spawn_organism(8)
+        self.spawn_organism(8)
+        self.spawn_organism(9)
+        self.spawn_organism(9)
+        self.spawn_organism(9)  
+
+
+
     def run_simulation(self) -> None:
         running = True
         while running:
@@ -79,6 +157,7 @@ class Simulation:
 
 
             self.screen.fill((141, 240, 98))
+            self.update_all_Objects()
             self.draw_all_objects()
             pg.display.flip()
             self.clock.tick(30)

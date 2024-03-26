@@ -2,15 +2,18 @@ from typing import List, Any
 
 class Organism:
     
-    def __init__(self, species_id: int, alive_status: bool, procreate_cool_down: float, organism_position: List[float]):
-        self.species_id = species_id
-        self.alive_status = alive_status
-        self.procreate_cool_down = procreate_cool_down
+    def __init__(self, organism_position: List[float], animal_id: int):
+        
         self.organism_position = organism_position
+        self.animal_id = animal_id
+
+        self.all_known_resources = []
+        self.all_known_organisms = []
+        self.alive_status = True
     
     def die(self) -> int:
         self.alive_status = False
-        return self.species_id
+        return self.animal_id
     
 
 
