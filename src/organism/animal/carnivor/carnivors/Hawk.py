@@ -27,19 +27,21 @@ class Hawk(Carnivor):
 
                 self.name = "Hawk"
                 self.species_id = 5
-                self.procreate_cool_down = 10000     #ticks
-                self.max_hunger = 2000               #ticks
-                self.max_thirst = 1000               #ticks
-                self.max_exhaustion = 5000           #ticks
-                self.speed = 1                       #pixels per tick
+                self.procreate_cool_down = 181440     # ticks
+                self.max_hunger = 34560                # ticks
+                self.max_thirst = 8640                 # ticks
+                self.max_exhaustion = 10800            # ticks
+                self.min_hunger = 5760                 # ticks
+                self.min_thirst = 1440                 # ticks
+                self.speed = 1                         # pixels per tick
                 self.mass = 1
-                self.visibility_range = 50          #pixels
-                self.detection_range = 50           #pixels
-                self.feeding_range = 5              #pixels
-                self.sleep_duration = 100           #ticks
-                self.detection_multiplier = 1       #constant
-                self.consumable_organisms = {4,9}   #species_id
-                self.decision_duration = 10         #ticks
+                self.sight_range = 400                 # pixels
+                self.feeding_range = 5                 # pixels (not provided in the stats, so keeping it the same as before)
+                self.sleep_duration = 2880             # ticks (sleep_lengths converted to ticks)
+                self.detection_multiplier = 1          # constant
+                self.consumable_organisms = {4, 7, 9}     # species_id
+                self.decision_duration = 100           # ticks
+
 
                 self.debug_mode = True
                 

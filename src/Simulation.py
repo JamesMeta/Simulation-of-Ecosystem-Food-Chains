@@ -23,8 +23,11 @@ class Simulation:
     
     def __init__(self):
 
+        self.screen_x_resolution = 1820
+        self.screen_y_resolution = 980
+
         pg.init()
-        self.screen = pg.display.set_mode((1820, 980))
+        self.screen = pg.display.set_mode((self.screen_x_resolution, self.screen_y_resolution))
         self.clock = pg.time.Clock()
 
         self.organism_map = {}
@@ -36,8 +39,8 @@ class Simulation:
 
     #Organism Types: 1 = Fox, 2 = Owl, 3 = Frog, 4 = Snake, 5 = Hawk, 6 = Small Bird, 7 = Rabbit, 8 = Grass Hopper, 9 = Mouse
     def spawn_organism(self, species_id: int) -> None:
-        x = random.randint(0, 1820)
-        y = random.randint(0, 980)
+        x = random.randint(0, self.screen_x_resolution)
+        y = random.randint(0, self.screen_y_resolution)
         position = [x, y]
         animal_id = self.get_unique_animal_id()
 
@@ -166,6 +169,18 @@ class Simulation:
 
         for i in range(10):
             self.spawn_organism(9)
+    
+    def test_two(self) -> None:
+        grass = 1
+        water = 2
+        forest = 3
+
+        self.spawn_resources(1, 100, [100, 100], grass)
+        self.spawn_resources(2, 100, [1720, 880], water)
+        self.spawn_resources(3, 100, [1720, 100], forest)
+
+        #Spawn 1 rabbit
+        self.spawn_organism(7)
 
 
 

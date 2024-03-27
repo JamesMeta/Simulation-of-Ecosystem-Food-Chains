@@ -25,21 +25,23 @@ class GrassHopper(Herbivor):
                 # self.progress_left_on_decision = 0
                 # self.hidden = False
 
-                self.name = "GrassHopper"
+                self.name = "Grasshopper"
                 self.species_id = 8
-                self.procreate_cool_down = 10000     #ticks
-                self.max_hunger = 2000               #ticks
-                self.max_thirst = 1000               #ticks
-                self.max_exhaustion = 5000           #ticks
-                self.speed = 1                       #pixels per tick
-                self.mass = 1
-                self.visibility_range = 50          #pixels
-                self.detection_range = 50           #pixels
-                self.feeding_range = 5              #pixels
-                self.sleep_duration = 100           #ticks
-                self.detection_multiplier = 1       #constant
-                self.consumable_resources = {1}     #resource_id
-                self.decision_duration = 10         #ticks
+                self.procreate_cool_down = 45360      # ticks
+                self.max_hunger = 25920               # ticks
+                self.max_thirst = 8640                # ticks
+                self.max_exhaustion = 8640            # ticks
+                self.min_hunger = 4320                # ticks
+                self.min_thirst = 1440                # ticks
+                self.speed = 1                        # pixels per tick
+                self.mass = 0.0001
+                self.sight_range = 60                 # pixels
+                self.feeding_range = 5                # pixels (not provided in the stats, so keeping it the same as before)
+                self.sleep_duration = 2160            # ticks (sleep_lengths converted to ticks)
+                self.detection_multiplier = 1         # constant
+                self.consumable_resources = {1}       # species_id
+                self.decision_duration = 100          # ticks
+
 
                 self.debug_mode = True
                 

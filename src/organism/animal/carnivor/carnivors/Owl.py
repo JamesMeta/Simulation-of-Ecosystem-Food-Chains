@@ -27,19 +27,20 @@ class Owl(Carnivor):
 
                 self.name = "Owl"
                 self.species_id = 2
-                self.procreate_cool_down = 10000     #ticks
-                self.max_hunger = 2000               #ticks
-                self.max_thirst = 1000               #ticks
-                self.max_exhaustion = 5000           #ticks
+                self.procreate_cool_down = 181440     #ticks
+                self.max_hunger = 43200               #ticks
+                self.max_thirst = 17280               #ticks
+                self.max_exhaustion = 4320           #ticks
+                self.min_hunger = 7200
+                self.min_thirst = 2880
                 self.speed = 1                       #pixels per tick
-                self.mass = 1
-                self.visibility_range = 50          #pixels
-                self.detection_range = 50           #pixels
+                self.mass = 1.8
+                self.sight_range = 360              #pixels
                 self.feeding_range = 5              #pixels
-                self.sleep_duration = 100           #ticks
+                self.sleep_duration = 720           #ticks
                 self.detection_multiplier = 1       #constant
                 self.consumable_organisms = {3,9}   #species_id
-                self.decision_duration = 10         #ticks
+                self.decision_duration = 100         #ticks
 
                 self.debug_mode = True
                 
