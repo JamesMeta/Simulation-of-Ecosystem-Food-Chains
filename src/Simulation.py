@@ -15,7 +15,8 @@ from organism.animal.herbivor.herbivors.Rabbit import Rabbit
 from organism.animal.herbivor.herbivors.GrassHopper import GrassHopper
 from organism.animal.herbivor.herbivors.Mouse import Mouse
 from maplogic.World import World
-from maplogic.Resource import Resource
+from maplogic.StaticResource import StaticResource
+from maplogic.DynamicResource import DynamicResource
 from maplogic.Grass import Grass
 
 
@@ -71,9 +72,18 @@ class Simulation:
     #Resource IDs: 1 = Grass, 2 = Water, 3 = Forest
     def spawn_resources(self, resource_id: int, resource_radius: float, resource_position: List[Any], resource_type_id: int) -> None:
         self.world.spawn_resource(resource_id, resource_radius, resource_position, resource_type_id)
+
+    def spawn_grass(self, resource_position: List[float]) -> None:
+
+        def get_unique_grass_id() -> int:
+            return len(self.world.dynamic_resource_map) + 1
+        
+        grass_id = get_unique_grass_id()
+        self.world.spawn_grass(grass_id, resource_position)
  
     def update_all_Objects(self) -> None:
-        for organism in self.organism_map.values():
+        copyof_organism_map = self.organism_map.copy()
+        for organism in copyof_organism_map.values():
             organism.update()
         self.world.update()
 
@@ -111,7 +121,7 @@ class Simulation:
         self.screen.fill(get_current_color(time[1]))
 
         if self.debug_mode:
-            for resource in self.world.resource_map.values():
+            for resource in self.world.static_resource_map.values():
                 if resource.resource_type_id == 1:
                     pg.draw.circle(self.screen, (58, 117, 33), resource.resource_position, resource.resource_radius)
                 elif resource.resource_type_id == 2:
@@ -120,6 +130,12 @@ class Simulation:
                     pg.draw.circle(self.screen, (150, 75, 0), resource.resource_position, resource.resource_radius)
                 else:
                     print("Invalid Resource Type ID")
+        
+        for resource in self.world.dynamic_resource_map.values():
+            if resource.resource_type_id == 1:
+                pg.draw.circle(self.screen, (124, 252, 0), resource.resource_position, resource.resource_radius)
+            else:
+                print("Invalid Resource Type ID")
         
         for organism in self.organism_map.values():
             pg.draw.circle(self.screen, organism.color, organism.organism_position, organism.radius)
@@ -182,6 +198,9 @@ class Simulation:
         #Spawn 1 rabbit
         self.spawn_organism(7)
 
+        #spawn grass
+        self.spawn_grass([100, 100])
+
 
 
 
@@ -203,7 +222,7 @@ class Simulation:
 if __name__ == "__main__":
     
     sim = Simulation()
-    sim.test_one()
+    sim.test_two()
     sim.run_simulation()
 
 

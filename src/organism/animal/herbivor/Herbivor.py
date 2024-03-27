@@ -21,6 +21,7 @@ class Herbivor(Animal):
             # self.thirst = 0
             # self.exhaustion = 0
             # self.warned = False
+            # self.needs_sleep = False
             # self.in_danger = False
             # self.ready_to_mate = False
             # self.current_target = None

@@ -20,6 +20,7 @@ class Mouse(Herbivor):
                 # self.exhaustion = 0
                 # self.warned = False
                 # self.in_danger = False
+                # self.needs_sleep = False
                 # self.ready_to_mate = False
                 # self.current_target = None
                 # self.progress_left_on_decision = 0
