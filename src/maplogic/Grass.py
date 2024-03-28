@@ -8,7 +8,7 @@ class Grass(DynamicResource):
 
     def __init__(self, resource_id: int, resource_position: List[float]):
         super().__init__(resource_id, resource_position, 5, 1)
-        self.regen_rate = 100
+        self.regen_rate = 1000
         self.current_regen = 0
         self.max_capacity = 100
         self.mass = 1
@@ -19,8 +19,8 @@ class Grass(DynamicResource):
         def get_unique_grass_id() -> int:
             return len(self.dynamic_resource_map) + 1
 
-        x = random.randint(self.associated_static_resource.resource_position[0] - self.resource_radius, self.associated_static_resource.resource_position[0] + self.associated_static_resource.resource_radius)
-        y = random.randint(self.associated_static_resource.resource_position[1] - self.resource_radius, self.associated_static_resource.resource_position[1] + self.associated_static_resource.resource_radius)
+        x = random.randint(self.associated_static_resource.resource_position[0] - self.associated_static_resource.resource_radius, self.associated_static_resource.resource_position[0] + self.associated_static_resource.resource_radius)
+        y = random.randint(self.associated_static_resource.resource_position[1] - self.associated_static_resource.resource_radius, self.associated_static_resource.resource_position[1] + self.associated_static_resource.resource_radius)
         position = [x, y]
         grass_id = get_unique_grass_id()
         new_grass = Grass(grass_id, position)

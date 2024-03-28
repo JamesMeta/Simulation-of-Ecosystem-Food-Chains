@@ -40,10 +40,15 @@ class Simulation:
 
     #Organism Types: 1 = Fox, 2 = Owl, 3 = Frog, 4 = Snake, 5 = Hawk, 6 = Small Bird, 7 = Rabbit, 8 = Grass Hopper, 9 = Mouse
     def spawn_organism(self, species_id: int) -> None:
+
+        def get_unique_animal_id() -> int:
+            return len(self.organism_map) + 1
+
+
         x = random.randint(0, self.screen_x_resolution)
         y = random.randint(0, self.screen_y_resolution)
         position = [x, y]
-        animal_id = self.get_unique_animal_id()
+        animal_id = get_unique_animal_id()
 
         if species_id == 1:
             self.organism_map[animal_id] = Fox(position, animal_id)
@@ -65,28 +70,12 @@ class Simulation:
             self.organism_map[animal_id] = Mouse(position, animal_id)
         else:
             print("Invalid Species ID")
-
-    def get_unique_animal_id(self) -> int:
-        return len(self.organism_map) + 1
-
-    #Resource IDs: 1 = Grass, 2 = Water, 3 = Forest
-    def spawn_resources(self, resource_id: int, resource_radius: float, resource_position: List[Any], resource_type_id: int) -> None:
-        self.world.spawn_resource(resource_id, resource_radius, resource_position, resource_type_id)
-
-    def spawn_grass(self, resource_position: List[float]) -> None:
-
-        def get_unique_grass_id() -> int:
-            return len(self.world.dynamic_resource_map) + 1
-        
-        grass_id = get_unique_grass_id()
-        self.world.spawn_grass(grass_id, resource_position)
  
     def update_all_Objects(self) -> None:
         copyof_organism_map = self.organism_map.copy()
         for organism in copyof_organism_map.values():
             organism.update()
         self.world.update()
-
     
     def draw_all_objects(self) -> None:
 
@@ -143,10 +132,7 @@ class Simulation:
         font = pg.font.Font(None, 36)
         text = font.render(f"Day: {self.world.time_of_day[0]} Time: {self.world.time_of_day[1]}:{self.world.time_of_day[2]}:{self.world.time_of_day[3]}", 1, (255, 255, 255))
         self.screen.blit(text, (10, 10))
-
-            
-        
-
+ 
     def test_one(self) -> None:
         grass = 1
         water = 2
@@ -191,27 +177,22 @@ class Simulation:
         water = 2
         forest = 3
 
-        self.spawn_resources(1, 100, [100, 100], grass)
-        self.spawn_resources(2, 100, [1720, 880], water)
-        self.spawn_resources(3, 100, [1720, 100], forest)
+        self.world.spawn_resource(1, 100, [100, 100], grass)
+        self.world.spawn_resource(2, 100, [1720, 880], water)
+        self.world.spawn_resource(3, 100, [1720, 100], forest)
 
         #Spawn 1 rabbit
         self.spawn_organism(7)
 
         #spawn grass
-        self.spawn_grass([100, 100])
-
-
-
-
+        self.world.spawn_grass()
+        
     def run_simulation(self) -> None:
         running = True
         while running:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     running = False
-
-
             
             self.update_all_Objects()
             self.draw_all_objects()

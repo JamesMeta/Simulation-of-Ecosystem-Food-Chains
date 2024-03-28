@@ -1,4 +1,5 @@
 import sys
+import random
 sys.path.append("src/maplogic")
 from typing import List, Any
 from maplogic.StaticResource import StaticResource
@@ -31,10 +32,26 @@ class World:
         resource = StaticResource(resource_id, resource_position, resource_radius, resource_type_id)
         self.static_resource_map[resource_id] = resource
     
-    def spawn_grass(self, resource_id: int, resource_position: List[float]) -> None:
+    def spawn_grass(self) -> None:
+
+        def get_unique_grass_id() -> int:
+            return len(self.dynamic_resource_map) + 1
+        
+        def get_random_valid_static_resource() -> List[float]:
+            valid_points = []
+            for resource in self.static_resource_map.values():
+                if resource.resource_type_id == 1:
+                    valid_points.append(resource)
+            return random.choice(valid_points)
+
+        
+        resource_id = get_unique_grass_id()
+        associated_static_resource = get_random_valid_static_resource()
+        resource_position = [random.randint(associated_static_resource.resource_position[0] - associated_static_resource.resource_radius, associated_static_resource.resource_position[0] + associated_static_resource.resource_radius), random.randint(associated_static_resource.resource_position[1] - associated_static_resource.resource_radius, associated_static_resource.resource_position[1] + associated_static_resource.resource_radius)]
+
         grass = Grass(resource_id, resource_position)
 
-        grass.set_post_creation_data(self.dynamic_resource_map, self.static_resource_map[1])
+        grass.set_post_creation_data(self.dynamic_resource_map, associated_static_resource)
 
         self.dynamic_resource_map[resource_id] = grass
 
