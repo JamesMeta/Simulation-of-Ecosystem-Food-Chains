@@ -35,13 +35,15 @@ class Frog(Carnivor):
                 self.max_exhaustion = 8640           #ticks
                 self.min_hunger = 14400
                 self.min_thirst = 720
-                self.speed = 1                       #pixels per tick
+                self.max_speed = 2                        # pixels per tick
+                self.min_speed = 1                        # pixels per tick
                 self.mass = 0.02
                 self.sight_range = 300              #pixels
                 self.feeding_range = 5              #pixels
                 self.sleep_duration = 360           #ticks
                 self.detection_multiplier = 1       #constant
                 self.consumable_organisms = {8}   #species_id
+                self.potential_predators = {2,4}        # species_id
                 self.decision_duration = 100         #ticks
                 
                 if self.debug_mode:

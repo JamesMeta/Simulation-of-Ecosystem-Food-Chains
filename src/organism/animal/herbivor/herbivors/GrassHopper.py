@@ -35,13 +35,15 @@ class GrassHopper(Herbivor):
                 self.max_exhaustion = 8640            # ticks
                 self.min_hunger = 4320                # ticks
                 self.min_thirst = 1440                # ticks
-                self.speed = 1                        # pixels per tick
+                self.max_speed = 2                        # pixels per tick
+                self.min_speed = 1                        # pixels per tick
                 self.mass = 0.0001
                 self.sight_range = 60                 # pixels
                 self.feeding_range = 5                # pixels (not provided in the stats, so keeping it the same as before)
                 self.sleep_duration = 2160            # ticks (sleep_lengths converted to ticks)
                 self.detection_multiplier = 1         # constant
                 self.consumable_resources = {1}       # species_id
+                self.potential_predators = {3,6}        # species_id
                 self.decision_duration = 100          # ticks
                 
                 if self.debug_mode:

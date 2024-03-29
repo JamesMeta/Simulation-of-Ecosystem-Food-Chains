@@ -35,13 +35,15 @@ class Fox(Carnivor):
                 self.max_exhaustion = 17280           #ticks
                 self.min_hunger = 10080
                 self.min_thirst = 4320
-                self.speed = 1                       #pixels per tick
+                self.max_speed = 2                        # pixels per tick
+                self.min_speed = 1                        # pixels per tick
                 self.mass = 3.8
                 self.sight_range = 300              #pixels
                 self.feeding_range = 5              #pixels
                 self.sleep_duration = 2880           #ticks
                 self.detection_multiplier = 1       #constant
                 self.consumable_organisms = {7,9}   #species_id
+                self.potential_predators = {-1}        # species_id
                 self.decision_duration = 100         #ticks
                 
                 if self.debug_mode:

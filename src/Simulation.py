@@ -49,27 +49,32 @@ class Simulation:
         y = random.randint(0, self.screen_y_resolution)
         position = [x, y]
         animal_id = get_unique_animal_id()
+        new_organism = None
 
         if species_id == 1:
-            self.organism_map[animal_id] = Fox(position, animal_id)
+            new_organism = Fox(position, animal_id)
         elif species_id == 2:
-            self.organism_map[animal_id] = Owl(position, animal_id)
+            new_organism = Owl(position, animal_id)
         elif species_id == 3:
-            self.organism_map[animal_id] = Frog(position, animal_id)
+            new_organism = Frog(position, animal_id)
         elif species_id == 4:
-            self.organism_map[animal_id] = Snake(position, animal_id)
+            new_organism = Snake(position, animal_id)
         elif species_id == 5:
-            self.organism_map[animal_id] = Hawk(position, animal_id)
+            new_organism = Hawk(position, animal_id)
         elif species_id == 6:
-            self.organism_map[animal_id] = SmallBird(position, animal_id)
+            new_organism = SmallBird(position, animal_id)
         elif species_id == 7:
-            self.organism_map[animal_id] = Rabbit(position, animal_id)
+            new_organism = Rabbit(position, animal_id)
         elif species_id == 8:
-            self.organism_map[animal_id] = GrassHopper(position, animal_id)
+            new_organism = GrassHopper(position, animal_id)
         elif species_id == 9:
-            self.organism_map[animal_id] = Mouse(position, animal_id)
+            new_organism = Mouse(position, animal_id)
         else:
             print("Invalid Species ID")
+        
+        new_organism.add_post_creation_attributes(self.world.static_resource_map, self.world.dynamic_resource_map, self.organism_map)
+        self.organism_map[animal_id] = new_organism
+        
  
     def update_all_Objects(self) -> None:
         copyof_organism_map = self.organism_map.copy()

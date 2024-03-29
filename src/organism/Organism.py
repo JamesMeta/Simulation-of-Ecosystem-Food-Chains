@@ -7,7 +7,8 @@ class Organism:
         self.organism_position = organism_position
         self.animal_id = animal_id
 
-        self.all_known_resources = []
+        self.all_known_static_resources = []
+        self.all_known_dynamic_resources = []
         self.all_known_organisms = []
         self.alive_status = True
     

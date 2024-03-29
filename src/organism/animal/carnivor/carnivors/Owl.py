@@ -35,13 +35,15 @@ class Owl(Carnivor):
                 self.max_exhaustion = 4320           #ticks
                 self.min_hunger = 7200
                 self.min_thirst = 2880
-                self.speed = 1                       #pixels per tick
+                self.max_speed = 2                        # pixels per tick
+                self.min_speed = 1                        # pixels per tick
                 self.mass = 1.8
                 self.sight_range = 360              #pixels
                 self.feeding_range = 5              #pixels
                 self.sleep_duration = 720           #ticks
                 self.detection_multiplier = 1       #constant
                 self.consumable_organisms = {3,9}   #species_id
+                self.potential_predators = {-1}        # species_id
                 self.decision_duration = 100         #ticks
                 
                 if self.debug_mode:
