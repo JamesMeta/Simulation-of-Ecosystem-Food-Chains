@@ -27,6 +27,9 @@ class Animal(Organism):
         self.current_target = None
         self.progress_left_on_decision = 0
 
+        self.random_start = True
+        self.debug_mode = True
+
     def drink_water(self, amount: float) -> None:
         self.thirst += amount
     

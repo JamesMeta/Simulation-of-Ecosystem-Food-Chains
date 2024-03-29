@@ -38,7 +38,7 @@ class Herbivor(Animal):
     #TODO: Implement this method
     def warn_others(self) -> None:
         pass
-
+        
     def update(self) -> None:
         x = random.randint(-4,4)
         y = random.randint(-4,4)

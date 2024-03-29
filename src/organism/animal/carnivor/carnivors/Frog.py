@@ -1,4 +1,5 @@
 from typing import List, Any
+import random
 import sys
 sys.path.append("src/organism/animal/carnivor")
 from Carnivor import Carnivor
@@ -42,9 +43,13 @@ class Frog(Carnivor):
                 self.detection_multiplier = 1       #constant
                 self.consumable_organisms = {8}   #species_id
                 self.decision_duration = 100         #ticks
-
-                self.debug_mode = True
                 
                 if self.debug_mode:
                         self.color = "green"
                         self.radius = 3
+                
+                if self.random_start:
+                    self.hunger = random.randint(0, self.max_hunger)
+                    self.thirst = random.randint(0, self.max_thirst)
+                    self.exhaustion = random.randint(0, self.max_exhaustion)
+                    self.procreate_cool_down = random.randint(0, self.procreate_cool_down)
