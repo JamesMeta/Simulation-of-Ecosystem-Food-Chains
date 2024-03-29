@@ -34,6 +34,7 @@ class Herbivor(Animal):
         self.needs_water = False
         self.needs_mate = False
         self.hidden = False
+        self.needs_for_speed = False
 
 
         #override these variables in the child class
@@ -78,7 +79,11 @@ class Herbivor(Animal):
             if self.in_danger:
                 self.run_away_from_threats()
                 self.progress_left_on_decision = self.decision_duration
+                self.needs_for_speed = True
                 return
+            
+            else:
+                self.needs_for_speed = False
             
             # third layer of decision making: Check if the organism needs sleep, food, or water balancing the priorities based on absolute needs
             exhaustion_remaining = self.max_exhaustion - self.exhaustion
@@ -103,8 +108,9 @@ class Herbivor(Animal):
                     self.needs_food = False
             
             if self.needs_sleep:
+                print("Needs sleep")
                 if self.safe_place:
-                    self.current_direction = self.move_towards_resource(self.safe_place.resource_id)
+                    self.move_towards_resource(self.safe_place.resource_type_id)
                     distance = ((self.organism_position[0] - self.safe_place.resource_position[0])**2 + (self.organism_position[1] - self.safe_place.resource_position[1])**2)**0.5
                     if distance < self.safe_place.radius:
                         self.sleep()
@@ -117,8 +123,9 @@ class Herbivor(Animal):
                     return
             
             if self.needs_food:
+                print("Needs food")
                 if self.current_target:
-                    self.current_direction = self.move_towards_dynamic_resource(self.current_target)
+                    self.move_towards_dynamic_resource(self.current_target)
                     distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
                     if distance < self.feeding_range:
                         self.eat_food()
@@ -132,11 +139,12 @@ class Herbivor(Animal):
                 return
             
             if self.needs_water:
+                print("Needs water")
 
                 water_id = 2
 
                 if self.current_target:
-                    self.current_direction = self.move_towards_resource(self.current_target.resource_id)
+                    self.move_towards_resource(self.current_target.resource_type_id)
                     distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
                     if distance < self.feeding_range:
                         self.drink_water()
@@ -157,7 +165,7 @@ class Herbivor(Animal):
             if self.ready_to_mate:
                 self.Detect_Mates()
                 if self.current_target:
-                    self.current_direction = self.move_towards_organism(self.current_target)
+                    self.move_towards_organism(self.current_target)
                     distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
                     if distance < self.feeding_range:
                         self.procreate()

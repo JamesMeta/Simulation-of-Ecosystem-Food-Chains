@@ -124,7 +124,6 @@ class Animal(Organism):
         
         return False
 
-    # TODO: Implement this method
     def move_towards_resource(self, resource_type_id: Any) -> None:
 
         def closest_resource_of_type(resource_type_id: Any) -> Any:
@@ -185,13 +184,17 @@ class Animal(Organism):
 
 
         if self.debug_mode:
+            print(f"Current Direction {self.current_direction} ", end="")
             if self.needs_food:
-                print(f"Getting food : {self.hunger}")
+                distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
+                print(f"Getting food : {self.hunger} : Distance to food : {distance}")
             if self.needs_water:
                 distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
                 print(f"Getting water : {self.thirst} : Distance to water : {distance}")
             if self.needs_sleep:
                 print(f"Sleeping : {self.exhaustion}")
+
+            pass
             
-            print(f"Current Direction {self.current_direction}")
+            
 
