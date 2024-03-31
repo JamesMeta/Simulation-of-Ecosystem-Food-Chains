@@ -12,7 +12,7 @@ class Grass(DynamicResource):
         self.current_regen = 0
         self.max_capacity = 100
         self.mass = 1
-        self.alive = True
+        self.alive_status = True
     
     def spawn_grass(self) -> None:
 
@@ -41,9 +41,9 @@ class Grass(DynamicResource):
                 current_capacity += 1
 
         if self.mass <= 0:
-            self.alive = False
+            self.alive_status = False
 
-        if self.alive:
+        if self.alive_status:
             self.current_regen += 1
             if current_capacity < self.max_capacity and self.current_regen >= self.regen_rate:
                 self.current_regen = 0

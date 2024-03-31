@@ -59,29 +59,43 @@ class Animal(Organism):
         self.decision_duration = None
         self.potential_predators = None
 
-    def add_post_creation_attributes(self, all_known_static_resources, all_known_dynamic_resources, all_known_organisms) -> None:
+    def add_post_creation_attributes(self, all_known_static_resources, all_known_dynamic_resources, all_known_organisms, safe_place) -> None:
         self.all_known_static_resources = all_known_static_resources
         self.all_known_dynamic_resources = all_known_dynamic_resources
         self.all_known_organisms = all_known_organisms
+        self.safe_place = safe_place
+        
 
     def drink_water(self) -> None:
+        print("Drinking Water")
         self.thirst = 0
         self.needs_water = False
+        self.current_target = None
+        self.current_direction = [0, 0]
     
-    def eat_food(self, amount: float) -> None:
+    def eat_food(self) -> None:
+
+        self.kill_organism(self.current_target)
+
+        print("Eating Food")
         self.hunger = 0
         self.needs_food = False
+        self.current_target = None
+        self.current_direction = [0, 0]
 
     # TODO: Implement this method, This needs to have creature movement implemented first
     def wander(self) -> None:
-        one_in_four = random.randint(1, 4)
+        one_in_four = random.randint(1, 2)
         if one_in_four == 1:
             self.current_direction = [random.uniform(-1, 1), random.uniform(-1, 1)]
+            print("Wandering")
         else:
             self.current_direction = [0, 0]
+            print("Not moving")
 
     def sleep(self) -> None:
-        self.decision_duration = self.sleep_duration
+        print("Sleeping")
+        self.progress_left_on_decision = self.sleep_duration
         self.current_direction = [0, 0]
         self.needs_sleep = False
         self.exhaustion = 0
@@ -141,20 +155,22 @@ class Animal(Organism):
         resource = closest_resource_of_type(resource_type_id)
         self.current_target = resource
         resource_position = resource.resource_position
-        slope = (resource_position[1] - self.organism_position[1]) / (resource_position[0] - self.organism_position[0])
-        angle = math.atan(slope)
+        distance = math.sqrt((self.organism_position[0] - resource_position[0])**2 + (self.organism_position[1] - resource_position[1])**2)
+        angle = math.atan2(resource_position[1] - self.organism_position[1], resource_position[0] - self.organism_position[0])
+
         self.current_direction = [math.cos(angle), math.sin(angle)]
     
     def move_towards_organism(self, organism: Any) -> None:
         organism_position = organism.organism_position
-        slope = (organism_position[1] - self.organism_position[1]) / (organism_position[0] - self.organism_position[0])
-        angle = math.atan(slope)
+        angle = math.atan2(organism_position[1] - self.organism_position[1], organism_position[0] - self.organism_position[0])
         self.current_direction = [math.cos(angle), math.sin(angle)]
+
+    def is_current_target_dyanmic(self) -> bool:
+        return self.current_target in self.all_known_dynamic_resources.values()
 
     def move_towards_dynamic_resource(self, resource: Any) -> None:
         resource_position = resource.resource_position
-        slope = (resource_position[1] - self.organism_position[1]) / (resource_position[0] - self.organism_position[0])
-        angle = math.atan(slope)
+        angle = math.atan2(resource_position[1] - self.organism_position[1], resource_position[0] - self.organism_position[0])
         self.current_direction = [math.cos(angle), math.sin(angle)]
     
     def move(self) -> None:
@@ -183,18 +199,17 @@ class Animal(Organism):
         self.procreate_cool_down -= 1
 
 
-        if self.debug_mode:
-            print(f"Current Direction {self.current_direction} ", end="")
-            if self.needs_food:
-                distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
-                print(f"Getting food : {self.hunger} : Distance to food : {distance}")
-            if self.needs_water:
-                distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
-                print(f"Getting water : {self.thirst} : Distance to water : {distance}")
-            if self.needs_sleep:
-                print(f"Sleeping : {self.exhaustion}")
-
-            pass
+        # if self.debug_mode:
+        #     print(f"Current Direction {self.current_direction} ", end="")
+        #     if self.needs_food:
+        #         distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
+        #         print(f"Getting food : {self.hunger} : Distance to food : {distance}")
+        #     if self.needs_water:
+        #         distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
+        #         print(f"Getting water : {self.thirst} : Distance to water : {distance}")
+        #     if self.needs_sleep:
+        #         print(f"Sleeping : {self.exhaustion}")
+        #     pass
             
             
 

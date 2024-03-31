@@ -35,8 +35,8 @@ class Rabbit(Herbivor):
                 self.max_exhaustion = 4320            # ticks
                 self.min_hunger = 1440                # ticks
                 self.min_thirst = 1440                # ticks
-                self.max_speed = 2                        # pixels per tick
-                self.min_speed = 1                        # pixels per tick
+                self.max_speed = 4                        # pixels per tick
+                self.min_speed = 2                        # pixels per tick
                 self.mass = 1
                 self.sight_range = 200                # pixels
                 self.feeding_range = 5                # pixels (not provided in the stats, so keeping it the same as before)
@@ -47,7 +47,7 @@ class Rabbit(Herbivor):
                 self.decision_duration = 100          # ticks
                 
                 if self.debug_mode:
-                        self.color = "blue"
+                        self.color = "white"
                         self.radius = 10
 
                 if self.random_start:
@@ -55,6 +55,7 @@ class Rabbit(Herbivor):
                     self.thirst = random.randint(0, self.max_thirst)
                     self.exhaustion = random.randint(0, self.max_exhaustion)
                     self.procreate_cool_down = random.randint(0, self.procreate_cool_down)
+
 
                 def procreate(self) -> Any:
                     pass

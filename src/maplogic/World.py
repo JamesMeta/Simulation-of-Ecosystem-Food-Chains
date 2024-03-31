@@ -58,7 +58,10 @@ class World:
     def update(self) -> None:
         copyofdynamicresourcemap = self.dynamic_resource_map.copy()
         for resource in copyofdynamicresourcemap.values():
-            resource.update()
+            if resource.alive_status:
+                resource.update()
+            else:
+                del self.dynamic_resource_map[resource.resource_id]
         self.update_time_of_day()
 
 

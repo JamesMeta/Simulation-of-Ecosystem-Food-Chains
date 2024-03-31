@@ -64,6 +64,27 @@ class Herbivor(Animal):
         if self.thirst > self.max_thirst:
             self.alive_status = False
 
+        if self.needs_food:
+            distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
+            if self.is_current_target_dyanmic():
+                if distance < self.feeding_range:
+                    self.eat_food()
+                else:
+                    pass
+            else:
+                if distance < self.sight_range:
+                    self.Detect_Food()
+                    self.move_towards_dynamic_resource(self.current_target)
+                else:
+                    pass
+                
+        if self.needs_water:
+            distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
+            distance -= self.current_target.resource_radius
+            if distance < self.feeding_range:
+                self.drink_water()
+            else:
+                pass
         
         if self.progress_left_on_decision == 0:
 
@@ -86,45 +107,47 @@ class Herbivor(Animal):
                 self.needs_for_speed = False
             
             # third layer of decision making: Check if the organism needs sleep, food, or water balancing the priorities based on absolute needs
-            exhaustion_remaining = self.max_exhaustion - self.exhaustion
-
-            if exhaustion_remaining < 0:
-                self.needs_sleep = True
-                self.needs_food = False
-                self.needs_water = False
 
             if self.hunger > self.min_hunger or self.thirst > self.min_thirst:
                 percent_food_remaining = 1 - (self.hunger / self.max_hunger)
                 percent_water_remaining = 1 - (self.thirst / self.max_thirst)
             
 
-                if percent_food_remaining > percent_water_remaining:
+                if percent_food_remaining < percent_water_remaining:
                     self.needs_food = True
                     self.needs_water = False
 
                 
-                if percent_water_remaining > percent_food_remaining:
+                if percent_water_remaining < percent_food_remaining:
                     self.needs_water = True
                     self.needs_food = False
+
+            exhaustion_remaining = self.max_exhaustion - self.exhaustion
+
+            if exhaustion_remaining < 0:
+                self.needs_sleep = True
+                self.needs_food = False
+                self.needs_water = False
             
             if self.needs_sleep:
                 print("Needs sleep")
-                if self.safe_place:
+                if self.safe_place is not None:
                     self.move_towards_resource(self.safe_place.resource_type_id)
                     distance = ((self.organism_position[0] - self.safe_place.resource_position[0])**2 + (self.organism_position[1] - self.safe_place.resource_position[1])**2)**0.5
-                    if distance < self.safe_place.radius:
+                    if distance < self.safe_place.resource_radius:
                         self.sleep()
                         self.hidden = True
                         return
                     else:
                         self.progress_left_on_decision = self.decision_duration
+                        return
                 else:
                     self.sleep()
                     return
             
             if self.needs_food:
                 print("Needs food")
-                if self.current_target:
+                if self.is_current_target_dyanmic():
                     self.move_towards_dynamic_resource(self.current_target)
                     distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
                     if distance < self.feeding_range:
@@ -146,6 +169,7 @@ class Herbivor(Animal):
                 if self.current_target:
                     self.move_towards_resource(self.current_target.resource_type_id)
                     distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
+                    distance -= self.current_target.resource_radius
                     if distance < self.feeding_range:
                         self.drink_water()
                     else:

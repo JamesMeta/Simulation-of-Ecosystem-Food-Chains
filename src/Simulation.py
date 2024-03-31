@@ -43,6 +43,13 @@ class Simulation:
 
         def get_unique_animal_id() -> int:
             return len(self.organism_map) + 1
+        
+        def get_safe_place(species_id: int) -> List[float]:
+            if species_id == 7:
+                all_forests = [resource for resource in self.world.static_resource_map.values() if resource.resource_type_id == 3]
+                return random.choice(all_forests)
+            else:
+                return None
 
 
         x = random.randint(0, self.screen_x_resolution)
@@ -72,7 +79,8 @@ class Simulation:
         else:
             print("Invalid Species ID")
         
-        new_organism.add_post_creation_attributes(self.world.static_resource_map, self.world.dynamic_resource_map, self.organism_map)
+        safe_place = get_safe_place(species_id)
+        new_organism.add_post_creation_attributes(self.world.static_resource_map, self.world.dynamic_resource_map, self.organism_map, safe_place)
         self.organism_map[animal_id] = new_organism
         
  
@@ -182,14 +190,15 @@ class Simulation:
         water = 2
         forest = 3
 
-        self.world.spawn_resource(1, 100, [100, 100], grass)
-        self.world.spawn_resource(2, 100, [1720, 880], water)
-        self.world.spawn_resource(3, 100, [1720, 100], forest)
+        self.world.spawn_resource(1, 100, [500, 200], grass)
+        self.world.spawn_resource(2, 100, [1020, 680], water)
+        self.world.spawn_resource(3, 100, [1020, 200], forest)
 
         #Spawn 1 rabbit
         self.spawn_organism(7)
 
         #spawn grass
+        self.world.spawn_grass()
         self.world.spawn_grass()
         
     def run_simulation(self) -> None:
