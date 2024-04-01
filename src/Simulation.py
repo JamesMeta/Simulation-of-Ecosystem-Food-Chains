@@ -19,6 +19,7 @@ from maplogic.StaticResource import StaticResource
 from maplogic.DynamicResource import DynamicResource
 from maplogic.Grass import Grass
 
+from maplogic.HeightMap import generate_resource_map
 
 class Simulation:
     
@@ -151,9 +152,9 @@ class Simulation:
         water = 2
         forest = 3
 
-        self.spawn_resources(1, 100, [100, 100], grass)
-        self.spawn_resources(2, 100, [1720, 880], water)
-        self.spawn_resources(3, 100, [1720, 100], forest)
+        self.world.spawn_resource(1, 100, [100, 100], grass)
+        self.world.spawn_resource(2, 100, [1720, 880], water)
+        self.world.spawn_resource(3, 100, [1720, 100], forest)
 
         #Spawn 10 of each organism
 
@@ -206,6 +207,38 @@ class Simulation:
         self.world.spawn_grass()
         self.world.spawn_grass()
 
+    def test_three(self) -> None:
+        #getting biome generation working
+        grass = 1
+        water = 2
+        forest = 3
+
+        map = generate_resource_map(self.screen_x_resolution, self.screen_y_resolution)
+
+        self.world.spawn_resource(1, 100, [500, 200], grass)
+        self.world.spawn_resource(2, 100, [1020, 680], water)
+        self.world.spawn_resource(3, 100, [1020, 200], forest)
+        self.world.spawn_resource(4, 100, [100, 100], grass)
+
+        i=0
+        for x in range(self.screen_x_resolution):
+            for y in range(self.screen_y_resolution):
+                map[x][y] = random.randint(1,3)
+                self.world.spawn_resource(i, 1, [x, y], map[x][y])
+                i+=1
+
+
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+
         
     def run_simulation(self) -> None:
         running = True
@@ -223,7 +256,7 @@ class Simulation:
 if __name__ == "__main__":
     
     sim = Simulation()
-    sim.test_two()
+    sim.test_three()
     sim.run_simulation()
 
 
