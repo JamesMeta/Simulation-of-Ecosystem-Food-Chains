@@ -213,27 +213,23 @@ class Simulation:
         water = 2
         forest = 3
 
-        map = generate_resource_map(self.screen_x_resolution, self.screen_y_resolution)
 
         self.world.spawn_resource(1, 100, [500, 200], grass)
         self.world.spawn_resource(2, 100, [1020, 680], water)
         self.world.spawn_resource(3, 100, [1020, 200], forest)
         self.world.spawn_resource(4, 100, [100, 100], grass)
 
+        #logic for map generation using a randint from the amount of available biomes
+        #mapped into a 2d array
         i=0
-        for x in range(self.screen_x_resolution):
-            for y in range(self.screen_y_resolution):
-                map[x][y] = random.randint(1,3)
-                self.world.spawn_resource(i, 1, [x, y], map[x][y])
+        biome_size = 100
+        map = generate_resource_map(self.screen_x_resolution, self.screen_y_resolution)
+        for x in range(0, self.screen_x_resolution, biome_size):
+            for y in range(0, self.screen_y_resolution, biome_size):
+                self.world.spawn_resource(i, biome_size/2, [x, y], map[x][y])
                 i+=1
 
 
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
         self.spawn_organism(7)
         self.spawn_organism(7)
         self.spawn_organism(7)
