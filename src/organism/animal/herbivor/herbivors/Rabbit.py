@@ -29,7 +29,7 @@ class Rabbit(Herbivor):
 
                 self.name = "Rabbit"
                 self.species_id = 7
-                self.procreate_cool_down = 66528      # ticks
+                self.procreate_cool_down = 500      # ticks
                 self.max_hunger = 8640                # ticks
                 self.max_thirst = 8640                # ticks
                 self.max_exhaustion = 4320            # ticks
@@ -44,7 +44,7 @@ class Rabbit(Herbivor):
                 self.detection_multiplier = 1         # constant
                 self.consumable_resources = [1]       # species_id
                 self.potential_predators = [1,5]        # species_id
-                self.decision_duration = 100          # ticks
+                self.decision_duration = 50          # ticks
                 
                 if self.debug_mode:
                         self.color = "white"
@@ -58,6 +58,30 @@ class Rabbit(Herbivor):
 
 
                 def procreate(self) -> Any:
-                    pass
+
+                    def get_unique_animal_id() -> int:
+                        for i in range(1, len(self.all_known_organisms) + 2):
+                            if i not in self.all_known_organisms:
+                                return i
+
+                    if not self.current_target.female:
+                        self.female = True
+                        new_rabbit = Rabbit(self.organism_position, len(self.all_known_organisms) + 1)
+                        new_rabbit.add_post_creation_attributes(self.all_known_static_resources, self.all_known_dynamic_resources, self.all_known_organisms, self.safe_place)
+                        rabbit_id = get_unique_animal_id()
+                        self.all_known_organisms[rabbit_id] = new_rabbit
+
+                    else:
+                        self.current_target.female = False
+                        self.current_target.procreate_cool_down = 66528
+                        self.current_target.current_target = None
+                        self.current_target.ready_to_mate = False
+                        self.procreate_cool_down = 66528
+                        self.current_target = None
+                        self.ready_to_mate = False
+
+                            
+                            
+        
 
                 

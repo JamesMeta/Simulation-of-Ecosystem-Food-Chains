@@ -17,7 +17,9 @@ class Grass(DynamicResource):
     def spawn_grass(self) -> None:
 
         def get_unique_grass_id() -> int:
-            return len(self.dynamic_resource_map) + 1
+            for i in range(1, len(self.dynamic_resource_map) + 2):
+                if i not in self.dynamic_resource_map:
+                    return i
 
         x = random.randint(self.associated_static_resource.resource_position[0] - self.associated_static_resource.resource_radius, self.associated_static_resource.resource_position[0] + self.associated_static_resource.resource_radius)
         y = random.randint(self.associated_static_resource.resource_position[1] - self.associated_static_resource.resource_radius, self.associated_static_resource.resource_position[1] + self.associated_static_resource.resource_radius)

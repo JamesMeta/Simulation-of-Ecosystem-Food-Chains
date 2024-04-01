@@ -196,10 +196,16 @@ class Simulation:
 
         #Spawn 1 rabbit
         self.spawn_organism(7)
-
+        self.spawn_organism(7)
+        
         #spawn grass
         self.world.spawn_grass()
         self.world.spawn_grass()
+        self.world.spawn_grass()
+        self.world.spawn_grass()
+        self.world.spawn_grass()
+        self.world.spawn_grass()
+
         
     def run_simulation(self) -> None:
         running = True

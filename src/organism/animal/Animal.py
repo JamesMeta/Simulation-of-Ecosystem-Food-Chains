@@ -38,6 +38,7 @@ class Animal(Organism):
         self.needs_food = False
         self.needs_water = False
         self.needs_mate = False
+        self.female = False
 
 
         #override these variables in the child class
@@ -110,8 +111,8 @@ class Animal(Organism):
 
     def Detect_Threats(self) -> None:
         for organism in self.all_known_organisms.values():
-            organism_position = organism.organism_position
-            distance = ((self.organism_position[0] - organism_position[0])**2 + (self.organism_position[1] - organism_position[1])**2)**0.5
+            threat_position = organism.organism_position
+            distance = ((self.organism_position[0] - threat_position[0])**2 + (self.organism_position[1] - threat_position[1])**2)**0.5
             if distance < self.sight_range:
                 if organism.species_id in self.potential_predators:
                     self.current_threat = organism
@@ -119,13 +120,19 @@ class Animal(Organism):
 
     def Detect_Mates(self) -> None:
         for organism in self.all_known_organisms.values():
-            organism_position = organism.organism_position
-            distance = ((self.organism_position[0] - organism_position[0])**2 + (self.organism_position[1] - organism_position[1])**2)**0.5
+            mate_position = organism.organism_position
+            distance = ((self.organism_position[0] - mate_position[0])**2 + (self.organism_position[1] - mate_position[1])**2)**0.5
+            if not organism.ready_to_mate:
+                continue
+
+            if organism.species_id != self.species_id:
+                continue
+
+            if distance > self.sight_range:
+                continue
+
             if distance < self.sight_range:
-                if organism.species_id == self.species_id:
-                    self.current_target = organism
-                    return
-        self.current_target = None
+                self.move_towards_organism(organism)
     
     def Detect_Water(self):
         for resource in self.all_known_static_resources.values():
@@ -189,6 +196,10 @@ class Animal(Organism):
 
     def make_decision(self) -> None:
         pass
+
+    def procreate(self) -> Any:
+        pass
+            
 
     def update(self) -> None:
         self.make_decision()

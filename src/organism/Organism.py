@@ -7,14 +7,15 @@ class Organism:
         self.organism_position = organism_position
         self.animal_id = animal_id
 
-        self.all_known_static_resources = []
-        self.all_known_dynamic_resources = []
-        self.all_known_organisms = []
+        self.all_known_static_resources = {}
+        self.all_known_dynamic_resources = {}
+        self.all_known_organisms = {}
         self.alive_status = True
     
     def die(self) -> int:
         self.alive_status = False
-        return self.animal_id
+        print(f"Organism {self.animal_id} has died.")
+        del self.all_known_organisms[self.animal_id]
     
 
 

@@ -14,8 +14,8 @@ class Herbivor(Animal):
                 
             # self.organism_position = organism_position
             # self.animal_id = animal_id
-            # self.all_known_resources = []
-            # self.all_known_organisms = []
+            # self.all_known_resources = {}
+            # self.all_known_organisms = {}
             # self.alive_status = True
             # self.hunger = 0
             # self.thirst = 0
@@ -32,7 +32,6 @@ class Herbivor(Animal):
         self.in_danger = False
         self.needs_food = False
         self.needs_water = False
-        self.needs_mate = False
         self.hidden = False
         self.needs_for_speed = False
 
@@ -59,10 +58,10 @@ class Herbivor(Animal):
     def make_decision(self) -> None:
 
         if self.hunger > self.max_hunger:
-            self.alive_status = False
+            self.die()
         
         if self.thirst > self.max_thirst:
-            self.alive_status = False
+            self.die()
 
         if self.needs_food:
             distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
@@ -85,6 +84,13 @@ class Herbivor(Animal):
                 self.drink_water()
             else:
                 pass
+
+        if self.ready_to_mate and self.current_target is not None:
+            distance = ((self.organism_position[0] - self.current_target.organism_position[0])**2 + (self.organism_position[1] - self.current_target.organism_position[1])**2)**0.5
+            if distance < self.feeding_range:
+                self.procreate()
+            else:
+                pass
         
         if self.progress_left_on_decision == 0:
 
@@ -93,7 +99,7 @@ class Herbivor(Animal):
             # first layer of decision making: Check alive status
 
             if not self.alive_status:
-                self.all_known_organisms.remove(self)
+                self.die()
                 return
             
             # second layer of decision making: Check if the organism is in danger
@@ -101,6 +107,10 @@ class Herbivor(Animal):
                 self.run_away_from_threats()
                 self.progress_left_on_decision = self.decision_duration
                 self.needs_for_speed = True
+                self.needs_food = False
+                self.needs_water = False
+                self.needs_sleep = False
+                self.ready_to_mate = False
                 return
             
             else:
@@ -111,11 +121,13 @@ class Herbivor(Animal):
             if self.hunger > self.min_hunger or self.thirst > self.min_thirst:
                 percent_food_remaining = 1 - (self.hunger / self.max_hunger)
                 percent_water_remaining = 1 - (self.thirst / self.max_thirst)
+                self.ready_to_mate = False
             
 
                 if percent_food_remaining < percent_water_remaining:
                     self.needs_food = True
                     self.needs_water = False
+                    
 
                 
                 if percent_water_remaining < percent_food_remaining:
@@ -128,6 +140,7 @@ class Herbivor(Animal):
                 self.needs_sleep = True
                 self.needs_food = False
                 self.needs_water = False
+                self.ready_to_mate = False
             
             if self.needs_sleep:
                 print("Needs sleep")
@@ -183,20 +196,20 @@ class Herbivor(Animal):
             
             # fourth layer of decision making: Check if the organism is ready to mate
 
-            if self.procreate_cool_down == 0:
+            if self.procreate_cool_down < 0:
                 self.ready_to_mate = True
 
             if self.ready_to_mate:
-                self.Detect_Mates()
-                if self.current_target:
+                print("Looking for mate")
+                if self.current_target is None:
+                    self.wander()
+                    self.Detect_Mates()
+    
+                if self.current_target is not None:
                     self.move_towards_organism(self.current_target)
-                    distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
+                    distance = ((self.organism_position[0] - self.current_target.organism_position[0])**2 + (self.organism_position[1] - self.current_target.organism_position[1])**2)**0.5
                     if distance < self.feeding_range:
                         self.procreate()
-                    else:
-                        pass
-                else:
-                    self.move_towards_resource(self.species_id)
                 
                 self.progress_left_on_decision = self.decision_duration
                 return
