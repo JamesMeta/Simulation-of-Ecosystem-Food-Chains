@@ -6,13 +6,16 @@ from typing import List, Any
 
 class Grass(DynamicResource):
 
-    def __init__(self, resource_id: int, resource_position: List[float]):
+    def __init__(self, resource_id: int, resource_position: List[float], dynamic_resource_map: Any, associated_static_resource: Any):
         super().__init__(resource_id, resource_position, 5, 1)
         self.regen_rate = 1000
         self.current_regen = 0
         self.max_capacity = 100
         self.mass = 1
         self.alive_status = True
+        self.dynamic_resource_map = dynamic_resource_map
+        self.associated_static_resource = associated_static_resource
+
     
     def spawn_grass(self) -> None:
 
@@ -25,14 +28,9 @@ class Grass(DynamicResource):
         y = random.randint(self.associated_static_resource.resource_position[1] - self.associated_static_resource.resource_radius, self.associated_static_resource.resource_position[1] + self.associated_static_resource.resource_radius)
         position = [x, y]
         grass_id = get_unique_grass_id()
-        new_grass = Grass(grass_id, position)
-        new_grass.set_post_creation_data(self.dynamic_resource_map, self.associated_static_resource)
+        new_grass = Grass(grass_id, position, self.dynamic_resource_map, self.associated_static_resource)
         self.dynamic_resource_map[grass_id] = new_grass
-
-    def set_post_creation_data(self, dynamic_resource_map, associated_static_resource) -> None:
-        self.dynamic_resource_map = dynamic_resource_map
-        self.associated_static_resource = associated_static_resource
-
+        
     
 
     def update(self) -> None:

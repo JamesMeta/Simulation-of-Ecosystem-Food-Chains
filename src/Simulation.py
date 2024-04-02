@@ -44,13 +44,6 @@ class Simulation:
 
         def get_unique_animal_id() -> int:
             return len(self.organism_map) + 1
-        
-        def get_safe_place(species_id: int) -> List[float]:
-            if species_id == 7:
-                all_forests = [resource for resource in self.world.static_resource_map.values() if resource.resource_type_id == 3]
-                return random.choice(all_forests)
-            else:
-                return None
 
 
         x = random.randint(0, self.screen_x_resolution)
@@ -60,28 +53,26 @@ class Simulation:
         new_organism = None
 
         if species_id == 1:
-            new_organism = Fox(position, animal_id)
+            new_organism = Fox(position, animal_id, self.world.static_resource_map, self.world.dynamic_resource_map, self.organism_map)
         elif species_id == 2:
-            new_organism = Owl(position, animal_id)
+            new_organism = Owl(position, animal_id, self.world.static_resource_map, self.world.dynamic_resource_map, self.organism_map)
         elif species_id == 3:
-            new_organism = Frog(position, animal_id)
+            new_organism = Frog(position, animal_id, self.world.static_resource_map, self.world.dynamic_resource_map, self.organism_map)
         elif species_id == 4:
-            new_organism = Snake(position, animal_id)
+            new_organism = Snake(position, animal_id, self.world.static_resource_map, self.world.dynamic_resource_map, self.organism_map)
         elif species_id == 5:
-            new_organism = Hawk(position, animal_id)
+            new_organism = Hawk(position, animal_id, self.world.static_resource_map, self.world.dynamic_resource_map, self.organism_map)
         elif species_id == 6:
-            new_organism = SmallBird(position, animal_id)
+            new_organism = SmallBird(position, animal_id, self.world.static_resource_map, self.world.dynamic_resource_map, self.organism_map)
         elif species_id == 7:
-            new_organism = Rabbit(position, animal_id)
+            new_organism = Rabbit(position, animal_id, self.world.static_resource_map, self.world.dynamic_resource_map, self.organism_map)
         elif species_id == 8:
-            new_organism = GrassHopper(position, animal_id)
+            new_organism = GrassHopper(position, animal_id, self.world.static_resource_map, self.world.dynamic_resource_map, self.organism_map)
         elif species_id == 9:
-            new_organism = Mouse(position, animal_id)
+            new_organism = Mouse(position, animal_id, self.world.static_resource_map, self.world.dynamic_resource_map, self.organism_map)
         else:
             print("Invalid Species ID")
         
-        safe_place = get_safe_place(species_id)
-        new_organism.add_post_creation_attributes(self.world.static_resource_map, self.world.dynamic_resource_map, self.organism_map, safe_place)
         self.organism_map[animal_id] = new_organism
         
  
@@ -235,6 +226,15 @@ class Simulation:
         self.spawn_organism(7)
         self.spawn_organism(7)
 
+        self.world.spawn_grass()
+        self.world.spawn_grass()
+        self.world.spawn_grass()
+        self.world.spawn_grass()
+        self.world.spawn_grass()
+        self.world.spawn_grass()
+        self.world.spawn_grass()
+        
+
         
     def run_simulation(self) -> None:
         running = True
@@ -252,7 +252,7 @@ class Simulation:
 if __name__ == "__main__":
     
     sim = Simulation()
-    sim.test_three()
+    sim.test_two()
     sim.run_simulation()
 
 

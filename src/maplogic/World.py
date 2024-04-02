@@ -49,9 +49,7 @@ class World:
         associated_static_resource = get_random_valid_static_resource()
         resource_position = [random.randint(associated_static_resource.resource_position[0] - associated_static_resource.resource_radius, associated_static_resource.resource_position[0] + associated_static_resource.resource_radius), random.randint(associated_static_resource.resource_position[1] - associated_static_resource.resource_radius, associated_static_resource.resource_position[1] + associated_static_resource.resource_radius)]
 
-        grass = Grass(resource_id, resource_position)
-
-        grass.set_post_creation_data(self.dynamic_resource_map, associated_static_resource)
+        grass = Grass(resource_id, resource_position, self.dynamic_resource_map, associated_static_resource)
 
         self.dynamic_resource_map[resource_id] = grass
 

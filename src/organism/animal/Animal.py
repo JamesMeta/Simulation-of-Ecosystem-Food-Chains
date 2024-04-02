@@ -7,7 +7,7 @@ from typing import List, Any
 
 class Animal(Organism):
 
-    def __init__(self, organism_position: List[float], animal_id: int):
+    def __init__(self, organism_position: List[float], animal_id: int, all_known_static_resources: Any, all_known_dynamic_resources: Any, all_known_organisms: Any):
 
         super().__init__(organism_position, animal_id)
 
@@ -15,9 +15,16 @@ class Animal(Organism):
 
         # self.organism_position = organism_position
         # self.animal_id = animal_id
-        # self.all_known_resources = []
-        # self.all_known_organisms = []
+
+        # self.all_known_static_resources = {}
+        # self.all_known_dynamic_resources = {}
+        # self.all_known_organisms = {}
         # self.alive_status = True
+
+        
+        self.all_known_static_resources = all_known_static_resources
+        self.all_known_dynamic_resources = all_known_dynamic_resources
+        self.all_known_organisms = all_known_organisms
 
         self.hunger = 0
         self.thirst = 0
@@ -39,6 +46,7 @@ class Animal(Organism):
         self.needs_water = False
         self.needs_mate = False
         self.female = False
+        self.needs_for_speed = False
 
 
         #override these variables in the child class
@@ -59,12 +67,6 @@ class Animal(Organism):
         self.consumable_resources = None
         self.decision_duration = None
         self.potential_predators = None
-
-    def add_post_creation_attributes(self, all_known_static_resources, all_known_dynamic_resources, all_known_organisms, safe_place) -> None:
-        self.all_known_static_resources = all_known_static_resources
-        self.all_known_dynamic_resources = all_known_dynamic_resources
-        self.all_known_organisms = all_known_organisms
-        self.safe_place = safe_place
         
 
     def drink_water(self) -> None:

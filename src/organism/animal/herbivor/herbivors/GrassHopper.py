@@ -6,25 +6,40 @@ from typing import List, Any
 
 class GrassHopper(Herbivor):
 
-    def __init__(self, organism_position: List[float], animal_id: int):
-                super().__init__(organism_position, animal_id)
+    def __init__(self, organism_position: List[float], animal_id: int, all_known_static_resources: Any, all_known_dynamic_resources: Any, all_known_organisms: Any):
+                super().__init__(organism_position, animal_id, all_known_static_resources, all_known_dynamic_resources, all_known_organisms)
 
                 # inherited variables
-                
+
                 # self.organism_position = organism_position
                 # self.animal_id = animal_id
-                # self.all_known_resources = []
-                # self.all_known_organisms = []
+
+                # self.all_known_static_resources = {}
+                # self.all_known_dynamic_resources = {}
+                # self.all_known_organisms = {}
                 # self.alive_status = True
+
                 # self.hunger = 0
                 # self.thirst = 0
                 # self.exhaustion = 0
-                # self.warned = False
-                # self.needs_sleep = False
-                # self.in_danger = False
                 # self.ready_to_mate = False
                 # self.current_target = None
+                # self.current_threat = None
                 # self.progress_left_on_decision = 0
+                # self.current_direction = [0, 0]
+                # self.safe_place = None
+
+                # self.random_start = True
+                # self.debug_mode = True
+
+                # #Binary variables for AI
+                # self.needs_sleep = False
+                # self.in_danger = False
+                # self.needs_food = False
+                # self.needs_water = False
+                # self.needs_mate = False
+                # self.female = False
+                # self.needs_for_speed = False
                 # self.hidden = False
 
                 self.name = "Grasshopper"
