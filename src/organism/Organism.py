@@ -12,7 +12,11 @@ class Organism:
         self.all_known_organisms = {}
         self.alive_status = True
     
-    def die(self) -> int:
+    def die(self) -> None:
+
+        if self.alive_status == False:
+            return 
+
         self.alive_status = False
         print(f"Organism {self.animal_id} has died.")
         del self.all_known_organisms[self.animal_id]
