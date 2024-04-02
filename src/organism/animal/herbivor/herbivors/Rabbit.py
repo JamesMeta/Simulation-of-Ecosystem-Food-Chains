@@ -45,7 +45,7 @@ class Rabbit(Herbivor):
 
                 self.name = "Rabbit"
                 self.species_id = 7
-                self.procreate_cool_down = 50000      # ticks
+                self.procreate_cool_down = 66528      # ticks
                 self.max_hunger = 8640                # ticks
                 self.max_thirst = 8640                # ticks
                 self.max_exhaustion = 4320            # ticks
@@ -77,28 +77,35 @@ class Rabbit(Herbivor):
                     self.procreate_cool_down = random.randint(0, self.procreate_cool_down)
 
 
-                def procreate(self) -> Any:
+    def procreate(self) -> Any:
 
-                    def get_unique_animal_id() -> int:
-                        for i in range(1, len(self.all_known_organisms) + 2):
-                            if i not in self.all_known_organisms:
-                                return i
+        def get_unique_animal_id() -> int:
+            for i in range(1, len(self.all_known_organisms) + 2):
+                if i not in self.all_known_organisms:
+                    return i
 
-                    if not self.current_target.female:
-                        self.female = True
-                        rabbit_id = get_unique_animal_id()
-                        new_rabbit = Rabbit(self.organism_position, rabbit_id, self.all_known_static_resources, self.all_known_dynamic_resources, self.all_known_organisms)
-                        
-                        self.all_known_organisms[rabbit_id] = new_rabbit
+        if not self.current_target.female:
+            self.female = True
+            rabbit_id = get_unique_animal_id()
+            #position = [random.randint(0, 1820), random.randint(0, 980)]
+            x = self.organism_position[0] #+ random.randint(-10, 10)
+            y = self.organism_position[1] #+ random.randint(-10, 10)
+            position = [x, y]
+            new_rabbit = Rabbit(position, rabbit_id, self.all_known_static_resources, self.all_known_dynamic_resources, self.all_known_organisms)
 
-                    else:
-                        self.current_target.female = False
-                        self.current_target.procreate_cool_down = 66528
-                        self.current_target.current_target = None
-                        self.current_target.ready_to_mate = False
-                        self.procreate_cool_down = 66528
-                        self.current_target = None
-                        self.ready_to_mate = False
+            self.procreate_cool_down = 66528
+            self.ready_to_mate = False
+            self.all_known_organisms[rabbit_id] = new_rabbit
+
+            print(f"Rabbit {self.animal_id} has procreated with Rabbit {self.current_target.animal_id} to create Rabbit {rabbit_id}")
+
+        else:
+            self.current_target.female = False
+            self.current_target.current_target = None
+            self.procreate_cool_down = 66528
+            self.current_target = None
+            self.ready_to_mate = False
+            self.current_task = False
 
                             
                             

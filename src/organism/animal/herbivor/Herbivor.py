@@ -89,7 +89,7 @@ class Herbivor(Animal):
 
         if self.ready_to_mate and self.current_target is not None:
             distance = ((self.organism_position[0] - self.current_target.organism_position[0])**2 + (self.organism_position[1] - self.current_target.organism_position[1])**2)**0.5
-            if distance < self.feeding_range:
+            if distance <= self.feeding_range:
                 self.procreate()
             else:
                 pass
@@ -211,7 +211,7 @@ class Herbivor(Animal):
             
             # fourth layer of decision making: Check if the organism is ready to mate
 
-            if self.procreate_cool_down < 0:
+            if self.procreate_cool_down <= 0:
                 self.ready_to_mate = True
                 self.current_task = True
 
@@ -251,7 +251,6 @@ class Herbivor(Animal):
                 self.move_towards_dynamic_resource(self.current_target)
                 return True
         return False
-    
     
     def procreate(self) -> Any:
         pass

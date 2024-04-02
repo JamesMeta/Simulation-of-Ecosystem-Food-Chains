@@ -36,7 +36,7 @@ class Animal(Organism):
         self.current_direction = [0, 0]
         self.safe_place = None
 
-        self.random_start = True
+        self.random_start = False
         self.debug_mode = True
 
         #Binary variables for AI
@@ -134,8 +134,13 @@ class Animal(Organism):
             if distance > self.sight_range:
                 continue
 
+            if organism.animal_id == self.animal_id:
+                continue
+
             if distance < self.sight_range:
                 self.move_towards_organism(organism)
+
+            
     
     def Detect_Water(self):
         for resource in self.all_known_static_resources.values():
@@ -171,6 +176,7 @@ class Animal(Organism):
         self.current_direction = [math.cos(angle), math.sin(angle)]
     
     def move_towards_organism(self, organism: Any) -> None:
+        self.current_target = organism
         organism_position = organism.organism_position
         angle = math.atan2(organism_position[1] - self.organism_position[1], organism_position[0] - self.organism_position[0])
         self.current_direction = [math.cos(angle), math.sin(angle)]
@@ -187,6 +193,15 @@ class Animal(Organism):
         try:
             self.organism_position[0] += self.current_direction[0]*self.min_speed
             self.organism_position[1] += self.current_direction[1]*self.min_speed
+
+            if self.organism_position[0] < 0:
+                self.organism_position[0] = 0
+            if self.organism_position[1] < 0:
+                self.organism_position[1] = 0
+            if self.organism_position[0] > 1820:
+                self.organism_position[0] = 1820
+            if self.organism_position[1] > 980:
+                self.organism_position[1] = 980
         except:
             print(f"Error in move function {self.current_direction}")
 

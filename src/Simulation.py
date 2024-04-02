@@ -189,14 +189,17 @@ class Simulation:
         #Spawn 1 rabbit
         self.spawn_organism(7)
         self.spawn_organism(7)
+
+        bunny1 = self.organism_map[1]
+        bunny2 = self.organism_map[2]
+
+        bunny1.organism_position = [500, 200]
+        bunny2.organism_position = [500, 250]
         
         #spawn grass
         self.world.spawn_grass()
         self.world.spawn_grass()
-        self.world.spawn_grass()
-        self.world.spawn_grass()
-        self.world.spawn_grass()
-        self.world.spawn_grass()
+
 
     def test_three(self) -> None:
         #getting biome generation working
@@ -252,7 +255,7 @@ class Simulation:
 if __name__ == "__main__":
     
     sim = Simulation()
-    sim.test_two()
+    sim.test_three()
     sim.run_simulation()
 
 
