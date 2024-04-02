@@ -41,6 +41,7 @@ class GrassHopper(Herbivor):
                 # self.female = False
                 # self.needs_for_speed = False
                 # self.hidden = False
+                # self.current_task = False
 
                 self.name = "Grasshopper"
                 self.species_id = 8

@@ -47,6 +47,7 @@ class Animal(Organism):
         self.needs_mate = False
         self.female = False
         self.needs_for_speed = False
+        self.current_task = False
 
 
         #override these variables in the child class

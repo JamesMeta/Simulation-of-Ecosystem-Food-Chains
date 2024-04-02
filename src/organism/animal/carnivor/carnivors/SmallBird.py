@@ -40,7 +40,8 @@ class SmallBird(Carnivor):
                 # self.needs_mate = False
                 # self.female = False
                 # self.needs_for_speed = False
-                #self.stalking = False
+                # self.stalking = False
+                # self.current_task = False
 
                 self.name = "Bird"
                 self.species_id = 6

@@ -41,6 +41,7 @@ class Herbivor(Animal):
         # self.needs_mate = False
         # self.female = False
         # self.needs_for_speed = False
+        # self.current_task = False
 
         #override these variables in the child class
         self.species_id = None
@@ -63,14 +64,7 @@ class Herbivor(Animal):
 
         self.hidden = False
 
-    def make_decision(self) -> None:
-
-        if self.hunger > self.max_hunger:
-            self.die()
-        
-        if self.thirst > self.max_thirst:
-            self.die()
-
+    def check_if_current_task_in_range(self) -> None:
         if self.needs_food:
             distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
             if self.is_current_target_dyanmic():
@@ -99,7 +93,18 @@ class Herbivor(Animal):
                 self.procreate()
             else:
                 pass
+
+    def make_decision(self) -> None:
+
+        if self.hunger > self.max_hunger:
+            self.die()
         
+        if self.thirst > self.max_thirst:
+            self.die()
+
+        if self.current_task:
+            self.check_if_current_task_in_range()
+
         if self.progress_left_on_decision == 0:
 
             print("Making decision")
@@ -130,6 +135,7 @@ class Herbivor(Animal):
                 percent_food_remaining = 1 - (self.hunger / self.max_hunger)
                 percent_water_remaining = 1 - (self.thirst / self.max_thirst)
                 self.ready_to_mate = False
+                self.current_task = True
             
 
                 if percent_food_remaining < percent_water_remaining:
@@ -149,6 +155,7 @@ class Herbivor(Animal):
                 self.needs_food = False
                 self.needs_water = False
                 self.ready_to_mate = False
+                self.current_task = False
             
             if self.needs_sleep:
                 print("Needs sleep")
@@ -206,6 +213,7 @@ class Herbivor(Animal):
 
             if self.procreate_cool_down < 0:
                 self.ready_to_mate = True
+                self.current_task = True
 
             if self.ready_to_mate:
                 print("Looking for mate")
@@ -224,6 +232,7 @@ class Herbivor(Animal):
             
             # fifth layer of decision making: Wander around
             self.wander()
+            self.current_task = False
             self.progress_left_on_decision = self.decision_duration
             return
                 
@@ -239,8 +248,10 @@ class Herbivor(Animal):
             distance = ((self.organism_position[0] - resource_position[0])**2 + (self.organism_position[1] - resource_position[1])**2)**0.5
             if distance < self.sight_range:
                 self.current_target = resource
+                self.move_towards_dynamic_resource(self.current_target)
                 return True
         return False
+    
     
     def procreate(self) -> Any:
         pass

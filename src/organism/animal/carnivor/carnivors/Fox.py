@@ -40,7 +40,8 @@ class Fox(Carnivor):
                 # self.needs_mate = False
                 # self.female = False
                 # self.needs_for_speed = False
-                #self.stalking = False
+                # self.stalking = False
+                # self.current_task = False
 
                 self.name = "Fox"
                 self.species_id = 1

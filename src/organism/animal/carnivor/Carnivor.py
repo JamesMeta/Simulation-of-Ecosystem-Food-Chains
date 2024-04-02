@@ -41,6 +41,7 @@ class Carnivor(Animal):
         # self.needs_mate = False
         # self.female = False
         # self.needs_for_speed = False
+        # self.current_task = False
 
         self.stalking = False
 

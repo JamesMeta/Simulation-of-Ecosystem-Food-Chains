@@ -41,10 +41,11 @@ class Rabbit(Herbivor):
                 # self.female = False
                 # self.needs_for_speed = False
                 # self.hidden = False
+                # self.current_task = False
 
                 self.name = "Rabbit"
                 self.species_id = 7
-                self.procreate_cool_down = 500      # ticks
+                self.procreate_cool_down = 50000      # ticks
                 self.max_hunger = 8640                # ticks
                 self.max_thirst = 8640                # ticks
                 self.max_exhaustion = 4320            # ticks
@@ -60,6 +61,10 @@ class Rabbit(Herbivor):
                 self.consumable_resources = [1]       # species_id
                 self.potential_predators = [1,5]        # species_id
                 self.decision_duration = 50          # ticks
+
+                all_forests = [resource for resource in all_known_static_resources.values() if resource.resource_type_id == 3]
+                self.safe_place = random.choice(all_forests)
+                        
                 
                 if self.debug_mode:
                         self.color = "white"
