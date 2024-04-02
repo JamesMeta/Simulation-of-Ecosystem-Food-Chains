@@ -19,6 +19,8 @@ class Herbivor(Animal):
         # self.all_known_dynamic_resources = {}
         # self.all_known_organisms = {}
         # self.alive_status = True
+        # self.visited_static_resources = []
+        # self.gender = None
 
         # self.hunger = 0
         # self.thirst = 0
@@ -67,7 +69,7 @@ class Herbivor(Animal):
     def check_if_current_task_in_range(self) -> None:
         if self.needs_food:
             distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
-            if self.is_current_target_dyanmic():
+            if self.is_current_target_dynamic():
                 if distance < self.feeding_range:
                     self.eat_food()
                 else:
@@ -107,7 +109,7 @@ class Herbivor(Animal):
 
         if self.progress_left_on_decision == 0:
 
-            print("Making decision")
+            print(f"{self.name}#{self.animal_id} Making Decision:", end=" ")
 
             # first layer of decision making: Check alive status
 
@@ -124,6 +126,7 @@ class Herbivor(Animal):
                 self.needs_water = False
                 self.needs_sleep = False
                 self.ready_to_mate = False
+                self.current_task = False
                 return
             
             else:
@@ -138,13 +141,11 @@ class Herbivor(Animal):
                 self.current_task = True
             
 
-                if percent_food_remaining < percent_water_remaining:
+                if percent_food_remaining <= percent_water_remaining:
                     self.needs_food = True
                     self.needs_water = False
                     
-
-                
-                if percent_water_remaining < percent_food_remaining:
+                if percent_water_remaining <= percent_food_remaining:
                     self.needs_water = True
                     self.needs_food = False
 
@@ -175,7 +176,7 @@ class Herbivor(Animal):
             
             if self.needs_food:
                 print("Needs food")
-                if self.is_current_target_dyanmic():
+                if self.is_current_target_dynamic():
                     self.move_towards_dynamic_resource(self.current_target)
                     distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
                     if distance < self.feeding_range:

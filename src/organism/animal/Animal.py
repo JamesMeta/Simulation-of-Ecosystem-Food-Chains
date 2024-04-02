@@ -20,7 +20,11 @@ class Animal(Organism):
         # self.all_known_dynamic_resources = {}
         # self.all_known_organisms = {}
         # self.alive_status = True
+        # self.visited_static_resources = []
+        # self.gender = None
 
+        # 0 = male, 1 = female
+        self.gender = random.randint(0, 1)
         
         self.all_known_static_resources = all_known_static_resources
         self.all_known_dynamic_resources = all_known_dynamic_resources
@@ -76,6 +80,7 @@ class Animal(Organism):
         self.needs_water = False
         self.current_target = None
         self.current_direction = [0, 0]
+        self.current_task = False
     
     def eat_food(self) -> None:
 
@@ -86,6 +91,7 @@ class Animal(Organism):
         self.needs_food = False
         self.current_target = None
         self.current_direction = [0, 0]
+        self.current_task = False
 
     # TODO: Implement this method, This needs to have creature movement implemented first
     def wander(self) -> None:
@@ -101,8 +107,10 @@ class Animal(Organism):
         print("Sleeping")
         self.progress_left_on_decision = self.sleep_duration
         self.current_direction = [0, 0]
+        self.current_target = None
         self.needs_sleep = False
         self.exhaustion = 0
+        self.current_task = False
 
 
     def run_away_from_threats(self) -> None:
@@ -135,6 +143,9 @@ class Animal(Organism):
                 continue
 
             if organism.animal_id == self.animal_id:
+                continue
+
+            if organism.gender == self.gender:
                 continue
 
             if distance < self.sight_range:
@@ -181,7 +192,7 @@ class Animal(Organism):
         angle = math.atan2(organism_position[1] - self.organism_position[1], organism_position[0] - self.organism_position[0])
         self.current_direction = [math.cos(angle), math.sin(angle)]
 
-    def is_current_target_dyanmic(self) -> bool:
+    def is_current_target_dynamic(self) -> bool:
         return self.current_target in self.all_known_dynamic_resources.values()
 
     def move_towards_dynamic_resource(self, resource: Any) -> None:

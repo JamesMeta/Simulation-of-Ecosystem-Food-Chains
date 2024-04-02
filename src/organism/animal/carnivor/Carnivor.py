@@ -19,6 +19,8 @@ class Carnivor(Animal):
         # self.all_known_dynamic_resources = {}
         # self.all_known_organisms = {}
         # self.alive_status = True
+        # self.visited_static_resources = []
+        # self.gender = None
 
         # self.hunger = 0
         # self.thirst = 0

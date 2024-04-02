@@ -189,14 +189,18 @@ class Simulation:
         #Spawn 1 rabbit
         self.spawn_organism(7)
         self.spawn_organism(7)
-
-        bunny1 = self.organism_map[1]
-        bunny2 = self.organism_map[2]
-
-        bunny1.organism_position = [500, 200]
-        bunny2.organism_position = [500, 250]
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
         
         #spawn grass
+        self.world.spawn_grass()
+        self.world.spawn_grass()
         self.world.spawn_grass()
         self.world.spawn_grass()
 
@@ -255,7 +259,7 @@ class Simulation:
 if __name__ == "__main__":
     
     sim = Simulation()
-    sim.test_three()
+    sim.test_two()
     sim.run_simulation()
 
 

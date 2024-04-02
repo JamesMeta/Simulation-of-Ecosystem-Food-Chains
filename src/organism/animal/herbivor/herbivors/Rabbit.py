@@ -18,6 +18,8 @@ class Rabbit(Herbivor):
                 # self.all_known_dynamic_resources = {}
                 # self.all_known_organisms = {}
                 # self.alive_status = True
+                # self.visited_static_resources = []
+                # self.gender = None
 
                 # self.hunger = 0
                 # self.thirst = 0
@@ -45,7 +47,7 @@ class Rabbit(Herbivor):
 
                 self.name = "Rabbit"
                 self.species_id = 7
-                self.procreate_cool_down = 66528      # ticks
+                self.procreate_cool_down = 1000      # ticks
                 self.max_hunger = 8640                # ticks
                 self.max_thirst = 8640                # ticks
                 self.max_exhaustion = 4320            # ticks
@@ -67,7 +69,10 @@ class Rabbit(Herbivor):
                         
                 
                 if self.debug_mode:
-                        self.color = "white"
+                        if self.gender == 0:
+                            self.color = "blue"
+                        else:
+                            self.color = "pink"
                         self.radius = 10
 
                 if self.random_start:
@@ -84,28 +89,35 @@ class Rabbit(Herbivor):
                 if i not in self.all_known_organisms:
                     return i
 
-        if not self.current_target.female:
-            self.female = True
-            rabbit_id = get_unique_animal_id()
-            #position = [random.randint(0, 1820), random.randint(0, 980)]
-            x = self.organism_position[0] #+ random.randint(-10, 10)
-            y = self.organism_position[1] #+ random.randint(-10, 10)
-            position = [x, y]
-            new_rabbit = Rabbit(position, rabbit_id, self.all_known_static_resources, self.all_known_dynamic_resources, self.all_known_organisms)
+        if self.gender == 0:
+             return
+        
+        rabbit_id = get_unique_animal_id()
+        #position = [random.randint(0, 1820), random.randint(0, 980)]
+        x = self.organism_position[0] #+ random.randint(-10, 10)
+        y = self.organism_position[1] #+ random.randint(-10, 10)
+        position = [x, y]
+        new_rabbit = Rabbit(position, rabbit_id, self.all_known_static_resources, self.all_known_dynamic_resources, self.all_known_organisms)
 
-            self.procreate_cool_down = 66528
-            self.ready_to_mate = False
-            self.all_known_organisms[rabbit_id] = new_rabbit
+        self.procreate_cool_down = 66528
+        self.ready_to_mate = False
+        self.current_task = False
 
-            print(f"Rabbit {self.animal_id} has procreated with Rabbit {self.current_target.animal_id} to create Rabbit {rabbit_id}")
+        self.all_known_organisms[rabbit_id] = new_rabbit
 
-        else:
-            self.current_target.female = False
-            self.current_target.current_target = None
-            self.procreate_cool_down = 66528
-            self.current_target = None
-            self.ready_to_mate = False
-            self.current_task = False
+        self.current_target.current_target = None
+        self.current_target.current_task = False
+        self.current_target.ready_to_mate = False
+        self.current_target.procreate_cool_down = 66528
+
+        print(f"Rabbit {self.animal_id} has procreated with Rabbit {self.current_target.animal_id} to create Rabbit {rabbit_id}")
+        self.current_target = None
+                
+
+        
+
+
+        
 
                             
                             
