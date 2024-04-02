@@ -3,7 +3,7 @@ from typing import List, Any
 class Organism:
     
     def __init__(self, organism_position: List[float], animal_id: int):
-        
+
         self.organism_position = organism_position
         self.animal_id = animal_id
 

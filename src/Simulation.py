@@ -1,5 +1,6 @@
 import pygame as pg
 import random
+import os
 from typing import List, Any
 from organism import Organism
 from organism.animal import Animal
@@ -24,6 +25,8 @@ from maplogic.HeightMap import generate_resource_map
 class Simulation:
     
     def __init__(self):
+        #Background is None by default, attribute can be changed to a pygame Image type to be used for predrawn background overlays.
+        self.background = None 
 
         self.screen_x_resolution = 1820
         self.screen_y_resolution = 980
@@ -215,7 +218,6 @@ class Simulation:
         self.world.spawn_resource(1, 100, [500, 200], grass)
         self.world.spawn_resource(2, 100, [1020, 680], water)
         self.world.spawn_resource(3, 100, [1020, 200], forest)
-        self.world.spawn_resource(4, 100, [100, 100], grass)
 
         #logic for map generation using a randint from the amount of available biomes
         #mapped into a 2d array
@@ -242,6 +244,19 @@ class Simulation:
         self.world.spawn_grass()
         
 
+    def test_four(self) -> None:
+        #sprite rendering
+        grass = 1
+        water = 2
+        forest = 3
+        self.world.spawn_resource(1, 100, [500, 200], grass)
+        self.world.spawn_resource(2, 100, [1020, 680], water)
+        self.world.spawn_resource(3, 100, [1020, 200], forest)
+
+        self.background = pg.image.load(os.path.join("assets", "map", "land1.png"))
+        self.background = pg.transform.scale(self.background, (self.screen_x_resolution, self.screen_y_resolution))
+
+
         
     def run_simulation(self) -> None:
         running = True
@@ -259,7 +274,7 @@ class Simulation:
 if __name__ == "__main__":
     
     sim = Simulation()
-    sim.test_two()
+    sim.test_four()
     sim.run_simulation()
 
 
