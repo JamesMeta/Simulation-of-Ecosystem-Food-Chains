@@ -1,4 +1,5 @@
 import sys
+import pygame as pg
 import random
 sys.path.append("src/maplogic")
 from typing import List, Any
@@ -12,6 +13,10 @@ class GrassPlant():
         self.alive_status = True
         self.radius = 5
         self.resource_type_id = 1
+
+        #Spriteloader Variables
+        self.has_sprite = False
+        self.sprite = None 
 
     
     # def spawn_grass(self) -> None:
@@ -46,6 +51,16 @@ class GrassPlant():
         #         self.current_regen = 0
         #         current_capacity += 1
         #         self.spawn_grass()
+
+    #Animal sprite loading handler.
+    def load_sprite(self) -> None:
+            sprite_filename = f"assets/sprites/grass_sprite.png"
+            try:
+                self.sprite = pg.image.load(sprite_filename)
+                self.has_sprite = True
+            except pg.error:
+                print(f"Error loading grass sprite.")
+                return
         
 
 

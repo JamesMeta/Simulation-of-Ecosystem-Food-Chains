@@ -1,6 +1,7 @@
 import sys
 import random
 import math
+import pygame as pg
 sys.path.append("src")
 
 from organism.Organism import Organism
@@ -59,6 +60,10 @@ class Animal(Organism):
 
         self.random_start = True
         self.debug_mode = True
+
+        #Spriteloader Variables
+        self.has_sprite = False
+        self.sprite = None 
 
         #Binary variables for AI
         self.needs_sleep = False
@@ -287,3 +292,17 @@ class Animal(Organism):
             
             
 
+    #Animal sprite loading handler.
+    def load_sprite(self) -> None:
+        for i in range(10):  # Assuming you have sprites for species IDs 0 to 9.
+            if i == self.species_id:
+                sprite_filename = f"assets/sprites/sprite_{self.species_id}.png"
+                try:
+                    self.sprite = pg.image.load(sprite_filename)
+                    self.has_sprite = True
+                except pg.error:
+                    print(f"Error loading sprite for species ID {self.species_id}")
+                    return
+                break
+        else:
+            print(f"Invalid animal ID {self.species_id}")

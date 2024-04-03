@@ -54,7 +54,8 @@ class Simulation:
             "Mouse": []
         }
 
-        self.debug_mode = True
+        self.debug_mode = False
+        self.sprites_enabled = not self.debug_mode
 
     #Organism Types: 1 = Fox, 2 = Owl, 3 = Frog, 4 = Snake, 5 = Hawk, 6 = Small Bird, 7 = Rabbit, 8 = Grass Hopper, 9 = Mouse
     def spawn_organism(self, species_id: int) -> None:
@@ -147,9 +148,23 @@ class Simulation:
                     pg.draw.circle(self.screen, (150, 75, 0), resource.resource_position, resource.resource_radius)
                 else:
                     print("Invalid Resource Type ID")
-        
-        for organism in self.organism_map.values():
-            pg.draw.circle(self.screen, organism.color, organism.organism_position, organism.radius)
+
+            for organism in self.organism_map.values():
+                    pg.draw.circle(self.screen, organism.color, organism.organism_position, organism.radius)
+        else:
+            for organism in self.organism_map.values():
+                organism.load_sprite()
+                self.screen.blit(organism.sprite, organism.organism_position)
+            for resource in self.world.static_resource_map.values():
+                if resource.resource_type_id == 1:
+                    for grass_plant in resource.dynamic_resource_map.values():
+                        grass_plant.load_sprite()
+                        self.screen.blit(grass_plant.sprite, grass_plant.resource_position)
+
+
+        # Spriteloader for organisms using the has_sprite attribute of each organism class as a flag.
+
+
         
         font = pg.font.Font(None, 36)
         text = font.render(f"Day: {self.world.time_of_day[0]} Time: {self.world.time_of_day[1]}:{self.world.time_of_day[2]}:{self.world.time_of_day[3]}", 1, (255, 255, 255))
