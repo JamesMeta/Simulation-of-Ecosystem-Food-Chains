@@ -1,9 +1,27 @@
 import sys
 import random
+sys.path.append("src/maplogic")
 sys.path.append("src/organism/animal")
 from Animal import Animal
+from maplogic.GrassPlant import GrassPlant
 from typing import List, Any
 import math
+
+class colors:
+    RED = '\033[91m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    BLUE = '\033[94m'
+    MAGENTA = '\033[95m'
+    CYAN = '\033[96m'
+    WHITE = '\033[97m'
+    RESET = '\033[0m'
+    BLACK = '\033[30m'
+    
+
+# Colorizing function
+def colorize(text, color):
+    return f"{color}{text}{colors.RESET}"
 
 class Herbivor(Animal):
     
@@ -78,11 +96,16 @@ class Herbivor(Animal):
                     self.progress_left_on_decision = self.decision_duration
                     return
                 
-                if self.is_within_grass_lands():
+                elif self.is_within_grass_lands():
                     if self.detect_grass_plants():
                         self.move_towards_grass_plants(self.current_target)
                         self.progress_left_on_decision = self.decision_duration
                         return
+                    
+                else:
+                    self.detect_grass_plants()
+                    self.move_towards_grass_plants(self.current_target)
+                    self.progress_left_on_decision = self.decision_duration
                 
             elif self.is_current_target_grass_plants():
                 distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
@@ -124,7 +147,7 @@ class Herbivor(Animal):
 
         if self.progress_left_on_decision == 0:
 
-            print(f"{self.name}#{self.animal_id} Making Decision:", end=" ")
+            print(colorize(f"{self.name}#{self.animal_id} Making Decision:", colors.WHITE), end=" ")
 
             # first layer of decision making: Check alive status
 
@@ -174,7 +197,7 @@ class Herbivor(Animal):
                 self.current_task = False
             
             if self.needs_sleep:
-                print("Needs sleep")
+                print(colorize("Needs Sleep", colors.YELLOW))
                 if self.safe_place is not None:
                     self.move_towards_resource(self.safe_place.resource_type_id)
                     distance = ((self.organism_position[0] - self.safe_place.resource_position[0])**2 + (self.organism_position[1] - self.safe_place.resource_position[1])**2)**0.5
@@ -190,7 +213,7 @@ class Herbivor(Animal):
                     return
             
             if self.needs_food:
-                print("Needs food")
+                print(colorize("Needs Food", colors.GREEN))
 
                 food_id = random.choice(self.consumable_resources)
 
@@ -205,7 +228,7 @@ class Herbivor(Animal):
                         self.progress_left_on_decision = self.decision_duration
                         return
 
-                if self.is_within_grass_lands():
+                elif self.is_within_grass_lands():
                     found = self.detect_grass_plants()
                     if not found:
                         self.visited_static_resources.append(self.current_target)
@@ -227,7 +250,7 @@ class Herbivor(Animal):
 
             
             if self.needs_water:
-                print("Needs water")
+                print(colorize("Needs Water", colors.BLUE))
 
                 water_id = 2
 
@@ -253,7 +276,7 @@ class Herbivor(Animal):
                 self.current_task = True
 
             if self.ready_to_mate:
-                print("Looking for mate")
+                print(colorize("Looking for Mate", colors.MAGENTA))
 
                 if self.current_target is None:
                     self.wander()
@@ -296,14 +319,12 @@ class Herbivor(Animal):
                 
             return False
         else:
-            print("Something has gone seriously wrong")
+            print(f"Something has gone seriously wrong {self.name}{self.animal_id} Current target: {self.current_target}")
+            
 
     def is_current_target_grass_plants(self) -> bool:
-        for resource in self.all_known_static_resources.values():
-            if resource.resource_type_id == 1:
-                resource_map = resource.dynamic_resource_map
-                if self.current_target in resource_map.values():
-                    return True
+        if isinstance(self.current_target, GrassPlant):
+            return True
         return False
 
     def is_within_grass_lands(self) -> bool:
@@ -316,6 +337,7 @@ class Herbivor(Animal):
                 if resource.resource_type_id == 1:
                     distance = ((self.organism_position[0] - resource.resource_position[0])**2 + (self.organism_position[1] - resource.resource_position[1])**2)**0.5
                     if distance < resource.resource_radius:
+                        self.current_target = resource
                         return True
         return False
 
@@ -328,7 +350,7 @@ class Herbivor(Animal):
             for resource in self.all_known_static_resources.values():
                 if resource.resource_type_id == 1:
                     distance = ((self.organism_position[0] - resource.resource_position[0])**2 + (self.organism_position[1] - resource.resource_position[1])**2)**0.5
-                    if distance < 10:
+                    if distance < 20:
                         return True
         return False
     

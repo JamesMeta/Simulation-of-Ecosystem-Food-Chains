@@ -2,8 +2,26 @@ import sys
 import random
 import math
 sys.path.append("src")
+
 from organism.Organism import Organism
 from typing import List, Any
+
+class colors:
+    RED = '\033[91m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    BLUE = '\033[94m'
+    MAGENTA = '\033[95m'
+    CYAN = '\033[96m'
+    WHITE = '\033[97m'
+    RESET = '\033[0m'
+    BLACK = '\033[30m'
+    BOLD = '\033[1m'
+    
+
+# Colorizing function
+def colorize(text, color):
+    return f"{color}{text}{colors.RESET}"
 
 class Animal(Organism):
 
@@ -75,7 +93,7 @@ class Animal(Organism):
         
 
     def drink_water(self) -> None:
-        print("Drinking Water")
+        print(colorize("Drinking", colors.BLUE))
         self.thirst = 0
         self.needs_water = False
         self.current_target = None
@@ -86,7 +104,7 @@ class Animal(Organism):
 
         self.kill_organism(self.current_target)
 
-        print("Eating Food")
+        print(colorize("Eating", colors.GREEN))
         self.hunger = 0
         self.needs_food = False
         self.current_target = None
@@ -99,13 +117,13 @@ class Animal(Organism):
         one_in_four = random.randint(1, 2)
         if one_in_four == 1:
             self.current_direction = [random.uniform(-1, 1), random.uniform(-1, 1)]
-            print("Wandering")
+            print(colorize("Wandering", colors.BLACK))
         else:
             self.current_direction = [0, 0]
-            print("Not moving")
+            print(colorize("Not Moving", colors.BLACK))
 
     def sleep(self) -> None:
-        print("Sleeping")
+        print(colorize("Sleeping", colors.YELLOW))
         self.progress_left_on_decision = self.sleep_duration
         self.current_direction = [0, 0]
         self.current_target = None
@@ -182,7 +200,7 @@ class Animal(Organism):
         resource = closest_resource_of_type(resource_type_id)
 
         if resource is None:
-            print("No resource found emptying visited resources")
+            print(colorize("No resource found emptying visited resources", colors.BOLD))
             self.visited_static_resources = []
             return
 

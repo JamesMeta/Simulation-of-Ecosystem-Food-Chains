@@ -18,6 +18,16 @@ class GrassLands(StaticResource):
 
         self.spawn_grass()
         self.spawn_grass()
+        self.spawn_grass()
+        self.spawn_grass()
+        self.spawn_grass()
+        self.spawn_grass()
+        self.spawn_grass()
+        self.spawn_grass()
+        self.spawn_grass()
+        self.spawn_grass()
+        self.spawn_grass()
+        self.spawn_grass()
 
     
     def spawn_grass(self) -> None:

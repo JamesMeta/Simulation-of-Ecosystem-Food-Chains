@@ -1,5 +1,6 @@
 import pygame as pg
 import random
+import matplotlib.pyplot as plt
 import os
 from typing import List, Any
 from organism import Organism
@@ -38,7 +39,19 @@ class Simulation:
         self.organism_map = {}
         self.world = World()
 
-        self.organism_population_over_time = []
+        self.current_day = 0
+
+        self.organism_population_over_time = {
+            "Fox": [],
+            "Owl": [],
+            "Frog": [],
+            "Snake": [],
+            "Hawk": [],
+            "Small Bird": [],
+            "Rabbit": [],
+            "Grass Hopper": [],
+            "Mouse": []
+        }
 
         self.debug_mode = True
 
@@ -84,6 +97,10 @@ class Simulation:
         for organism in copyof_organism_map.values():
             organism.update()
         self.world.update()
+
+        if self.world.time_of_day[0] != self.current_day:
+            self.log_population()
+            self.current_day = self.world.time_of_day[0]
     
     def draw_all_objects(self) -> None:
 
@@ -136,6 +153,53 @@ class Simulation:
         font = pg.font.Font(None, 36)
         text = font.render(f"Day: {self.world.time_of_day[0]} Time: {self.world.time_of_day[1]}:{self.world.time_of_day[2]}:{self.world.time_of_day[3]}", 1, (255, 255, 255))
         self.screen.blit(text, (10, 10))
+
+    def log_population(self) -> None:
+        fox_count, owl_count, frog_count, snake_count, hawk_count, small_bird_count, rabbit_count, grass_hopper_count, mouse_count = 0, 0, 0, 0, 0, 0, 0, 0, 0
+
+        for organism in self.organism_map.values():
+            if isinstance(organism, Fox):
+                fox_count += 1
+            elif isinstance(organism, Owl):
+                owl_count += 1
+            elif isinstance(organism, Frog):
+                frog_count += 1
+            elif isinstance(organism, Snake):
+                snake_count += 1
+            elif isinstance(organism, Hawk):
+                hawk_count += 1
+            elif isinstance(organism, SmallBird):
+                small_bird_count += 1
+            elif isinstance(organism, Rabbit):
+                rabbit_count += 1
+            elif isinstance(organism, GrassHopper):
+                grass_hopper_count += 1
+            elif isinstance(organism, Mouse):
+                mouse_count += 1
+            else:
+                print("Invalid Organism Type")
+        
+        self.organism_population_over_time["Fox"].append(fox_count)
+        self.organism_population_over_time["Owl"].append(owl_count)
+        self.organism_population_over_time["Frog"].append(frog_count)
+        self.organism_population_over_time["Snake"].append(snake_count)
+        self.organism_population_over_time["Hawk"].append(hawk_count)
+        self.organism_population_over_time["Small Bird"].append(small_bird_count)
+        self.organism_population_over_time["Rabbit"].append(rabbit_count)
+        self.organism_population_over_time["Grass Hopper"].append(grass_hopper_count)
+        self.organism_population_over_time["Mouse"].append(mouse_count)
+    
+    def plot_population(self) -> None:
+        plt.figure(figsize=(10, 5))
+        for species, population in self.organism_population_over_time.items():
+            plt.plot(population, label=species)
+        plt.xlabel("Day")
+        plt.ylabel("Population")
+        plt.title("Population Over Time")
+        plt.legend()
+        plt.show()
+
+
  
     def test_one(self) -> None:
         grass = 1
@@ -193,6 +257,35 @@ class Simulation:
         self.spawn_organism(7)
         self.spawn_organism(7)
         self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+
+        self.log_population()
+        
+        
 
 
     def test_three(self) -> None:
@@ -247,7 +340,8 @@ class Simulation:
             self.update_all_Objects()
             self.draw_all_objects()
             pg.display.flip()
-            self.clock.tick(30)
+            self.clock.tick(200)
+        self.plot_population()
 
 
 if __name__ == "__main__":

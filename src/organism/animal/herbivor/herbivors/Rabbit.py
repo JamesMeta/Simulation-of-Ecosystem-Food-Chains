@@ -4,6 +4,20 @@ import sys
 sys.path.append("src/organism/animal/herbivor")
 from Herbivor import Herbivor
 
+class colors:
+    RED = '\033[91m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    BLUE = '\033[94m'
+    MAGENTA = '\033[95m'
+    CYAN = '\033[96m'
+    WHITE = '\033[97m'
+    RESET = '\033[0m'
+
+# Colorizing function
+def colorize(text, color):
+    return f"{color}{text}{colors.RESET}"
+
 class Rabbit(Herbivor):
 
     def __init__(self, organism_position: List[float], animal_id: int, all_known_static_resources: Any, all_known_organisms: Any):
@@ -97,7 +111,7 @@ class Rabbit(Herbivor):
         x = self.organism_position[0] #+ random.randint(-10, 10)
         y = self.organism_position[1] #+ random.randint(-10, 10)
         position = [x, y]
-        new_rabbit = Rabbit(position, rabbit_id, self.all_known_static_resources, self.all_known_dynamic_resources, self.all_known_organisms)
+        new_rabbit = Rabbit(position, rabbit_id, self.all_known_static_resources, self.all_known_organisms)
 
         self.procreate_cool_down = 66528
         self.ready_to_mate = False
@@ -109,8 +123,7 @@ class Rabbit(Herbivor):
         self.current_target.current_task = False
         self.current_target.ready_to_mate = False
         self.current_target.procreate_cool_down = 66528
-
-        print(f"Rabbit {self.animal_id} has procreated with Rabbit {self.current_target.animal_id} to create Rabbit {rabbit_id}")
+        print(colorize(f"Rabbit {self.animal_id} has procreated with Rabbit {self.current_target.animal_id} to create Rabbit {rabbit_id}", colors.CYAN))
         self.current_target = None
                 
 

@@ -1,5 +1,19 @@
 from typing import List, Any
 
+class colors:
+    RED = '\033[91m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    BLUE = '\033[94m'
+    MAGENTA = '\033[95m'
+    CYAN = '\033[96m'
+    WHITE = '\033[97m'
+    RESET = '\033[0m'
+
+# Colorizing function
+def colorize(text, color):
+    return f"{color}{text}{colors.RESET}"
+
 class Organism:
     
     def __init__(self, organism_position: List[float], animal_id: int):
@@ -18,7 +32,7 @@ class Organism:
             return 
 
         self.alive_status = False
-        print(f"Organism {self.animal_id} has died.")
+        print(colorize(f"Organism {self.animal_id} has died.", colors.RED))
         del self.all_known_organisms[self.animal_id]
     
 
