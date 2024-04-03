@@ -54,7 +54,7 @@ class Simulation:
             "Mouse": []
         }
 
-        self.debug_mode = False
+        self.debug_mode = True
 
     #Organism Types: 1 = Fox, 2 = Owl, 3 = Frog, 4 = Snake, 5 = Hawk, 6 = Small Bird, 7 = Rabbit, 8 = Grass Hopper, 9 = Mouse
     def spawn_organism(self, species_id: int) -> None:
@@ -152,6 +152,10 @@ class Simulation:
             for organism in self.organism_map.values():
                 pg.draw.circle(self.screen, organism.color, organism.organism_position, organism.radius)
         else:
+            #   This code will ALWAYS display the same map if debug mode is off, 
+            #   the sprite is independant of the fields used for reasource identification. 
+            #   Either fix this later or ship it with activation only for a single map.
+            self.screen.blit(pg.image.load(f"assets/map/land1.png"), (0,0))
             for organism in self.organism_map.values():
                 organism.load_sprite()
                 self.screen.blit(organism.sprite, organism.organism_position)
@@ -322,18 +326,35 @@ class Simulation:
         self.spawn_organism(7)
         self.spawn_organism(7)
         
-
     def test_four(self) -> None:
-        #sprite rendering
+        self.debug_mode = False
+
         grass = 1
         water = 2
         forest = 3
-        self.world.spawn_resource(1, 100, [500, 200], grass)
-        self.world.spawn_resource(2, 100, [1020, 680], water)
-        self.world.spawn_resource(3, 100, [1020, 200], forest)
 
-        self.background = pg.image.load(os.path.join("assets", "map", "land1.png"))
-        self.background = pg.transform.scale(self.background, (self.screen_x_resolution, self.screen_y_resolution))
+        self.world.spawn_resource(1, 250, [875, 175], grass)
+        self.world.spawn_resource(2, 300, [1700, 500], forest)
+        self.world.spawn_resource(3, 300, [150, 1000], water)
+        self.world.spawn_resource(4, 300, [300, 1000], water)
+        self.world.spawn_resource(5, 300, [450, 1000], water)
+        self.world.spawn_resource(6, 300, [600, 1000], water)
+        self.world.spawn_resource(7, 300, [750, 1000], water)
+
+ 
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7) 
+        self.spawn_organism(7)
+        self.spawn_organism(7) 
+        
+        self.spawn_organism(9)
+        self.spawn_organism(9)
+        self.spawn_organism(9)
+        self.spawn_organism(9) 
+        self.spawn_organism(9)
+        self.spawn_organism(9) 
 
 
         
@@ -354,7 +375,7 @@ class Simulation:
 if __name__ == "__main__":
     
     sim = Simulation()
-    sim.test_two()
+    sim.test_four()
     sim.run_simulation()
 
 
