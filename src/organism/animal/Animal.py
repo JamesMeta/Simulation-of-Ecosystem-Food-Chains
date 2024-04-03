@@ -7,7 +7,7 @@ from typing import List, Any
 
 class Animal(Organism):
 
-    def __init__(self, organism_position: List[float], animal_id: int, all_known_static_resources: Any, all_known_dynamic_resources: Any, all_known_organisms: Any):
+    def __init__(self, organism_position: List[float], animal_id: int, all_known_static_resources: Any, all_known_organisms: Any):
 
         super().__init__(organism_position, animal_id)
 
@@ -27,7 +27,6 @@ class Animal(Organism):
         self.gender = random.randint(0, 1)
         
         self.all_known_static_resources = all_known_static_resources
-        self.all_known_dynamic_resources = all_known_dynamic_resources
         self.all_known_organisms = all_known_organisms
 
         self.hunger = 0
@@ -200,8 +199,8 @@ class Animal(Organism):
         angle = math.atan2(organism_position[1] - self.organism_position[1], organism_position[0] - self.organism_position[0])
         self.current_direction = [math.cos(angle), math.sin(angle)]
 
-    def is_current_target_dynamic(self) -> bool:
-        return self.current_target in self.all_known_dynamic_resources.values()
+    # def is_current_target_dynamic(self) -> bool:
+    #     return self.current_target in self.all_known_dynamic_resources.values()
     
     def is_current_target_static(self) -> bool:
         return self.current_target in self.all_known_static_resources.values()
@@ -209,10 +208,10 @@ class Animal(Organism):
     def is_current_target_organism(self) -> bool:
         return self.current_target in self.all_known_organisms.values()
 
-    def move_towards_dynamic_resource(self, resource: Any) -> None:
-        resource_position = resource.resource_position
-        angle = math.atan2(resource_position[1] - self.organism_position[1], resource_position[0] - self.organism_position[0])
-        self.current_direction = [math.cos(angle), math.sin(angle)]
+    # def move_towards_dynamic_resource(self, resource: Any) -> None:
+    #     resource_position = resource.resource_position
+    #     angle = math.atan2(resource_position[1] - self.organism_position[1], resource_position[0] - self.organism_position[0])
+    #     self.current_direction = [math.cos(angle), math.sin(angle)]
     
     def move(self) -> None:
         try:
@@ -242,7 +241,6 @@ class Animal(Organism):
 
     def procreate(self) -> Any:
         pass
-            
 
     def update(self) -> None:
         self.make_decision()

@@ -3,12 +3,13 @@ import random
 sys.path.append("src/organism/animal")
 from Animal import Animal
 from typing import List, Any
+import math
 
 class Herbivor(Animal):
     
-    def __init__(self, organism_position: List[float], animal_id: int, all_known_static_resources: Any, all_known_dynamic_resources: Any, all_known_organisms: Any):
+    def __init__(self, organism_position: List[float], animal_id: int, all_known_static_resources: Any, all_known_organisms: Any):
 
-        super().__init__(organism_position, animal_id, all_known_static_resources, all_known_dynamic_resources, all_known_organisms)
+        super().__init__(organism_position, animal_id, all_known_static_resources, all_known_organisms)
 
         # inherited variables
 
@@ -69,20 +70,31 @@ class Herbivor(Animal):
 
     def check_if_current_task_in_range(self) -> None:
         if self.needs_food and self.current_target is not None:
-            distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
-            if self.is_current_target_dynamic():
-                if distance < self.feeding_range:
-                    self.eat_food()
-                else:
-                    pass
-            else:
-                if distance < self.sight_range:
-                    self.Detect_Food()
-                    self.move_towards_dynamic_resource(self.current_target)
-                if distance < self.feeding_range:
+            if self.is_current_target_static():
+                
+                if self.is_at_grass_lands_center() and not self.detect_grass_plants():
                     self.visited_static_resources.append(self.current_target)
                     self.current_target = None
-                    print("No food found at current target")
+                    self.progress_left_on_decision = self.decision_duration
+                    return
+                
+                if self.is_within_grass_lands():
+                    if self.detect_grass_plants():
+                        self.move_towards_grass_plants(self.current_target)
+                        self.progress_left_on_decision = self.decision_duration
+                        return
+                
+            elif self.is_current_target_grass_plants():
+                distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
+                if distance < self.feeding_range:
+                    self.eat_food()
+                    self.progress_left_on_decision = self.decision_duration
+                    return
+                else:
+                    self.move_towards_grass_plants(self.current_target)
+                    self.progress_left_on_decision = self.decision_duration
+                    return
+
                 
         if self.needs_water and self.current_target is not None:
             distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
@@ -179,19 +191,40 @@ class Herbivor(Animal):
             
             if self.needs_food:
                 print("Needs food")
-                if self.is_current_target_dynamic():
-                    self.move_towards_dynamic_resource(self.current_target)
+
+                food_id = random.choice(self.consumable_resources)
+
+                if self.is_current_target_grass_plants():
                     distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
                     if distance < self.feeding_range:
                         self.eat_food()
+                        self.progress_left_on_decision = self.decision_duration
+                        return
                     else:
-                        pass
+                        self.move_towards_grass_plants(self.current_target)
+                        self.progress_left_on_decision = self.decision_duration
+                        return
+
+                if self.is_within_grass_lands():
+                    found = self.detect_grass_plants()
+                    if not found:
+                        self.visited_static_resources.append(self.current_target)
+                        self.current_target = None
+                        self.progress_left_on_decision = self.decision_duration
+                        return
+                    
+                    if found:
+                        self.move_towards_grass_plants(self.current_target)
+                        self.progress_left_on_decision = self.decision_duration
+                        return
+                    
                 else:
-                    if not self.Detect_Food():
-                        self.move_towards_resource(random.choice(self.consumable_resources))
-                        
-                self.progress_left_on_decision = self.decision_duration
-                return
+                    self.move_towards_resource(food_id)
+                    self.progress_left_on_decision = self.decision_duration
+                    return
+                
+
+
             
             if self.needs_water:
                 print("Needs water")
@@ -246,15 +279,57 @@ class Herbivor(Animal):
         else:
             self.progress_left_on_decision -= 1
 
+    def move_towards_grass_plants(self, grass_plants: Any) -> None:
         
-    def Detect_Food(self) -> Any:
-        for resource in self.all_known_dynamic_resources.values():
-            resource_position = resource.resource_position
-            distance = ((self.organism_position[0] - resource_position[0])**2 + (self.organism_position[1] - resource_position[1])**2)**0.5
-            if distance < self.sight_range:
-                self.current_target = resource
-                self.move_towards_dynamic_resource(self.current_target)
+        angle = math.atan2(grass_plants.resource_position[1] - self.organism_position[1], grass_plants.resource_position[0] - self.organism_position[0])
+        self.current_direction = [math.cos(angle), math.sin(angle)]
+    
+    def detect_grass_plants(self) -> bool:
+        if self.is_current_target_static():
+            resource_map = self.current_target.dynamic_resource_map
+            for resource in resource_map.values():
+                pos = resource.resource_position
+                distance = ((self.organism_position[0] - pos[0])**2 + (self.organism_position[1] - pos[1])**2)**0.5
+                if distance < self.sight_range:
+                    self.current_target = resource
+                    return True
+                
+            return False
+        else:
+            print("Something has gone seriously wrong")
+
+    def is_current_target_grass_plants(self) -> bool:
+        for resource in self.all_known_static_resources.values():
+            if resource.resource_type_id == 1:
+                resource_map = resource.dynamic_resource_map
+                if self.current_target in resource_map.values():
+                    return True
+        return False
+
+    def is_within_grass_lands(self) -> bool:
+        if self.is_current_target_static():
+            distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
+            if distance < self.current_target.resource_radius:
                 return True
+        else:
+            for resource in self.all_known_static_resources.values():
+                if resource.resource_type_id == 1:
+                    distance = ((self.organism_position[0] - resource.resource_position[0])**2 + (self.organism_position[1] - resource.resource_position[1])**2)**0.5
+                    if distance < resource.resource_radius:
+                        return True
+        return False
+
+    def is_at_grass_lands_center(self) -> bool:
+        if self.is_current_target_static():
+            distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
+            if distance < 20:
+                return True
+        else:
+            for resource in self.all_known_static_resources.values():
+                if resource.resource_type_id == 1:
+                    distance = ((self.organism_position[0] - resource.resource_position[0])**2 + (self.organism_position[1] - resource.resource_position[1])**2)**0.5
+                    if distance < 10:
+                        return True
         return False
     
     def procreate(self) -> Any:

@@ -6,8 +6,8 @@ from Carnivor import Carnivor
 
 class SmallBird(Carnivor):
     
-        def __init__(self, organism_position: List[float], animal_id: int, all_known_static_resources: Any, all_known_dynamic_resources: Any, all_known_organisms: Any):
-                super().__init__(organism_position, animal_id, all_known_static_resources, all_known_dynamic_resources, all_known_organisms)
+        def __init__(self, organism_position: List[float], animal_id: int, all_known_static_resources: Any, all_known_organisms: Any):
+                super().__init__(organism_position, animal_id, all_known_static_resources, all_known_organisms)
 
                 # inherited variables
 

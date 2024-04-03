@@ -8,7 +8,6 @@ class Organism:
         self.animal_id = animal_id
 
         self.all_known_static_resources = {}
-        self.all_known_dynamic_resources = {}
         self.all_known_organisms = {}
         self.gender = None
         self.alive_status = True

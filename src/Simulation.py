@@ -17,8 +17,8 @@ from organism.animal.herbivor.herbivors.GrassHopper import GrassHopper
 from organism.animal.herbivor.herbivors.Mouse import Mouse
 from maplogic.World import World
 from maplogic.StaticResource import StaticResource
-from maplogic.DynamicResource import DynamicResource
-from maplogic.Grass import Grass
+from maplogic.GrassLands import GrassLands
+from maplogic.GrassPlant import GrassPlant
 
 from maplogic.HeightMap import generate_resource_map
 
@@ -56,23 +56,23 @@ class Simulation:
         new_organism = None
 
         if species_id == 1:
-            new_organism = Fox(position, animal_id, self.world.static_resource_map, self.world.dynamic_resource_map, self.organism_map)
+            new_organism = Fox(position, animal_id, self.world.static_resource_map, self.organism_map)
         elif species_id == 2:
-            new_organism = Owl(position, animal_id, self.world.static_resource_map, self.world.dynamic_resource_map, self.organism_map)
+            new_organism = Owl(position, animal_id, self.world.static_resource_map, self.organism_map)
         elif species_id == 3:
-            new_organism = Frog(position, animal_id, self.world.static_resource_map, self.world.dynamic_resource_map, self.organism_map)
+            new_organism = Frog(position, animal_id, self.world.static_resource_map, self.organism_map)
         elif species_id == 4:
-            new_organism = Snake(position, animal_id, self.world.static_resource_map, self.world.dynamic_resource_map, self.organism_map)
+            new_organism = Snake(position, animal_id, self.world.static_resource_map, self.organism_map)
         elif species_id == 5:
-            new_organism = Hawk(position, animal_id, self.world.static_resource_map, self.world.dynamic_resource_map, self.organism_map)
+            new_organism = Hawk(position, animal_id, self.world.static_resource_map, self.organism_map)
         elif species_id == 6:
-            new_organism = SmallBird(position, animal_id, self.world.static_resource_map, self.world.dynamic_resource_map, self.organism_map)
+            new_organism = SmallBird(position, animal_id, self.world.static_resource_map, self.organism_map)
         elif species_id == 7:
-            new_organism = Rabbit(position, animal_id, self.world.static_resource_map, self.world.dynamic_resource_map, self.organism_map)
+            new_organism = Rabbit(position, animal_id, self.world.static_resource_map, self.organism_map)
         elif species_id == 8:
-            new_organism = GrassHopper(position, animal_id, self.world.static_resource_map, self.world.dynamic_resource_map, self.organism_map)
+            new_organism = GrassHopper(position, animal_id, self.world.static_resource_map, self.organism_map)
         elif species_id == 9:
-            new_organism = Mouse(position, animal_id, self.world.static_resource_map, self.world.dynamic_resource_map, self.organism_map)
+            new_organism = Mouse(position, animal_id, self.world.static_resource_map, self.organism_map)
         else:
             print("Invalid Species ID")
         
@@ -121,18 +121,14 @@ class Simulation:
             for resource in self.world.static_resource_map.values():
                 if resource.resource_type_id == 1:
                     pg.draw.circle(self.screen, (58, 117, 33), resource.resource_position, resource.resource_radius)
+                    for grass_plant in resource.dynamic_resource_map.values():
+                        pg.draw.circle(self.screen, (0, 255, 0), grass_plant.resource_position, grass_plant.radius)
                 elif resource.resource_type_id == 2:
                     pg.draw.circle(self.screen, (0, 0, 255), resource.resource_position, resource.resource_radius)
                 elif resource.resource_type_id == 3:
                     pg.draw.circle(self.screen, (150, 75, 0), resource.resource_position, resource.resource_radius)
                 else:
                     print("Invalid Resource Type ID")
-        
-        for resource in self.world.dynamic_resource_map.values():
-            if resource.resource_type_id == 1:
-                pg.draw.circle(self.screen, (124, 252, 0), resource.resource_position, resource.resource_radius)
-            else:
-                print("Invalid Resource Type ID")
         
         for organism in self.organism_map.values():
             pg.draw.circle(self.screen, organism.color, organism.organism_position, organism.radius)
@@ -186,19 +182,17 @@ class Simulation:
         forest = 3
 
         self.world.spawn_resource(1, 100, [500, 200], grass)
-        self.world.spawn_resource(2, 100, [800, 900], grass)
+        self.world.spawn_resource(2, 100, [800, 800], grass)
         self.world.spawn_resource(3, 100, [1020, 680], water)
         self.world.spawn_resource(4, 100, [1020, 200], forest)
 
         #Spawn 1 rabbit
         self.spawn_organism(7)
         self.spawn_organism(7)
-        
-        #spawn grass
-        # self.world.spawn_grass()
-        # self.world.spawn_grass()
-        # self.world.spawn_grass()
-        # self.world.spawn_grass()
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
+        self.spawn_organism(7)
 
 
     def test_three(self) -> None:
@@ -227,14 +221,6 @@ class Simulation:
         self.spawn_organism(7)
         self.spawn_organism(7)
         self.spawn_organism(7)
-
-        self.world.spawn_grass()
-        self.world.spawn_grass()
-        self.world.spawn_grass()
-        self.world.spawn_grass()
-        self.world.spawn_grass()
-        self.world.spawn_grass()
-        self.world.spawn_grass()
         
 
     def test_four(self) -> None:
