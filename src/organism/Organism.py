@@ -25,6 +25,9 @@ class Organism:
         self.all_known_organisms = {}
         self.gender = None
         self.alive_status = True
+
+        # carnivore = 0, herbivore = 1
+        self.dietary_classification = None
     
     def die(self) -> None:
 

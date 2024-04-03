@@ -66,6 +66,7 @@ class Mouse(Herbivor):
                 self.potential_predators = [1,2,5]        # species_id
                 self.decision_duration = 100          # ticks
                 self.litter_size = [4,5,6,7]
+                self.metabolism_constant = 0.2
                 
                 if self.debug_mode:
                     self.color = "darkgrey"
@@ -96,6 +97,7 @@ class Mouse(Herbivor):
             new_animal = Mouse(position, animal_id, self.all_known_static_resources, self.all_known_organisms)
             print(colorize(f"{self.name} {self.animal_id} has procreated with {self.name} {self.current_target.animal_id} to create {self.name} {animal_id}", colors.CYAN))
             self.all_known_organisms[animal_id] = new_animal
+            new_animal.procreate_cool_down = 60480
 
         self.procreate_cool_down = 66528
         self.ready_to_mate = False

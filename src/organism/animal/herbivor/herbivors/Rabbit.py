@@ -66,6 +66,7 @@ class Rabbit(Herbivor):
                 self.potential_predators = [1,5]        # species_id
                 self.decision_duration = 50          # ticks
                 self.litter_size = [4,5,6,7,8,9]
+                self.metabolism_constant = 0.05
 
                 all_forests = [resource for resource in all_known_static_resources.values() if resource.resource_type_id == 3]
                 self.safe_place = random.choice(all_forests)
@@ -100,6 +101,7 @@ class Rabbit(Herbivor):
             new_animal = Rabbit(position, animal_id, self.all_known_static_resources, self.all_known_organisms)
             print(colorize(f"{self.name} {self.animal_id} has procreated with {self.name} {self.current_target.animal_id} to create {self.name} {animal_id}", colors.CYAN))
             self.all_known_organisms[animal_id] = new_animal
+            new_animal.procreate_cool_down = 66528
 
         self.procreate_cool_down = 66528
         self.ready_to_mate = False

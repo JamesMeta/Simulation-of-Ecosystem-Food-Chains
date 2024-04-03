@@ -64,6 +64,9 @@ class Herbivor(Animal):
         # self.needs_for_speed = False
         # self.current_task = False
 
+        self.hidden = False
+        self.dietary_classification = 1
+
         #override these variables in the child class
         self.species_id = None
         self.procreate_cool_down = None
@@ -82,9 +85,9 @@ class Herbivor(Animal):
         self.consumable_resources = None
         self.decision_duration = None
         self.potential_predators = None
-
-        self.hidden = False
         self.visited_static_resources = []
+
+
 
     def check_if_current_task_in_range(self) -> None:
         if self.needs_food and self.current_target is not None:
@@ -102,6 +105,7 @@ class Herbivor(Animal):
                         self.progress_left_on_decision = self.decision_duration
                         return
                     
+
                 else:
                     self.detect_grass_plants()
                     self.move_towards_grass_plants(self.current_target)

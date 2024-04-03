@@ -66,6 +66,7 @@ class GrassHopper(Herbivor):
                 self.potential_predators = [3,6]        # species_id
                 self.decision_duration = 100          # ticks
                 self.litter_size = [7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30]
+                self.metabolism_constant = 16
                 
                 if self.debug_mode:
                         self.color = "yellow"
@@ -95,8 +96,9 @@ class GrassHopper(Herbivor):
             new_animal = GrassHopper(position, animal_id, self.all_known_static_resources, self.all_known_organisms)
             print(colorize(f"{self.name} {self.animal_id} has procreated with {self.name} {self.current_target.animal_id} to create {self.name} {animal_id}", colors.CYAN))
             self.all_known_organisms[animal_id] = new_animal
+            new_animal.procreate_cool_down = 45360
 
-        self.procreate_cool_down = 66528
+        self.procreate_cool_down = 45360
         self.ready_to_mate = False
         self.current_task = False
 

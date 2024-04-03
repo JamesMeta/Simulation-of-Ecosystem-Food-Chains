@@ -62,6 +62,7 @@ class Carnivor(Animal):
         # self.current_task = False
 
         self.stalking = False
+        self.dietary_classification = 0
 
         #override these variables in the child class
         self.species_id = None

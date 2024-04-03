@@ -8,10 +8,10 @@ class GrassPlant():
     def __init__(self, resource_id: int, resource_position: List[float]):
         self.resource_id = resource_id
         self.resource_position = resource_position
-        self.mass = 1
         self.alive_status = True
         self.radius = 5
         self.resource_type_id = 1
+        self.mass = 0.020
 
     
     # def spawn_grass(self) -> None:
@@ -37,7 +37,7 @@ class GrassPlant():
         #     if resource.resource_type_id == 1:
         #         current_capacity += 1
 
-        if self.mass <= 0:
+        if self.hp <= 0:
             self.alive_status = False
 
         # if self.alive_status:

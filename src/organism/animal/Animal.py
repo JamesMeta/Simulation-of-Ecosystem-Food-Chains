@@ -2,6 +2,9 @@ import sys
 import random
 import math
 sys.path.append("src")
+sys.path.append("src/maplogic")
+
+from maplogic.GrassPlant import GrassPlant
 
 from organism.Organism import Organism
 from typing import List, Any
@@ -102,19 +105,37 @@ class Animal(Organism):
     
     def eat_food(self) -> None:
 
+        #print(colorize("Eating", colors.GREEN))
+
         if self.current_target.alive_status == False:
             self.current_target = None
             self.current_direction = [0, 0]
             return
         
-        self.kill_organism(self.current_target)
-        #print(colorize("Eating", colors.GREEN))
-        self.hunger = 0
-        self.needs_food = False
-        self.current_target = None
-        self.current_direction = [0, 0]
-        self.current_task = False
-        self.visited_static_resources = []
+        # carnivore Eating method
+        if self.dietary_classification == 0:
+            pass
+
+        # herbivore Eating method
+        if self.dietary_classification == 1:
+            
+            food_need = self.mass * self.metabolism_constant
+
+            if self.current_target.mass > food_need:
+                self.current_target.mass -= food_need
+                self.hunger = 0
+                self.needs_food = False
+                self.current_target = None
+                self.current_direction = [0, 0]
+                self.current_task = False
+                self.visited_static_resources = []
+            
+            elif self.current_target.mass <= food_need:
+                self.kill_organism(self.current_target)
+                percent_reduction = (food_need - self.current_target.mass) / food_need
+                self.hunger = self.hunger * percent_reduction
+                self.current_direction = [0, 0]
+            
 
     # TODO: Implement this method, This needs to have creature movement implemented first
     def wander(self) -> None:
