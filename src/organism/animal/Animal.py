@@ -102,8 +102,12 @@ class Animal(Organism):
     
     def eat_food(self) -> None:
 
+        if self.current_target.alive_status == False:
+            self.current_target = None
+            self.current_direction = [0, 0]
+            return
+        
         self.kill_organism(self.current_target)
-
         print(colorize("Eating", colors.GREEN))
         self.hunger = 0
         self.needs_food = False
