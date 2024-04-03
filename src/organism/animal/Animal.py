@@ -1,6 +1,7 @@
 import sys
 import random
 import math
+import pygame as pg
 sys.path.append("src")
 sys.path.append("src/maplogic")
 
@@ -62,6 +63,9 @@ class Animal(Organism):
 
         self.random_start = True
         self.debug_mode = True
+
+        #Spriteloader Variables
+        self.sprite = None 
 
         #Binary variables for AI
         self.needs_sleep = False
@@ -307,4 +311,16 @@ class Animal(Organism):
         #     pass
             
             
-
+    #Animal sprite loading handler.
+    def load_sprite(self) -> None:
+        for i in range(10):
+            if i == self.species_id:
+                sprite_filename = f"assets/sprites/sprite_{self.species_id}.png"
+                try:
+                    self.sprite = pg.image.load(sprite_filename)
+                except pg.error:
+                    print(f"Error loading sprite for species ID {self.species_id}")
+                    return
+                break
+        else:
+            print(f"Invalid animal ID {self.species_id}")
