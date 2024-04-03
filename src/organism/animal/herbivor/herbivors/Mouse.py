@@ -3,6 +3,8 @@ import random
 sys.path.append("src/organism/animal/herbivor")
 from Herbivor import Herbivor
 from typing import List, Any
+from Herbivor import colors
+from Herbivor import colorize
 
 class Mouse(Herbivor):
 
@@ -60,9 +62,10 @@ class Mouse(Herbivor):
                 self.feeding_range = 5                # pixels (not provided in the stats, so keeping it the same as before)
                 self.sleep_duration = 2160            # ticks (sleep_lengths converted to ticks)
                 self.detection_multiplier = 1         # constant
-                self.consumable_resources = {1}       # species_id
-                self.potential_predators = {1,2,5}        # species_id
+                self.consumable_resources = [1]       # species_id
+                self.potential_predators = [1,2,5]        # species_id
                 self.decision_duration = 100          # ticks
+                self.litter_size = [4,5,6,7]
                 
                 if self.debug_mode:
                     self.color = "darkgrey"
@@ -73,3 +76,36 @@ class Mouse(Herbivor):
                     self.thirst = random.randint(0, self.max_thirst)
                     self.exhaustion = random.randint(0, self.max_exhaustion)
                     self.procreate_cool_down = random.randint(0, self.procreate_cool_down)
+
+
+    def procreate(self) -> Any:
+
+        def get_unique_animal_id() -> int:
+            for i in range(1, len(self.all_known_organisms) + 2):
+                if i not in self.all_known_organisms:
+                    return i
+
+        if self.gender == 0:
+             return
+        
+        for i in range(random.choice(self.litter_size)):
+            animal_id = get_unique_animal_id()
+            x = self.organism_position[0] 
+            y = self.organism_position[1] 
+            position = [x, y]
+            new_animal = Mouse(position, animal_id, self.all_known_static_resources, self.all_known_organisms)
+            print(colorize(f"{self.name} {self.animal_id} has procreated with {self.name} {self.current_target.animal_id} to create {self.name} {animal_id}", colors.CYAN))
+            self.all_known_organisms[animal_id] = new_animal
+
+        self.procreate_cool_down = 66528
+        self.ready_to_mate = False
+        self.current_task = False
+
+        
+
+        self.current_target.current_target = None
+        self.current_target.current_task = False
+        self.current_target.ready_to_mate = False
+        self.current_target.procreate_cool_down = 66528
+        
+        self.current_target = None

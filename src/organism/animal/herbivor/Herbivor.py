@@ -147,7 +147,7 @@ class Herbivor(Animal):
 
         if self.progress_left_on_decision == 0:
 
-            print(colorize(f"{self.name}#{self.animal_id} Making Decision:", colors.WHITE), end=" ")
+            #print(colorize(f"{self.name}#{self.animal_id} Making Decision:", colors.WHITE), end=" ")
 
             # first layer of decision making: Check alive status
 
@@ -197,7 +197,7 @@ class Herbivor(Animal):
                 self.current_task = False
             
             if self.needs_sleep:
-                print(colorize("Needs Sleep", colors.YELLOW))
+                #print(colorize("Needs Sleep", colors.YELLOW))
                 if self.safe_place is not None:
                     self.move_towards_resource(self.safe_place.resource_type_id)
                     distance = ((self.organism_position[0] - self.safe_place.resource_position[0])**2 + (self.organism_position[1] - self.safe_place.resource_position[1])**2)**0.5
@@ -213,7 +213,7 @@ class Herbivor(Animal):
                     return
             
             if self.needs_food:
-                print(colorize("Needs Food", colors.GREEN))
+                #print(colorize("Needs Food", colors.GREEN))
 
                 food_id = random.choice(self.consumable_resources)
 
@@ -250,7 +250,7 @@ class Herbivor(Animal):
 
             
             if self.needs_water:
-                print(colorize("Needs Water", colors.BLUE))
+                #print(colorize("Needs Water", colors.BLUE))
 
                 water_id = 2
 
@@ -276,7 +276,7 @@ class Herbivor(Animal):
                 self.current_task = True
 
             if self.ready_to_mate:
-                print(colorize("Looking for Mate", colors.MAGENTA))
+                #print(colorize("Looking for Mate", colors.MAGENTA))
 
                 if self.current_target is None:
                     self.wander()

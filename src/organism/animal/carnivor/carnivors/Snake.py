@@ -3,6 +3,8 @@ import random
 sys.path.append("src/organism/animal/carnivor")
 from Carnivor import Carnivor
 from typing import List, Any
+from Carnivor import colors
+from Carnivor import colorize
 
 class Snake(Carnivor):
     

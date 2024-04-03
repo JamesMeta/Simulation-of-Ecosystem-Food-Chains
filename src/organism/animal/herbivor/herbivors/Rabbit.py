@@ -3,20 +3,8 @@ import random
 import sys
 sys.path.append("src/organism/animal/herbivor")
 from Herbivor import Herbivor
-
-class colors:
-    RED = '\033[91m'
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    BLUE = '\033[94m'
-    MAGENTA = '\033[95m'
-    CYAN = '\033[96m'
-    WHITE = '\033[97m'
-    RESET = '\033[0m'
-
-# Colorizing function
-def colorize(text, color):
-    return f"{color}{text}{colors.RESET}"
+from Herbivor import colors
+from Herbivor import colorize
 
 class Rabbit(Herbivor):
 
@@ -77,16 +65,14 @@ class Rabbit(Herbivor):
                 self.consumable_resources = [1]       # species_id
                 self.potential_predators = [1,5]        # species_id
                 self.decision_duration = 50          # ticks
+                self.litter_size = [4,5,6,7,8,9]
 
                 all_forests = [resource for resource in all_known_static_resources.values() if resource.resource_type_id == 3]
                 self.safe_place = random.choice(all_forests)
                         
                 
                 if self.debug_mode:
-                        if self.gender == 0:
-                            self.color = "blue"
-                        else:
-                            self.color = "pink"
+                        self.color = "grey"
                         self.radius = 10
 
                 if self.random_start:
@@ -106,24 +92,26 @@ class Rabbit(Herbivor):
         if self.gender == 0:
              return
         
-        rabbit_id = get_unique_animal_id()
-        #position = [random.randint(0, 1820), random.randint(0, 980)]
-        x = self.organism_position[0] #+ random.randint(-10, 10)
-        y = self.organism_position[1] #+ random.randint(-10, 10)
-        position = [x, y]
-        new_rabbit = Rabbit(position, rabbit_id, self.all_known_static_resources, self.all_known_organisms)
+        for i in range(random.choice(self.litter_size)):
+            animal_id = get_unique_animal_id()
+            x = self.organism_position[0] 
+            y = self.organism_position[1] 
+            position = [x, y]
+            new_animal = Rabbit(position, animal_id, self.all_known_static_resources, self.all_known_organisms)
+            print(colorize(f"{self.name} {self.animal_id} has procreated with {self.name} {self.current_target.animal_id} to create {self.name} {animal_id}", colors.CYAN))
+            self.all_known_organisms[animal_id] = new_animal
 
         self.procreate_cool_down = 66528
         self.ready_to_mate = False
         self.current_task = False
 
-        self.all_known_organisms[rabbit_id] = new_rabbit
+        
 
         self.current_target.current_target = None
         self.current_target.current_task = False
         self.current_target.ready_to_mate = False
         self.current_target.procreate_cool_down = 66528
-        print(colorize(f"Rabbit {self.animal_id} has procreated with Rabbit {self.current_target.animal_id} to create Rabbit {rabbit_id}", colors.CYAN))
+    
         self.current_target = None
                 
 

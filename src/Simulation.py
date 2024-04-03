@@ -1,5 +1,6 @@
 import pygame as pg
 import random
+import math
 import matplotlib.pyplot as plt
 import os
 from typing import List, Any
@@ -250,7 +251,7 @@ class Simulation:
         self.world.spawn_resource(3, 100, [1020, 680], water)
         self.world.spawn_resource(4, 100, [1020, 200], forest)
 
-        #Spawn 1 rabbit
+        
         self.spawn_organism(7)
         self.spawn_organism(7)
         self.spawn_organism(7)
@@ -258,30 +259,26 @@ class Simulation:
         self.spawn_organism(7)
         self.spawn_organism(7)
         self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
+        
+        self.spawn_organism(8)
+        self.spawn_organism(8)
+        self.spawn_organism(8)
+        self.spawn_organism(8)
+        self.spawn_organism(8)
+        self.spawn_organism(8)
+        self.spawn_organism(8)
+        self.spawn_organism(8)
+
+        self.spawn_organism(9)
+        self.spawn_organism(9)
+        self.spawn_organism(9)
+        self.spawn_organism(9)
+        self.spawn_organism(9)
+        self.spawn_organism(9)
+        self.spawn_organism(9)
+        self.spawn_organism(9)
+        self.spawn_organism(9)
+        self.spawn_organism(9)
 
         self.log_population()
         
@@ -340,7 +337,7 @@ class Simulation:
             self.update_all_Objects()
             self.draw_all_objects()
             pg.display.flip()
-            self.clock.tick(200)
+            self.clock.tick(math.inf)
         self.plot_population()
 
 

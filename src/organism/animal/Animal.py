@@ -93,7 +93,7 @@ class Animal(Organism):
         
 
     def drink_water(self) -> None:
-        print(colorize("Drinking", colors.BLUE))
+        #print(colorize("Drinking", colors.BLUE))
         self.thirst = 0
         self.needs_water = False
         self.current_target = None
@@ -108,7 +108,7 @@ class Animal(Organism):
             return
         
         self.kill_organism(self.current_target)
-        print(colorize("Eating", colors.GREEN))
+        #print(colorize("Eating", colors.GREEN))
         self.hunger = 0
         self.needs_food = False
         self.current_target = None
@@ -121,13 +121,13 @@ class Animal(Organism):
         one_in_four = random.randint(1, 2)
         if one_in_four == 1:
             self.current_direction = [random.uniform(-1, 1), random.uniform(-1, 1)]
-            print(colorize("Wandering", colors.BLACK))
+            #print(colorize("Wandering", colors.BLACK))
         else:
             self.current_direction = [0, 0]
-            print(colorize("Not Moving", colors.BLACK))
+            #print(colorize("Not Moving", colors.BLACK))
 
     def sleep(self) -> None:
-        print(colorize("Sleeping", colors.YELLOW))
+        #print(colorize("Sleeping", colors.YELLOW))
         self.progress_left_on_decision = self.sleep_duration
         self.current_direction = [0, 0]
         self.current_target = None
@@ -204,7 +204,7 @@ class Animal(Organism):
         resource = closest_resource_of_type(resource_type_id)
 
         if resource is None:
-            print(colorize("No resource found emptying visited resources", colors.BOLD))
+            #print(colorize("No resource found emptying visited resources", colors.BOLD))
             self.visited_static_resources = []
             return
 

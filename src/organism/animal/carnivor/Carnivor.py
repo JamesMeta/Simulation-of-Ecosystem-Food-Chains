@@ -4,6 +4,22 @@ sys.path.append("src/organism/animal")
 from Animal import Animal
 from typing import List, Any
 
+class colors:
+    RED = '\033[91m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    BLUE = '\033[94m'
+    MAGENTA = '\033[95m'
+    CYAN = '\033[96m'
+    WHITE = '\033[97m'
+    RESET = '\033[0m'
+    BLACK = '\033[30m'
+    
+
+# Colorizing function
+def colorize(text, color):
+    return f"{color}{text}{colors.RESET}"
+
 class Carnivor(Animal):
 
     def __init__(self, organism_position: List[float], animal_id: int, all_known_static_resources: Any,  all_known_organisms: Any):
