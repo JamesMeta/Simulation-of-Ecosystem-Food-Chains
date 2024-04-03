@@ -10,7 +10,6 @@ class Organism:
         self.all_known_static_resources = {}
         self.all_known_dynamic_resources = {}
         self.all_known_organisms = {}
-        self.visited_static_resources = []
         self.gender = None
         self.alive_status = True
     

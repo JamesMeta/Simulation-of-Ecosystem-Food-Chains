@@ -186,26 +186,19 @@ class Simulation:
         forest = 3
 
         self.world.spawn_resource(1, 100, [500, 200], grass)
-        self.world.spawn_resource(2, 100, [1020, 680], water)
-        self.world.spawn_resource(3, 100, [1020, 200], forest)
+        self.world.spawn_resource(2, 100, [800, 900], grass)
+        self.world.spawn_resource(3, 100, [1020, 680], water)
+        self.world.spawn_resource(4, 100, [1020, 200], forest)
 
         #Spawn 1 rabbit
         self.spawn_organism(7)
         self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
         
         #spawn grass
-        self.world.spawn_grass()
-        self.world.spawn_grass()
-        self.world.spawn_grass()
-        self.world.spawn_grass()
+        # self.world.spawn_grass()
+        # self.world.spawn_grass()
+        # self.world.spawn_grass()
+        # self.world.spawn_grass()
 
 
     def test_three(self) -> None:
@@ -274,7 +267,7 @@ class Simulation:
 if __name__ == "__main__":
     
     sim = Simulation()
-    sim.test_four()
+    sim.test_two()
     sim.run_simulation()
 
 

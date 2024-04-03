@@ -65,9 +65,10 @@ class Herbivor(Animal):
         self.potential_predators = None
 
         self.hidden = False
+        self.visited_static_resources = []
 
     def check_if_current_task_in_range(self) -> None:
-        if self.needs_food:
+        if self.needs_food and self.current_target is not None:
             distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
             if self.is_current_target_dynamic():
                 if distance < self.feeding_range:
@@ -78,10 +79,12 @@ class Herbivor(Animal):
                 if distance < self.sight_range:
                     self.Detect_Food()
                     self.move_towards_dynamic_resource(self.current_target)
-                else:
-                    pass
+                if distance < self.feeding_range:
+                    self.visited_static_resources.append(self.current_target)
+                    self.current_target = None
+                    print("No food found at current target")
                 
-        if self.needs_water:
+        if self.needs_water and self.current_target is not None:
             distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
             distance -= self.current_target.resource_radius
             if distance < self.feeding_range:
@@ -195,7 +198,7 @@ class Herbivor(Animal):
 
                 water_id = 2
 
-                if self.current_target:
+                if self.is_current_target_static():
                     self.move_towards_resource(self.current_target.resource_type_id)
                     distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
                     distance -= self.current_target.resource_radius
@@ -218,11 +221,12 @@ class Herbivor(Animal):
 
             if self.ready_to_mate:
                 print("Looking for mate")
+
                 if self.current_target is None:
                     self.wander()
                     self.Detect_Mates()
     
-                if self.current_target is not None:
+                if self.is_current_target_organism():
                     self.move_towards_organism(self.current_target)
                     distance = ((self.organism_position[0] - self.current_target.organism_position[0])**2 + (self.organism_position[1] - self.current_target.organism_position[1])**2)**0.5
                     if distance < self.feeding_range:

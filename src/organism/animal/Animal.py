@@ -40,7 +40,7 @@ class Animal(Organism):
         self.current_direction = [0, 0]
         self.safe_place = None
 
-        self.random_start = False
+        self.random_start = True
         self.debug_mode = True
 
         #Binary variables for AI
@@ -72,6 +72,7 @@ class Animal(Organism):
         self.consumable_resources = None
         self.decision_duration = None
         self.potential_predators = None
+        self.visited_static_resources = []
         
 
     def drink_water(self) -> None:
@@ -92,6 +93,7 @@ class Animal(Organism):
         self.current_target = None
         self.current_direction = [0, 0]
         self.current_task = False
+        self.visited_static_resources = []
 
     # TODO: Implement this method, This needs to have creature movement implemented first
     def wander(self) -> None:
@@ -173,12 +175,18 @@ class Animal(Organism):
                 if resource.resource_type_id == resource_type_id:
                     resource_position = resource.resource_position
                     cur_distance = ((self.organism_position[0] - resource_position[0])**2 + (self.organism_position[1] - resource_position[1])**2)**0.5
-                    if cur_distance < min_distance:
+                    if cur_distance < min_distance and resource not in self.visited_static_resources:
                         min_distance = cur_distance
                         closest_resource = resource
             return closest_resource
         
         resource = closest_resource_of_type(resource_type_id)
+
+        if resource is None:
+            print("No resource found emptying visited resources")
+            self.visited_static_resources = []
+            return
+
         self.current_target = resource
         resource_position = resource.resource_position
         distance = math.sqrt((self.organism_position[0] - resource_position[0])**2 + (self.organism_position[1] - resource_position[1])**2)
@@ -194,6 +202,12 @@ class Animal(Organism):
 
     def is_current_target_dynamic(self) -> bool:
         return self.current_target in self.all_known_dynamic_resources.values()
+    
+    def is_current_target_static(self) -> bool:
+        return self.current_target in self.all_known_static_resources.values()
+    
+    def is_current_target_organism(self) -> bool:
+        return self.current_target in self.all_known_organisms.values()
 
     def move_towards_dynamic_resource(self, resource: Any) -> None:
         resource_position = resource.resource_position
