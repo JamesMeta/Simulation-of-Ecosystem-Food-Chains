@@ -148,9 +148,8 @@ class Simulation:
                     pg.draw.circle(self.screen, (150, 75, 0), resource.resource_position, resource.resource_radius)
                 else:
                     print("Invalid Resource Type ID")
-
             for organism in self.organism_map.values():
-                pg.draw.circle(self.screen, organism.color, organism.organism_position, organism.radius)
+                pg.draw.circle(self.screen, organism.color, organism.organism_position, organism.radius)   
         else:
             #   This code will ALWAYS display the same map if debug mode is off, 
             #   the sprite is independant of the fields used for reasource identification. 
@@ -333,13 +332,15 @@ class Simulation:
         water = 2
         forest = 3
 
-        self.world.spawn_resource(1, 250, [875, 175], grass)
-        self.world.spawn_resource(2, 300, [1700, 500], forest)
-        self.world.spawn_resource(3, 300, [150, 1000], water)
-        self.world.spawn_resource(4, 300, [300, 1000], water)
-        self.world.spawn_resource(5, 300, [450, 1000], water)
-        self.world.spawn_resource(6, 300, [600, 1000], water)
-        self.world.spawn_resource(7, 300, [750, 1000], water)
+        self.world.spawn_resource(1, 225, [875, 175], grass)
+        self.world.spawn_resource(2, 100, [1450, 950], grass)
+        self.world.spawn_resource(3, 275, [1700, 500], forest)
+        self.world.spawn_resource(4, 125, [300, 450], forest)
+        self.world.spawn_resource(5, 300, [150, 1000], water)
+        self.world.spawn_resource(6, 300, [300, 1000], water)
+        self.world.spawn_resource(7, 300, [450, 1000], water)
+        self.world.spawn_resource(8, 300, [600, 1000], water)
+        self.world.spawn_resource(9, 300, [750, 1000], water)
 
  
         self.spawn_organism(7)
