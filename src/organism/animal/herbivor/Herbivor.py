@@ -267,8 +267,7 @@ class Herbivor(Animal):
                     else:
                         pass
                 else:
-                    if not self.Detect_Water():
-                        self.move_towards_resource(water_id)
+                    self.move_towards_resource(water_id)
                         
                 self.progress_left_on_decision = self.decision_duration
                 return
@@ -284,7 +283,7 @@ class Herbivor(Animal):
 
                 if self.current_target is None:
                     self.wander()
-                    self.Detect_Mates()
+                    self.detect_mates()
     
                 if self.is_current_target_organism():
                     self.move_towards_organism(self.current_target)
@@ -325,7 +324,6 @@ class Herbivor(Animal):
         else:
             print(f"Something has gone seriously wrong {self.name}{self.animal_id} Current target: {self.current_target}")
             
-
     def is_current_target_grass_plants(self) -> bool:
         if isinstance(self.current_target, GrassPlant):
             return True

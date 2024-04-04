@@ -168,7 +168,7 @@ class Animal(Organism):
         self.current_direction = [target_current_direction[0] + random.uniform(-0.1,0.1), target_current_direction[1] + random.uniform(-0.1,0.1)]
 
 
-    def Detect_Threats(self) -> None:
+    def detect_threats(self) -> None:
         for organism in self.all_known_organisms.values():
             threat_position = organism.organism_position
             distance = ((self.organism_position[0] - threat_position[0])**2 + (self.organism_position[1] - threat_position[1])**2)**0.5
@@ -177,7 +177,7 @@ class Animal(Organism):
                     self.current_threat = organism
                     return
 
-    def Detect_Mates(self) -> None:
+    def detect_mates(self) -> None:
         for organism in self.all_known_organisms.values():
             mate_position = organism.organism_position
             distance = ((self.organism_position[0] - mate_position[0])**2 + (self.organism_position[1] - mate_position[1])**2)**0.5
@@ -199,18 +199,6 @@ class Animal(Organism):
             if distance < self.sight_range:
                 self.move_towards_organism(organism)
 
-            
-    
-    def Detect_Water(self):
-        for resource in self.all_known_static_resources.values():
-            resource_position = resource.resource_position
-            distance = ((self.organism_position[0] - resource_position[0])**2 + (self.organism_position[1] - resource_position[1])**2)**0.5
-            if distance < self.sight_range:
-                if resource.resource_type_id in self.consumable_resources:
-                    self.current_target = resource
-                    return
-        
-        return False
 
     def move_towards_resource(self, resource_type_id: Any) -> None:
 

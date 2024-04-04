@@ -369,14 +369,14 @@ class Simulation:
             self.update_all_Objects()
             self.draw_all_objects()
             pg.display.flip()
-            self.clock.tick(math.inf)
+            self.clock.tick(30)
         self.plot_population()
 
 
 if __name__ == "__main__":
     
     sim = Simulation()
-    sim.test_four()
+    sim.test_two()
     sim.run_simulation()
 
 
