@@ -15,6 +15,7 @@ class GrassLands(StaticResource):
         self.mass = 1
         self.alive_status = True
         self.dynamic_resource_map = {}
+        self.screen_resolutions = [1820, 980]
 
         self.spawn_grass()
         self.spawn_grass()
@@ -36,9 +37,11 @@ class GrassLands(StaticResource):
             for i in range(1, len(self.dynamic_resource_map) + 2):
                 if i not in self.dynamic_resource_map:
                     return i
+        x,y = random.randint(self.resource_position[0] - self.resource_radius, self.resource_position[0] + self.resource_radius), random.randint(self.resource_position[1] - self.resource_radius, self.resource_position[1] + self.resource_radius)
+        while x < 0 or x > self.screen_resolutions[0] or y < 0 or y > self.screen_resolutions[1]:
+            x = random.randint(self.resource_position[0] - self.resource_radius, self.resource_position[0] + self.resource_radius)
+            y = random.randint(self.resource_position[1] - self.resource_radius, self.resource_position[1] + self.resource_radius)
 
-        x = random.randint(self.resource_position[0] - self.resource_radius, self.resource_position[0] + self.resource_radius)
-        y = random.randint(self.resource_position[1] - self.resource_radius, self.resource_position[1] + self.resource_radius)
         position = [x, y]
         grass_id = get_unique_grass_id()
         new_grass = GrassPlant(grass_id, position)
