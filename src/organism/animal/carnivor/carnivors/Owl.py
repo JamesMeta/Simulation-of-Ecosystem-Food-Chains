@@ -64,6 +64,7 @@ class Owl(Carnivor):
                 self.consumable_organisms = [3,9]   #species_id
                 self.potential_predators = [-1]        # species_id
                 self.decision_duration = 100         #ticks
+                self.metabolism_constant = 0.075
                 
                 if self.debug_mode:
                         self.color = "brown"

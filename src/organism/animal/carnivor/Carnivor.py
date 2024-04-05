@@ -1,6 +1,7 @@
 import sys
 import random
 import math
+import numpy as np
 sys.path.append("src/organism/animal")
 from Animal import Animal
 from typing import List, Any
@@ -168,7 +169,7 @@ class Carnivor(Animal):
                     self.needs_food = True
                     self.needs_water = False
                     
-                if percent_water_remaining <= percent_food_remaining:
+                if percent_water_remaining < percent_food_remaining:
                     self.needs_water = True
                     self.needs_food = False
 
@@ -200,18 +201,15 @@ class Carnivor(Animal):
             if self.needs_food:
                 print(colorize("Needs Food", colors.GREEN))
 
-                if self.current_target is None:
-                    self.begin_hunting()
-                
                 if self.stalking:
                     self.begin_stalking()
+                    self.progress_left_on_decision = self.decision_duration
+                    return
 
-                if self.is_current_target_organism():
-                    distance = ((self.organism_position[0] - self.current_target.organism_position[0])**2 + (self.organism_position[1] - self.current_target.organism_position[1])**2)**0.5
-                    if distance < self.feeding_range:
-                        self.eat_food()
-                
+                self.begin_hunting()
+        
                 self.progress_left_on_decision = self.decision_duration
+                return
                 
            
             if self.needs_water:
@@ -297,14 +295,21 @@ class Carnivor(Animal):
             self.eat_food()
             return
         
-        target_position = self.current_target.organism_position
+        if distance > self.sight_range:
+            print(colorize(f"{self.name}#{self.animal_id} Target Escaped", colors.RED))
+            self.current_target = None
+            self.stalking = False
+            return
+        
+        target_position = np.array(self.current_target.organism_position)
         target_view_range = self.current_target.sight_range
-        target_current_direction = self.current_target.current_direction
+        target_current_direction = np.array(self.current_target.current_direction)
         target_current_speed = self.current_target.min_speed
+        target_remaining_ticks = self.current_target.progress_left_on_decision
 
         if distance > target_view_range:
             print(colorize(f"{self.name}#{self.animal_id} Out of Target's Sight", colors.RED))
-            target_future_position = target_position + target_current_direction * target_current_speed
+            target_future_position = target_position + (target_current_direction * target_current_speed * target_remaining_ticks)
             angle = math.atan2(target_future_position[1] - self.organism_position[1], target_future_position[0] - self.organism_position[0])
             self.current_direction = [math.cos(angle), math.sin(angle)]
             self.stalking = True

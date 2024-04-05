@@ -65,6 +65,7 @@ class Frog(Carnivor):
                 self.consumable_organisms = [8]   #species_id
                 self.potential_predators = [2,4]        # species_id
                 self.decision_duration = 100         #ticks
+                self.metabolism_constant = 0.50
                 
                 if self.debug_mode:
                         self.color = "green"

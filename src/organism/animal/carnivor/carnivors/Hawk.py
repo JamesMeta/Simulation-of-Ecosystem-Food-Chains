@@ -65,6 +65,7 @@ class Hawk(Carnivor):
                 self.consumable_organisms = [4, 7, 9]     # species_id
                 self.potential_predators = [-1]        # species_id
                 self.decision_duration = 100           # ticks
+                self.metabolism_constant = 0.075
                 
                 if self.debug_mode:
                         self.color = "white"

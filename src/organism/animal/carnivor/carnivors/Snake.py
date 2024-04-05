@@ -65,6 +65,7 @@ class Snake(Carnivor):
                 self.consumable_organisms = [3, 6]     # species_id
                 self.potential_predators = [5]        # species_id
                 self.decision_duration = 100           # ticks
+                self.metabolism_constant = 0.05
 
                 if self.debug_mode:
                         self.color = "red"

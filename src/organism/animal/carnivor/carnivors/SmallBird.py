@@ -65,6 +65,7 @@ class SmallBird(Carnivor):
                 self.consumable_organisms = [8]   # species_id
                 self.potential_predators = [4]        # species_id
                 self.decision_duration = 100         # ticks
+                self.metabolism_constant = 0.15
                 
                 if self.debug_mode:
                         self.color = "black"
