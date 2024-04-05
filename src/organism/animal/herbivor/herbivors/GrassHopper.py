@@ -70,7 +70,7 @@ class GrassHopper(Herbivor):
                 
                 if self.debug_mode:
                         self.color = "yellow"
-                        self.radius = 1
+                        self.radius = 2
 
                 if self.random_start:
                     self.hunger = random.randint(0, self.max_hunger)

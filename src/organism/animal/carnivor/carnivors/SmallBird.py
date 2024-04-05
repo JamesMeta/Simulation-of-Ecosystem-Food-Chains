@@ -62,8 +62,8 @@ class SmallBird(Carnivor):
                 self.feeding_range = 5               # pixels (not provided in the stats, so keeping it the same as before)
                 self.sleep_duration = 2880           # ticks (sleep_lengths converted to ticks)
                 self.detection_multiplier = 1        # constant
-                self.consumable_organisms = {8}   # species_id
-                self.potential_predators = {4}        # species_id
+                self.consumable_organisms = [8]   # species_id
+                self.potential_predators = [4]        # species_id
                 self.decision_duration = 100         # ticks
                 
                 if self.debug_mode:

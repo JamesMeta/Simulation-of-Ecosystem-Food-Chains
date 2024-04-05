@@ -62,8 +62,8 @@ class Frog(Carnivor):
                 self.feeding_range = 5              #pixels
                 self.sleep_duration = 360           #ticks
                 self.detection_multiplier = 1       #constant
-                self.consumable_organisms = {8}   #species_id
-                self.potential_predators = {2,4}        # species_id
+                self.consumable_organisms = [8]   #species_id
+                self.potential_predators = [2,4]        # species_id
                 self.decision_duration = 100         #ticks
                 
                 if self.debug_mode:

@@ -61,8 +61,8 @@ class Owl(Carnivor):
                 self.feeding_range = 5              #pixels
                 self.sleep_duration = 720           #ticks
                 self.detection_multiplier = 1       #constant
-                self.consumable_organisms = {3,9}   #species_id
-                self.potential_predators = {-1}        # species_id
+                self.consumable_organisms = [3,9]   #species_id
+                self.potential_predators = [-1]        # species_id
                 self.decision_duration = 100         #ticks
                 
                 if self.debug_mode:

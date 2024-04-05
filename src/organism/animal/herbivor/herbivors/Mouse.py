@@ -70,7 +70,7 @@ class Mouse(Herbivor):
                 
                 if self.debug_mode:
                     self.color = "darkgrey"
-                    self.radius = 2
+                    self.radius = 3
                 
                 if self.random_start:
                     self.hunger = random.randint(0, self.max_hunger)

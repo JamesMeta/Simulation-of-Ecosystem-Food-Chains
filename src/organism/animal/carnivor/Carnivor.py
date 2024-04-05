@@ -1,5 +1,6 @@
 import sys
 import random
+import math
 sys.path.append("src/organism/animal")
 from Animal import Animal
 from typing import List, Any
@@ -85,8 +86,22 @@ class Carnivor(Animal):
         self.visited_static_resources = []
 
     def check_if_current_task_in_range(self) -> None:
-        if self.needs_food and self.current_target is not None:
-            pass
+        
+        if self.needs_food:
+
+            if self.is_current_target_static():
+                if self.is_at_center_of_resource():
+                    self.visited_static_resources.append(self.current_target)
+                    self.current_target = None
+                    self.current_direction = [0,0]
+
+
+            if self.is_current_target_organism():
+                distance = ((self.organism_position[0] - self.current_target.organism_position[0])**2 + (self.organism_position[1] - self.current_target.organism_position[1])**2)**0.5
+                if distance < self.feeding_range:
+                    self.eat_food()
+                else:
+                    pass
 
                 
         if self.needs_water and self.current_target is not None:
@@ -117,7 +132,7 @@ class Carnivor(Animal):
 
         if self.progress_left_on_decision == 0:
 
-            #print(colorize(f"{self.name}#{self.animal_id} Making Decision:", colors.WHITE), end=" ")
+            print(colorize(f"{self.name}#{self.animal_id} Making Decision:", colors.WHITE), end=" ")
 
             # first layer of decision making: Check alive status
 
@@ -167,7 +182,7 @@ class Carnivor(Animal):
                 self.current_task = False
             
             if self.needs_sleep:
-                #print(colorize("Needs Sleep", colors.YELLOW))
+                print(colorize("Needs Sleep", colors.YELLOW))
                 if self.safe_place is not None:
                     self.move_towards_resource(self.safe_place.resource_type_id)
                     distance = ((self.organism_position[0] - self.safe_place.resource_position[0])**2 + (self.organism_position[1] - self.safe_place.resource_position[1])**2)**0.5
@@ -183,13 +198,24 @@ class Carnivor(Animal):
                     return
             
             if self.needs_food:
-                self.hunger = 0
+                print(colorize("Needs Food", colors.GREEN))
+
+                if self.current_target is None:
+                    self.begin_hunting()
                 
+                if self.stalking:
+                    self.begin_stalking()
 
-
-            
+                if self.is_current_target_organism():
+                    distance = ((self.organism_position[0] - self.current_target.organism_position[0])**2 + (self.organism_position[1] - self.current_target.organism_position[1])**2)**0.5
+                    if distance < self.feeding_range:
+                        self.eat_food()
+                
+                self.progress_left_on_decision = self.decision_duration
+                
+           
             if self.needs_water:
-                #print(colorize("Needs Water", colors.BLUE))
+                print(colorize("Needs Water", colors.BLUE))
 
                 water_id = 2
 
@@ -214,7 +240,7 @@ class Carnivor(Animal):
                 self.current_task = True
 
             if self.ready_to_mate:
-                #print(colorize("Looking for Mate", colors.MAGENTA))
+                print(colorize("Looking for Mate", colors.MAGENTA))
 
                 if self.current_target is None:
                     self.wander()
@@ -240,12 +266,101 @@ class Carnivor(Animal):
         else:
             self.progress_left_on_decision -= 1
 
-   
-   
-   
-   
-    def Detect_Food(self) -> List[Any]:
-        pass
+    def detect_food(self) -> bool:
+        potential_food = [None,None]
+        for organism in self.all_known_organisms.values():
+            if organism.species_id in self.consumable_organisms:
+                distance = ((self.organism_position[0] - organism.organism_position[0])**2 + (self.organism_position[1] - organism.organism_position[1])**2)**0.5
+                if distance <= self.sight_range:
+
+                    if potential_food[0] is None:
+                        potential_food = [distance, organism]
+
+                    if potential_food[0] > distance:
+                        potential_food = [distance, organism]
+        
+        if potential_food[1] is None:
+            return False
+
+        self.current_target = potential_food[1]
+        return True
+    
+    def begin_stalking(self):
+
+        if self.current_target is None or self.current_target.alive_status == False or not self.is_current_target_organism:
+            print("Something went wrong")
+            return
+        
+        distance = ((self.organism_position[0] - self.current_target.organism_position[0])**2 + (self.organism_position[1] - self.current_target.organism_position[1])**2)**0.5
+
+        if distance <= self.feeding_range:
+            self.eat_food()
+            return
+        
+        target_position = self.current_target.organism_position
+        target_view_range = self.current_target.sight_range
+        target_current_direction = self.current_target.current_direction
+        target_current_speed = self.current_target.min_speed
+
+        if distance > target_view_range:
+            print(colorize(f"{self.name}#{self.animal_id} Out of Target's Sight", colors.RED))
+            target_future_position = target_position + target_current_direction * target_current_speed
+            angle = math.atan2(target_future_position[1] - self.organism_position[1], target_future_position[0] - self.organism_position[0])
+            self.current_direction = [math.cos(angle), math.sin(angle)]
+            self.stalking = True
+
+        if distance <= target_view_range or self.current_target.in_danger:
+            print(colorize(f"{self.name}#{self.animal_id} In Target's Sight", colors.RED))
+            angle = math.atan2(target_position[1] - self.organism_position[1], target_position[0] - self.organism_position[0])
+            self.current_direction = [math.cos(angle), math.sin(angle)]
+            self.needs_for_speed = True
+            self.stalking = False
+    
+    def begin_hunting(self):
+
+        print(colorize(f"{self.name}#{self.animal_id} Beginning Hunting", colors.RED))
+
+        if self.current_target is None or self.current_target.alive_status == False or not self.is_current_target_organism:
+            self.stalking = False
+
+        if self.detect_food():
+            print(colorize(f"{self.name}#{self.animal_id} Detected Food", colors.RED))
+            self.begin_stalking()
+            self.stalking = True
+            self.visited_static_resources = []
+        
+        elif len(self.visited_static_resources) != len(self.all_known_static_resources):
+
+            if self.is_current_target_static():
+                self.move_towards_specific_resource(self.current_target)
+                print(colorize(f"{self.name}#{self.animal_id} Moving Towards Resource", colors.RED))
+                return
+            else:
+                for resource in self.all_known_static_resources.values():
+                    if resource not in self.visited_static_resources:
+                        self.move_towards_specific_resource(resource)
+                        print(colorize(f"{self.name}#{self.animal_id} Moving Towards Resource", colors.RED))
+                        return
+        
+        else:
+            self.wander()
+            self.visited_static_resources = []
+    
+    def is_at_center_of_resource(self) -> bool:
+        if self.is_current_target_static():
+            distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
+            if distance < self.feeding_range:
+                return True
+        else:
+            "Something went wrong"
+
+            
+
+        
+        
+
+
+                    
 
 
 

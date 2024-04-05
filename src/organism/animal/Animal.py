@@ -116,14 +116,27 @@ class Animal(Organism):
             self.current_direction = [0, 0]
             return
         
+        food_need = self.mass * self.metabolism_constant
+
         # carnivore Eating method
         if self.dietary_classification == 0:
-            pass
+            
+            if self.current_target.mass > food_need:
+                self.kill_organism(self.current_target)
+                self.hunger = 0
+                self.needs_food = False
+                self.current_target = None
+                self.current_direction = [0, 0]
+                self.current_task = False
+        
+            elif self.current_target.mass <= food_need:
+                self.kill_organism(self.current_target)
+                percent_reduction = (food_need - self.current_target.mass) / food_need
+                self.hunger = self.hunger * percent_reduction
+                self.current_direction = [0, 0]
 
         # herbivore Eating method
         if self.dietary_classification == 1:
-            
-            food_need = self.mass * self.metabolism_constant
 
             if self.current_target.mass > food_need:
                 self.current_target.mass -= food_need
@@ -146,10 +159,10 @@ class Animal(Organism):
         one_in_four = random.randint(1, 2)
         if one_in_four == 1:
             self.current_direction = [random.uniform(-1, 1), random.uniform(-1, 1)]
-            #print(colorize("Wandering", colors.BLACK))
+            print(colorize("Wandering", colors.BLACK))
         else:
             self.current_direction = [0, 0]
-            #print(colorize("Not Moving", colors.BLACK))
+            print(colorize("Not Moving", colors.BLACK))
 
     def sleep(self) -> None:
         #print(colorize("Sleeping", colors.YELLOW))
@@ -223,7 +236,14 @@ class Animal(Organism):
 
         self.current_target = resource
         resource_position = resource.resource_position
-        distance = math.sqrt((self.organism_position[0] - resource_position[0])**2 + (self.organism_position[1] - resource_position[1])**2)
+        angle = math.atan2(resource_position[1] - self.organism_position[1], resource_position[0] - self.organism_position[0])
+
+        self.current_direction = [math.cos(angle), math.sin(angle)]
+
+    def move_towards_specific_resource(self, resource: Any) -> None:
+
+        self.current_target = resource
+        resource_position = resource.resource_position
         angle = math.atan2(resource_position[1] - self.organism_position[1], resource_position[0] - self.organism_position[0])
 
         self.current_direction = [math.cos(angle), math.sin(angle)]

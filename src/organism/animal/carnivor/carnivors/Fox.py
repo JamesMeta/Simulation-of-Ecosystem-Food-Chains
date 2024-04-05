@@ -62,9 +62,9 @@ class Fox(Carnivor):
                 self.feeding_range = 5              #pixels
                 self.sleep_duration = 2880           #ticks
                 self.detection_multiplier = 1       #constant
-                self.consumable_organisms = {7,9}   #species_id
-                self.potential_predators = {-1}        # species_id
-                self.decision_duration = 100         #ticks
+                self.consumable_organisms = [7,9]   #species_id
+                self.potential_predators = [-1]        # species_id
+                self.decision_duration = 50         #ticks
                 
                 if self.debug_mode:
                         self.color = "orange"

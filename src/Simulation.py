@@ -267,31 +267,9 @@ class Simulation:
         
         self.spawn_organism(7)
         self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        self.spawn_organism(7)
-        
-        self.spawn_organism(8)
-        self.spawn_organism(8)
-        self.spawn_organism(8)
-        self.spawn_organism(8)
-        self.spawn_organism(8)
-        self.spawn_organism(8)
-        self.spawn_organism(8)
-        self.spawn_organism(8)
 
-        self.spawn_organism(9)
-        self.spawn_organism(9)
-        self.spawn_organism(9)
-        self.spawn_organism(9)
-        self.spawn_organism(9)
-        self.spawn_organism(9)
-        self.spawn_organism(9)
-        self.spawn_organism(9)
-        self.spawn_organism(9)
-        self.spawn_organism(9)
+        self.spawn_organism(1)
+        
 
         self.log_population()
         
