@@ -51,9 +51,9 @@ class Fox(Carnivor):
                 self.species_id = 1
                 self.procreate_cool_down = 181440     #ticks
                 self.max_hunger = 60480               #ticks
-                self.max_thirst = 4320               #ticks
+                self.max_thirst = 25920               #ticks
                 self.max_exhaustion = 17280           #ticks
-                self.min_hunger = 10080
+                self.min_hunger = 10080 
                 self.min_thirst = 4320
                 self.max_speed = 6.8                        # pixels per tick
                 self.min_speed = 3.4                        # pixels per tick

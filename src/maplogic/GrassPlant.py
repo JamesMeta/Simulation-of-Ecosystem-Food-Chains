@@ -17,40 +17,16 @@ class GrassPlant():
         #Spriteloader variables
         self.sprite = None
 
-    
-    # def spawn_grass(self) -> None:
-
-    #     def get_unique_grass_id() -> int:
-    #         for i in range(1, len(self.dynamic_resource_map) + 2):
-    #             if i not in self.dynamic_resource_map:
-    #                 return i
-
-    #     x = random.randint(self.associated_static_resource.resource_position[0] - self.associated_static_resource.resource_radius, self.associated_static_resource.resource_position[0] + self.associated_static_resource.resource_radius)
-    #     y = random.randint(self.associated_static_resource.resource_position[1] - self.associated_static_resource.resource_radius, self.associated_static_resource.resource_position[1] + self.associated_static_resource.resource_radius)
-    #     position = [x, y]
-    #     grass_id = get_unique_grass_id()
-    #     new_grass = Grass(grass_id, position, self.dynamic_resource_map, self.associated_static_resource)
-    #     self.dynamic_resource_map[grass_id] = new_grass
         
     
 
     def update(self) -> None:
 
-        # current_capacity = 0
-        # for resource in self.dynamic_resource_map.values():
-        #     if resource.resource_type_id == 1:
-        #         current_capacity += 1
-
         if self.hp <= 0:
             self.alive_status = False
-
-        # if self.alive_status:
-        #     self.current_regen += 1
-        #     if current_capacity < self.max_capacity and self.current_regen >= self.regen_rate:
-        #         self.current_regen = 0
-        #         current_capacity += 1
-        #         self.spawn_grass()
         
+    def die(self) -> None:
+        self.alive_status = False
 
 
     #Animal sprite loading handler.

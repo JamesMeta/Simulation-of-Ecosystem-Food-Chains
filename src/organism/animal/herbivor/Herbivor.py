@@ -154,10 +154,6 @@ class Herbivor(Animal):
             #print(colorize(f"{self.name}#{self.animal_id} Making Decision:", colors.WHITE), end=" ")
 
             # first layer of decision making: Check alive status
-
-            if not self.alive_status:
-                self.die()
-                return
             
             # second layer of decision making: Check if the organism is in danger
             if self.in_danger:

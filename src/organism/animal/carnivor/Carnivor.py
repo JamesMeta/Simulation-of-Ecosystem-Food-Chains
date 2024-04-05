@@ -102,7 +102,7 @@ class Carnivor(Animal):
                 if distance < self.feeding_range:
                     self.eat_food()
                 else:
-                    pass
+                    self.begin_stalking()
 
                 
         if self.needs_water and self.current_target is not None:

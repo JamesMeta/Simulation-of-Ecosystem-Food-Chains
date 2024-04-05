@@ -354,7 +354,7 @@ class Simulation:
 if __name__ == "__main__":
     
     sim = Simulation()
-    sim.test_four()
+    sim.test_two()
     sim.run_simulation()
 
 

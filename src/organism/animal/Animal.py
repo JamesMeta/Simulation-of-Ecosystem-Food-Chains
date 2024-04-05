@@ -131,8 +131,8 @@ class Animal(Organism):
         
             elif self.current_target.mass <= food_need:
                 self.kill_organism(self.current_target)
-                percent_reduction = (food_need - self.current_target.mass) / food_need
-                self.hunger = self.hunger * percent_reduction
+                percent_reduction = abs(1 - ((food_need - self.current_target.mass) / food_need))
+                self.hunger -= self.max_hunger * percent_reduction
                 self.current_direction = [0, 0]
 
         # herbivore Eating method
@@ -149,8 +149,8 @@ class Animal(Organism):
             
             elif self.current_target.mass <= food_need:
                 self.kill_organism(self.current_target)
-                percent_reduction = (food_need - self.current_target.mass) / food_need
-                self.hunger = self.hunger * percent_reduction
+                percent_reduction = abs(1 - ((food_need - self.current_target.mass) / food_need))
+                self.hunger -= self.max_hunger * percent_reduction
                 self.current_direction = [0, 0]
             
 
@@ -289,7 +289,7 @@ class Animal(Organism):
         self.organism_position[1] += self.current_direction[1]*self.max_speed
         
     def kill_organism(self, organism: Any) -> None:
-        organism.alive_status = False
+        organism.die()
 
     def make_decision(self) -> None:
         pass
@@ -298,12 +298,15 @@ class Animal(Organism):
         pass
 
     def update(self) -> None:
+
         self.make_decision()
         self.move()
         self.hunger += 1
         self.thirst += 1
         self.exhaustion += 1
         self.procreate_cool_down -= 1
+
+
 
 
         # if self.debug_mode:
