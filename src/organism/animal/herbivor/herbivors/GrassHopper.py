@@ -48,7 +48,8 @@ class GrassHopper(Herbivor):
 
                 self.name = "Grasshopper"
                 self.species_id = 8
-                self.procreate_cool_down = 45360      # ticks
+                self.max_procreation_cool_down = 35360
+                self.procreate_cool_down = 35360      # ticks
                 self.max_hunger = 25920               # ticks
                 self.max_thirst = 8640                # ticks
                 self.max_exhaustion = 8640            # ticks
@@ -91,9 +92,9 @@ class GrassHopper(Herbivor):
             position = [x, y]
             new_animal = GrassHopper(position, animal_id, self.all_known_static_resources, self.all_known_organisms)
             self.all_known_organisms[animal_id] = new_animal
-            new_animal.procreate_cool_down = 45360
+            new_animal.procreate_cool_down = self.max_procreation_cool_down
 
-        self.procreate_cool_down = 45360
+        self.procreate_cool_down = self.max_procreation_cool_down
         self.ready_to_mate = False
         self.current_task = False
 
@@ -102,7 +103,7 @@ class GrassHopper(Herbivor):
         self.current_target.current_target = None
         self.current_target.current_task = False
         self.current_target.ready_to_mate = False
-        self.current_target.procreate_cool_down = 66528
+        self.current_target.procreate_cool_down = self.max_procreation_cool_down
         
         self.current_target = None
 

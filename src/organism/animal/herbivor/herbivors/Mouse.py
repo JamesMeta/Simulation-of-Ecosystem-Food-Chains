@@ -47,7 +47,8 @@ class Mouse(Herbivor):
 
                 self.name = "Mouse"
                 self.species_id = 9
-                self.procreate_cool_down = 60480      # ticks
+                self.max_procreation_cool_down = 20480
+                self.procreate_cool_down = 20480      # ticks
                 self.max_hunger = 8640                # ticks
                 self.max_thirst = 8640                # ticks
                 self.max_exhaustion = 8640            # ticks
@@ -92,9 +93,9 @@ class Mouse(Herbivor):
             position = [x, y]
             new_animal = Mouse(position, animal_id, self.all_known_static_resources, self.all_known_organisms)
             self.all_known_organisms[animal_id] = new_animal
-            new_animal.procreate_cool_down = 60480
+            new_animal.procreate_cool_down = self.max_procreation_cool_down
 
-        self.procreate_cool_down = 66528
+        self.procreate_cool_down = self.max_procreation_cool_down
         self.ready_to_mate = False
         self.current_task = False
 
@@ -103,6 +104,6 @@ class Mouse(Herbivor):
         self.current_target.current_target = None
         self.current_target.current_task = False
         self.current_target.ready_to_mate = False
-        self.current_target.procreate_cool_down = 66528
+        self.current_target.procreate_cool_down = self.max_procreation_cool_down
         
         self.current_target = None

@@ -112,7 +112,7 @@ class Carnivor(Animal):
     # Speed will change depending on the strategy currently being used
     def begin_stalking(self):
 
-        if self.current_target is None or not self.is_current_target_organism:
+        if self.current_target is None or not self.is_current_target_organism():
             self.stalking = False
             return
         
@@ -231,6 +231,26 @@ class Carnivor(Animal):
 
         self.current_target = potential_food[1]
         return True
+
+    #if the animal is close to death, it will have an absolute need to eat or drink
+    #this will override all other needs except for sleep
+    #predators will nolonger scare the animal whether for the better or for the very very worse...
+    def is_absolute_need(self):
+        if self.hunger > self.max_hunger * 0.8:
+            self.absolute_need = True
+            self.consumable_organisms.append(self.species_id)
+            return True
+        
+        if self.thirst > self.max_thirst * 0.8:
+            self.absolute_need = True
+            return True
+        
+        self.absolute_need = False
+    
+        if self.species_id in self.consumable_organisms:
+            self.consumable_organisms.remove(self.species_id)
+
+        return False
 
     # Similar to the herbivore implementation, this function serves to check if the organism is at the center of the resource
     # Used to determine if the organism has been to this resource before

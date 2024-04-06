@@ -228,11 +228,12 @@ class Animal(Organism):
         return isinstance(self.current_target, StaticResource) or isinstance(self.current_target, GrassLands)
     
     def is_current_target_organism(self) -> bool:
-
-        if isinstance(self.current_target, StaticResource) or isinstance(self.current_target, GrassLands):
+        if isinstance(self.current_target, (StaticResource, GrassLands)):
             return False
-
-        return self.current_target in self.all_known_organisms.values()
+        elif self.current_target in self.all_known_organisms.values():
+            return True
+        else:
+            return False
 
     # function is used to kill the passed organism
     # the organism will be removed from the simulation

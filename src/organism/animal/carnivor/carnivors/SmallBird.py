@@ -47,12 +47,12 @@ class SmallBird(Carnivor):
 
                 self.name = "Bird"
                 self.species_id = 6
-                self.max_procreation_cool_down = 120960
-                self.procreate_cool_down = 120960    # ticks
-                self.max_hunger = 8640               # ticks
+                self.max_procreation_cool_down = 20960
+                self.procreate_cool_down = 20960    # ticks
+                self.max_hunger = 6640               # ticks
                 self.max_thirst = 8640               # ticks
                 self.max_exhaustion = 8640           # ticks
-                self.min_hunger = 1440               # ticks
+                self.min_hunger = 3440               # ticks
                 self.min_thirst = 1440               # ticks
                 self.max_speed = 4                        # pixels per tick
                 self.min_speed = 2                        # pixels per tick

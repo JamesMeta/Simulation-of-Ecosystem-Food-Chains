@@ -46,12 +46,12 @@ class Owl(Carnivor):
 
                 self.name = "Owl"
                 self.species_id = 2
-                self.max_procreation_cool_down = 181440
-                self.procreate_cool_down = 181440     #ticks
-                self.max_hunger = 43200               #ticks
+                self.max_procreation_cool_down = 41440
+                self.procreate_cool_down = 41440     #ticks
+                self.max_hunger = 8200               #ticks
                 self.max_thirst = 17280               #ticks
                 self.max_exhaustion = 4320           #ticks
-                self.min_hunger = 7200
+                self.min_hunger = 4200
                 self.min_thirst = 2880
                 self.max_speed = 6.4                        # pixels per tick
                 self.min_speed = 3.2                        # pixels per tick

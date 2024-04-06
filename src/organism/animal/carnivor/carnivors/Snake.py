@@ -47,12 +47,12 @@ class Snake(Carnivor):
 
                 self.name = "Snake"
                 self.species_id = 4
-                self.max_procreation_cool_down = 181440
-                self.procreate_cool_down = 181440     # ticks
-                self.max_hunger = 120960               # ticks
+                self.max_procreation_cool_down = 41440
+                self.procreate_cool_down = 41440     # ticks
+                self.max_hunger = 8000               # ticks
                 self.max_thirst = 8640                 # ticks
                 self.max_exhaustion = 8640             # ticks
-                self.min_hunger = 20160                # ticks
+                self.min_hunger = 4160                # ticks
                 self.min_thirst = 1440                 # ticks
                 self.max_speed = 2.9                        # pixels per tick
                 self.min_speed = 1.45                        # pixels per tick

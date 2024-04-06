@@ -684,11 +684,11 @@ class Simulation:
             self.spawn_organism(3) 
 
         #snake
-        for i in range(20):
+        for i in range(10):
             self.spawn_organism(4) 
 
         #hawk
-        for i in range(5):
+        for i in range(4):
             self.spawn_organism(5) 
 
         #small bird
@@ -696,15 +696,15 @@ class Simulation:
             self.spawn_organism(6) 
 
         #rabbit
-        for i in range(20):
+        for i in range(100):
             self.spawn_organism(7) 
 
         #grass hopper
-        for i in range(1000):
+        for i in range(2000):
             self.spawn_organism(8) 
 
         #mouse
-        for i in range(60):
+        for i in range(150):
             self.spawn_organism(9)
 
         self.spawn_organism(10)

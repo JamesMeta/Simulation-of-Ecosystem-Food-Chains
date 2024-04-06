@@ -47,9 +47,9 @@ class Hawk(Carnivor):
 
                 self.name = "Hawk"
                 self.species_id = 5
-                self.procreate_cool_down = 181440     # ticks
-                self.procreate_cool_down = 181440     # ticks
-                self.max_hunger = 34560                # ticks
+                self.max_procreation_cool_down = 41440     # ticks
+                self.procreate_cool_down = 41440     # ticks
+                self.max_hunger = 8000                # ticks
                 self.max_thirst = 8640                 # ticks
                 self.max_exhaustion = 10800            # ticks
                 self.min_hunger = 5760                 # ticks

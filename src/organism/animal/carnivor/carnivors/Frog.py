@@ -47,12 +47,12 @@ class Frog(Carnivor):
 
                 self.name = "Frog"
                 self.species_id = 3
-                self.max_procreation_cool_down = 72576
-                self.procreate_cool_down = 72576     #ticks
-                self.max_hunger = 86400               #ticks
+                self.max_procreation_cool_down = 20000
+                self.procreate_cool_down = 2000     #ticks
+                self.max_hunger = 6400               #ticks
                 self.max_thirst = 4320               #ticks
                 self.max_exhaustion = 8640           #ticks
-                self.min_hunger = 14400
+                self.min_hunger = 4400
                 self.min_thirst = 720
                 self.max_speed = 1.6                        # pixels per tick
                 self.min_speed = 0.8                        # pixels per tick
