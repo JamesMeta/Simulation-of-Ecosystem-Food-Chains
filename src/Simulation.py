@@ -195,7 +195,7 @@ class Simulation:
             #   This code will ALWAYS display the same map if debug mode is off, 
             #   the sprite is independant of the fields used for reasource identification. 
             #   Either fix this later or ship it with activation only for a single map.
-            self.screen.blit(pg.image.load(f"assets/map/land2.jpg"), (0,0))
+            self.screen.blit(pg.transform.scale(pg.image.load(f"assets/map/land2.jpg"), (self.screen_x_resolution, self.screen_y_resolution)), (0,0))
             for organism in self.organism_map.values():
 
                 if isinstance(organism, Utility):
