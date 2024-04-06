@@ -49,7 +49,8 @@ class Rabbit(Herbivor):
 
                 self.name = "Rabbit"
                 self.species_id = 7
-                self.procreate_cool_down = 36528      # ticks
+                self.max_procreation_cool_down = 26528
+                self.procreate_cool_down = 26528      # ticks
                 self.max_hunger = 8640                # ticks
                 self.max_thirst = 8640                # ticks
                 self.max_exhaustion = 4320            # ticks
@@ -95,9 +96,9 @@ class Rabbit(Herbivor):
             new_animal = Rabbit(position, animal_id, self.all_known_static_resources, self.all_known_organisms)
             print(colorize(f"{self.name} {self.animal_id} has procreated with {self.name} {self.current_target.animal_id} to create {self.name} {animal_id}", colors.CYAN))
             self.all_known_organisms[animal_id] = new_animal
-            new_animal.procreate_cool_down = 66528
+            new_animal.procreate_cool_down = self.max_procreation_cool_down
 
-        self.procreate_cool_down = 66528
+        self.procreate_cool_down = self.max_procreation_cool_down
         self.ready_to_mate = False
         self.current_task = False
 
@@ -106,7 +107,7 @@ class Rabbit(Herbivor):
         self.current_target.current_target = None
         self.current_target.current_task = False
         self.current_target.ready_to_mate = False
-        self.current_target.procreate_cool_down = 66528
+        self.current_target.procreate_cool_down = self.max_procreation_cool_down
     
         self.current_target = None
                 

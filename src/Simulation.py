@@ -37,6 +37,7 @@ class Simulation:
         pg.init()
         self.screen = pg.display.set_mode((self.screen_x_resolution, self.screen_y_resolution))
         self.clock = pg.time.Clock()
+        self.starting_species_names = []
 
         self.organism_map = {}
         self.world = World()
@@ -79,22 +80,40 @@ class Simulation:
 
         if species_id == 1:
             new_organism = Fox(position, animal_id, self.world.static_resource_map, self.organism_map)
+            if not self.starting_species_names:
+                self.starting_species_names.append("Fox")
         elif species_id == 2:
             new_organism = Owl(position, animal_id, self.world.static_resource_map, self.organism_map)
+            if not self.starting_species_names:
+                self.starting_species_names.append("Owl")
         elif species_id == 3:
             new_organism = Frog(position, animal_id, self.world.static_resource_map, self.organism_map)
+            if not self.starting_species_names:
+                self.starting_species_names.append("Frog")
         elif species_id == 4:
             new_organism = Snake(position, animal_id, self.world.static_resource_map, self.organism_map)
+            if not self.starting_species_names:
+                self.starting_species_names.append("Snake")
         elif species_id == 5:
             new_organism = Hawk(position, animal_id, self.world.static_resource_map, self.organism_map)
+            if not self.starting_species_names:
+                self.starting_species_names.append("Hawk")
         elif species_id == 6:
             new_organism = SmallBird(position, animal_id, self.world.static_resource_map, self.organism_map)
+            if not self.starting_species_names:
+                self.starting_species_names.append("Small Bird")
         elif species_id == 7:
             new_organism = Rabbit(position, animal_id, self.world.static_resource_map, self.organism_map)
+            if not self.starting_species_names:
+                self.starting_species_names.append("Rabbit")
         elif species_id == 8:
             new_organism = GrassHopper(position, animal_id, self.world.static_resource_map, self.organism_map)
+            if not self.starting_species_names:
+                self.starting_species_names.append("Grass Hopper")
         elif species_id == 9:
             new_organism = Mouse(position, animal_id, self.world.static_resource_map, self.organism_map)
+            if not self.starting_species_names:
+                self.starting_species_names.append("Mouse")
         else:
             print("Invalid Species ID")
 
@@ -195,7 +214,7 @@ class Simulation:
             #   This code will ALWAYS display the same map if debug mode is off, 
             #   the sprite is independant of the fields used for reasource identification. 
             #   Either fix this later or ship it with activation only for a single map.
-            self.screen.blit(pg.image.load(f"assets/map/land2.jpg"), (0,0))
+            self.screen.blit(pg.transform.scale(pg.image.load(f"assets/map/land2.jpg"), (self.screen_x_resolution, self.screen_y_resolution)), (0,0))
             for organism in self.organism_map.values():
 
                 if isinstance(organism, Utility):
@@ -256,6 +275,8 @@ class Simulation:
         plt.figure(figsize=(10, 5))
         for species, population in self.organism_population_over_time.items():
             plt.plot(population, label=species)
+        if species in self.starting_species_names:
+                plt.plot(population, label=species)
         plt.xlabel("Day")
         plt.ylabel("Population")
         plt.title("Population Over Time")
@@ -267,11 +288,22 @@ class Simulation:
         for species, population in self.organism_population_over_time.items():
             if species != "Grass Hopper":
                 plt.plot(population, label=species)
+            if species in self.starting_species_names:
+                plt.plot(population, label=species)
         plt.xlabel("Day")
         plt.ylabel("Population")
         plt.title("Population Over Time (Excluding Grass Hopper)")
         plt.legend()
         plt.show()
+
+        #plot without grass
+        plt.figure(figsize=(10, 5))
+        for species, population in self.organism_population_over_time.items():
+            if species != "Grass":
+                plt.plot(population, label=species)
+            if species in self.starting_species_names:
+                plt.plot(population, label=species)
+            
 
         #plot utility cause of deaths
         utility = self.organism_map["utility"]

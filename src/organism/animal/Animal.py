@@ -263,7 +263,7 @@ class Animal(Organism):
             if organism.gender == self.gender:
                 continue
 
-            if distance < self.sight_range:
+            if distance < self.sight_range*4:
                 self.move_towards_organism(organism)
 
     def closest_resource_of_type(self, resource_type_id: Any) -> Any:
