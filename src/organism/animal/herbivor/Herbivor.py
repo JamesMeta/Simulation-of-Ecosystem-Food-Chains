@@ -4,6 +4,7 @@ sys.path.append("src/maplogic")
 sys.path.append("src/organism/animal")
 from Animal import Animal
 from maplogic.GrassPlant import GrassPlant
+from maplogic.StaticResource import StaticResource
 from typing import List, Any
 import math
 
@@ -90,36 +91,51 @@ class Herbivor(Animal):
 
 
     def check_if_current_task_in_range(self) -> None:
+
+        if self.is_absolute_need():
+            self.progress_left_on_decision = 0
+            return
+
+        if self.in_danger:
+            self.run_away_from_threats()
+            return
+
+        if self.needs_sleep and self.current_target is not None:
+            distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
+            if distance < self.current_target.resource_radius:
+                self.sleep()
+                self.hidden = True
+                return
+            else:
+                self.move_towards_specific_resource(self.current_target)
+                return
+
         if self.needs_food and self.current_target is not None:
             if self.is_current_target_static():
                 
                 if self.is_at_grass_lands_center() and not self.detect_grass_plants():
                     self.visited_static_resources.append(self.current_target)
                     self.current_target = None
-                    self.progress_left_on_decision = self.decision_duration
+                    self.current_direction = [0, 0]
                     return
                 
                 elif self.is_within_grass_lands():
                     if self.detect_grass_plants():
                         self.move_towards_grass_plants(self.current_target)
-                        self.progress_left_on_decision = self.decision_duration
                         return
                     
 
                 else:
                     self.detect_grass_plants()
                     self.move_towards_grass_plants(self.current_target)
-                    self.progress_left_on_decision = self.decision_duration
                 
             elif self.is_current_target_grass_plants():
                 distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
                 if distance < self.feeding_range:
                     self.eat_food()
-                    self.progress_left_on_decision = self.decision_duration
                     return
                 else:
                     self.move_towards_grass_plants(self.current_target)
-                    self.progress_left_on_decision = self.decision_duration
                     return
 
                 
@@ -140,6 +156,8 @@ class Herbivor(Animal):
 
     def make_decision(self) -> None:
 
+        self.is_absolute_need()
+
         if self.hunger > self.max_hunger:
             self.die("starvation")
         
@@ -156,7 +174,15 @@ class Herbivor(Animal):
             # first layer of decision making: Check alive status
             
             # second layer of decision making: Check if the organism is in danger
-            if self.in_danger:
+
+            if self.hidden:
+                self.hidden = False
+
+            self.detect_threats()
+            if self.current_threat is not None and not self.absolute_need:
+                self.in_danger = True
+
+            if self.in_danger and not self.absolute_need:
                 self.run_away_from_threats()
                 self.progress_left_on_decision = self.decision_duration
                 self.needs_for_speed = True
@@ -164,7 +190,7 @@ class Herbivor(Animal):
                 self.needs_water = False
                 self.needs_sleep = False
                 self.ready_to_mate = False
-                self.current_task = False
+                self.current_task = True
                 return
             
             else:
@@ -194,7 +220,7 @@ class Herbivor(Animal):
                 self.needs_food = False
                 self.needs_water = False
                 self.ready_to_mate = False
-                self.current_task = False
+                self.current_task = True
             
             if self.needs_sleep:
                 #print(colorize("Needs Sleep", colors.YELLOW))
@@ -255,13 +281,16 @@ class Herbivor(Animal):
                 water_id = 2
 
                 if self.is_current_target_static():
-                    self.move_towards_resource(self.current_target.resource_type_id)
-                    distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
-                    distance -= self.current_target.resource_radius
-                    if distance < self.feeding_range:
-                        self.drink_water()
+                    if self.current_target.resource_type_id == water_id:
+                        self.move_towards_specific_resource(self.current_target)
+                        distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
+                        distance -= self.current_target.resource_radius
+                        if distance < self.feeding_range:
+                            self.drink_water()
+                        else:
+                            pass
                     else:
-                        pass
+                        self.move_towards_resource(water_id)
                 else:
                     self.move_towards_resource(water_id)
                         

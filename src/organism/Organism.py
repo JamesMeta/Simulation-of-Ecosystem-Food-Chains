@@ -37,6 +37,8 @@ class Organism:
 
         self.alive_status = False
         print(colorize(f"Organism {self.name} #{self.animal_id} has died due to {cause_of_death}", colors.RED))
+
+        self.all_known_organisms["utility"].count_deaths[cause_of_death] += 1
         del self.all_known_organisms[self.animal_id]
     
 

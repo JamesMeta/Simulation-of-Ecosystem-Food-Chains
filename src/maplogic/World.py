@@ -11,7 +11,7 @@ class World:
     def __init__(self):
         self.static_resource_map = {}
 
-        self.time_of_day = [0,12,0,0] # [day, hour, minute, second] ticks in day = 24*60*6 = 8640
+        self.time_of_day = [1,12,0,0] # [day, hour, minute, second] ticks in day = 24*60*6 = 8640
 
     def update_time_of_day(self) -> None:
         self.time_of_day[3] += 10

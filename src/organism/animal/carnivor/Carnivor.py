@@ -65,6 +65,7 @@ class Carnivor(Animal):
 
         self.stalking = False
         self.dietary_classification = 0
+        self.hidden = False
 
         #override these variables in the child class
         self.species_id = None
@@ -87,7 +88,20 @@ class Carnivor(Animal):
         self.visited_static_resources = []
 
     def check_if_current_task_in_range(self) -> None:
+
+        if self.is_absolute_need():
+            self.progress_left_on_decision = 0
         
+        if self.needs_sleep and self.current_target is not None:
+            distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
+            if distance < self.current_target.resource_radius:
+                self.sleep()
+                self.hidden = True
+                return
+            else:
+                self.move_towards_specific_resource(self.current_target)
+                return
+
         if self.needs_food:
 
             if self.is_current_target_static():
@@ -122,14 +136,37 @@ class Carnivor(Animal):
 
     def make_decision(self) -> None:
 
+        self.is_absolute_need()
+
+        if self.hidden:
+                self.hidden = False
+
         if self.hunger > self.max_hunger:
-            self.die("Hunger")
+            self.die("starvation")
         
         if self.thirst > self.max_thirst:
-            self.die("Thirst")
+            self.die("dehydration")
 
         if self.current_task:
             self.check_if_current_task_in_range()
+
+        self.detect_threats()
+        if self.current_threat is not None and not self.absolute_need:
+            self.in_danger = True
+
+        if self.in_danger and not self.absolute_need:
+            self.run_away_from_threats()
+            self.progress_left_on_decision = self.decision_duration
+            self.needs_for_speed = True
+            self.needs_food = False
+            self.needs_water = False
+            self.needs_sleep = False
+            self.ready_to_mate = False
+            self.current_task = True
+            return
+
+        else:
+            self.needs_for_speed = False
 
         if self.progress_left_on_decision == 0:
 
@@ -180,7 +217,7 @@ class Carnivor(Animal):
                 self.needs_food = False
                 self.needs_water = False
                 self.ready_to_mate = False
-                self.current_task = False
+                self.current_task = True
             
             if self.needs_sleep:
                 #print(colorize("Needs Sleep", colors.YELLOW))
@@ -267,6 +304,10 @@ class Carnivor(Animal):
     def detect_food(self) -> bool:
         potential_food = [None,None]
         for organism in self.all_known_organisms.values():
+
+            if organism.hidden:
+                continue
+
             if organism.species_id in self.consumable_organisms:
                 distance = ((self.organism_position[0] - organism.organism_position[0])**2 + (self.organism_position[1] - organism.organism_position[1])**2)**0.5
                 if distance <= self.sight_range:
