@@ -329,15 +329,6 @@ class Animal(Organism):
         try:
             self.organism_position[0] += self.current_direction[0]*self.min_speed
             self.organism_position[1] += self.current_direction[1]*self.min_speed
-
-            if self.organism_position[0] < 0:
-                self.current_direction[0] = -self.current_direction[0]
-            if self.organism_position[1] < 0:
-                self.current_direction[1] = -self.current_direction[1]
-            if self.organism_position[0] > 1820:
-                self.current_direction[0] = -self.current_direction[0]
-            if self.organism_position[1] > 980:
-                self.current_direction[1] = -self.current_direction[1]
         except:
             print(f"Error in move function {self.current_direction}")
 
@@ -345,15 +336,6 @@ class Animal(Organism):
         try:
             self.organism_position[0] += self.current_direction[0]*self.max_speed
             self.organism_position[1] += self.current_direction[1]*self.min_speed
-
-            if self.organism_position[0] < 0:
-                self.current_direction[0] = -self.current_direction[0]
-            if self.organism_position[1] < 0:
-                self.current_direction[1] = -self.current_direction[1]
-            if self.organism_position[0] > 1820:
-                self.current_direction[0] = -self.current_direction[0]
-            if self.organism_position[1] > 980:
-                self.current_direction[1] = -self.current_direction[1]
         except:
             print(f"Error in move function {self.current_direction}")
         
