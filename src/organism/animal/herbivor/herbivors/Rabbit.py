@@ -3,8 +3,6 @@ import random
 import sys
 sys.path.append("src/organism/animal/herbivor")
 from Herbivor import Herbivor
-from Herbivor import colors
-from Herbivor import colorize
 
 class Rabbit(Herbivor):
 
@@ -94,7 +92,6 @@ class Rabbit(Herbivor):
             y = self.organism_position[1] 
             position = [x, y]
             new_animal = Rabbit(position, animal_id, self.all_known_static_resources, self.all_known_organisms)
-            print(colorize(f"{self.name} {self.animal_id} has procreated with {self.name} {self.current_target.animal_id} to create {self.name} {animal_id}", colors.CYAN))
             self.all_known_organisms[animal_id] = new_animal
             new_animal.procreate_cool_down = self.max_procreation_cool_down
 

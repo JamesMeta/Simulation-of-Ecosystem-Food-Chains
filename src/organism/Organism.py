@@ -1,19 +1,9 @@
 from typing import List, Any
 
-class colors:
-    RED = '\033[91m'
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    BLUE = '\033[94m'
-    MAGENTA = '\033[95m'
-    CYAN = '\033[96m'
-    WHITE = '\033[97m'
-    RESET = '\033[0m'
-
-# Colorizing function
-def colorize(text, color):
-    return f"{color}{text}{colors.RESET}"
-
+# Great Grandparent class
+# This class is the base class for all organisms in the simulation
+# It contains the basic attributes that all organisms have
+# It also contains the die function which is used to remove the organism from the simulation
 class Organism:
     
     def __init__(self, organism_position: List[float], animal_id: int):
@@ -36,8 +26,8 @@ class Organism:
             return 
 
         self.alive_status = False
-        print(colorize(f"Organism {self.name} #{self.animal_id} has died due to {cause_of_death}", colors.RED))
 
+        # Use the utility class to count the cause of death
         self.all_known_organisms["utility"].count_deaths[cause_of_death] += 1
         del self.all_known_organisms[self.animal_id]
     

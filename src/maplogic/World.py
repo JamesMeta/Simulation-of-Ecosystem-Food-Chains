@@ -1,10 +1,8 @@
 import sys
-import random
 sys.path.append("src/maplogic")
 from typing import List, Any
 from maplogic.StaticResource import StaticResource
 from maplogic.GrassLands import GrassLands
-from maplogic.GrassPlant import GrassPlant
 
 class World:
 
@@ -13,6 +11,10 @@ class World:
 
         self.time_of_day = [1,12,0,0] # [day, hour, minute, second] ticks in day = 24*60*6 = 8640
 
+    # Update the time of day
+    # This function was originally used to update the time of day in the game in a second by second basis
+    # However, time of day was converted to time of year in the final version of the game
+    # This function still is used but the logic doesnt make sense anymore
     def update_time_of_day(self) -> None:
         self.time_of_day[3] += 10
         if self.time_of_day[3] >= 60:
@@ -36,9 +38,11 @@ class World:
         self.static_resource_map[resource_id] = resource
 
     def update(self) -> None:
+
         for resource in self.static_resource_map.values():
             if resource.resource_type_id == 1:
                 resource.update()
+                
         self.update_time_of_day()
 
 

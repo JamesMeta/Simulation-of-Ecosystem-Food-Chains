@@ -1,8 +1,5 @@
-import sys
-import random
 import pygame as pg
-sys.path.append("src/maplogic")
-from typing import List, Any
+from typing import List
 
 class GrassPlant():
 
@@ -17,14 +14,13 @@ class GrassPlant():
         #Spriteloader variables
         self.sprite = None
 
-        
-    
-
     def update(self) -> None:
 
-        if self.hp <= 0:
+        #Check if the grass plant has been eaten completely
+        if self.mass <= 0:
             self.alive_status = False
         
+    #function will be used by other classes to remove eaten grass from the map
     def die(self, cause_of_death) -> None:
         self.alive_status = False
 
@@ -37,9 +33,6 @@ class GrassPlant():
             except pg.error:
                 print(f"Error loading grass sprite.")
                 return
-
-
-
 
 if __name__ == "__main__":
     pass

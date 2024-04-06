@@ -1,8 +1,11 @@
+
+#import all necessary libraries and classes
 import pygame as pg
 import random
 import math
 import matplotlib.pyplot as plt
 import os
+
 from typing import List, Any
 from organism import Organism
 from organism.utility import Utility
@@ -22,7 +25,6 @@ from maplogic.World import World
 from maplogic.StaticResource import StaticResource
 from maplogic.GrassLands import GrassLands
 from maplogic.GrassPlant import GrassPlant
-
 from maplogic.HeightMap import generate_resource_map
 
 class Simulation:
@@ -37,7 +39,6 @@ class Simulation:
         pg.init()
         self.screen = pg.display.set_mode((self.screen_x_resolution, self.screen_y_resolution))
         self.clock = pg.time.Clock()
-        self.starting_species_names = []
 
         self.organism_map = {}
         self.world = World()
@@ -45,15 +46,6 @@ class Simulation:
         self.current_day = 1
 
         self.organism_population_over_time = {
-            "Fox": [],
-            "Owl": [],
-            "Frog": [],
-            "Snake": [],
-            "Hawk": [],
-            "Small Bird": [],
-            "Rabbit": [],
-            "Grass Hopper": [],
-            "Mouse": [],
             "Grass": []
         }
 
@@ -61,134 +53,9 @@ class Simulation:
 
         self.debug_mode = True
 
-    #Organism Types: 1 = Fox, 2 = Owl, 3 = Frog, 4 = Snake, 5 = Hawk, 6 = Small Bird, 7 = Rabbit, 8 = Grass Hopper, 9 = Mouse, 10 = Utility
-    def spawn_organism(self, species_id: int) -> None:
-
-        if species_id == 10:
-            utility = Utility(self.organism_map)
-            self.organism_map["utility"] = utility
-            return
-
-        def get_unique_animal_id() -> int:
-            return len(self.organism_map) + 1
-
-        x = random.randint(0, self.screen_x_resolution)
-        y = random.randint(0, self.screen_y_resolution)
-        position = [x, y]
-        animal_id = get_unique_animal_id()
-        new_organism = None
-
-        if species_id == 1:
-            new_organism = Fox(position, animal_id, self.world.static_resource_map, self.organism_map)
-            if not self.starting_species_names:
-                self.starting_species_names.append("Fox")
-        elif species_id == 2:
-            new_organism = Owl(position, animal_id, self.world.static_resource_map, self.organism_map)
-            if not self.starting_species_names:
-                self.starting_species_names.append("Owl")
-        elif species_id == 3:
-            new_organism = Frog(position, animal_id, self.world.static_resource_map, self.organism_map)
-            if not self.starting_species_names:
-                self.starting_species_names.append("Frog")
-        elif species_id == 4:
-            new_organism = Snake(position, animal_id, self.world.static_resource_map, self.organism_map)
-            if not self.starting_species_names:
-                self.starting_species_names.append("Snake")
-        elif species_id == 5:
-            new_organism = Hawk(position, animal_id, self.world.static_resource_map, self.organism_map)
-            if not self.starting_species_names:
-                self.starting_species_names.append("Hawk")
-        elif species_id == 6:
-            new_organism = SmallBird(position, animal_id, self.world.static_resource_map, self.organism_map)
-            if not self.starting_species_names:
-                self.starting_species_names.append("Small Bird")
-        elif species_id == 7:
-            new_organism = Rabbit(position, animal_id, self.world.static_resource_map, self.organism_map)
-            if not self.starting_species_names:
-                self.starting_species_names.append("Rabbit")
-        elif species_id == 8:
-            new_organism = GrassHopper(position, animal_id, self.world.static_resource_map, self.organism_map)
-            if not self.starting_species_names:
-                self.starting_species_names.append("Grass Hopper")
-        elif species_id == 9:
-            new_organism = Mouse(position, animal_id, self.world.static_resource_map, self.organism_map)
-            if not self.starting_species_names:
-                self.starting_species_names.append("Mouse")
-        else:
-            print("Invalid Species ID")
-
-        self.extinction_timers[species_id] = 0
-        
-        self.organism_map[animal_id] = new_organism
-        
- 
-    def update_all_Objects(self) -> None:
-        copyof_organism_map = self.organism_map.copy()
-        for organism in copyof_organism_map.values():
-            
-            if isinstance(organism, Utility):
-                continue
-
-            organism.update()
-        self.world.update()
-
-        if self.world.time_of_day[0] != self.current_day:
-
-            for key in self.extinction_timers:
-                if self.extinction_timers[key] == 0:
-                    self.extinction_timers[key] = self.current_day + 7
-                
-
-            for organism in self.organism_map.values():
-                if isinstance(organism, Utility):
-                    continue
-
-                if organism.species_id in self.extinction_timers:
-                    self.extinction_timers[organism.species_id] = 0
-            
-            for key, value in self.extinction_timers.items():
-                if value == self.current_day:
-                    print(f"Respawning Species {key}")
-                    self.spawn_organism(key)
-                    self.spawn_organism(key)
-                    self.spawn_organism(key)
-                    self.spawn_organism(key)
-
-
-            self.log_population()
-            self.current_day = self.world.time_of_day[0]
-    
     def draw_all_objects(self) -> None:
-
-        def interpolate_color(color1, color2, ratio):
-            r = int(color1[0] * (1 - ratio) + color2[0] * ratio)
-            g = int(color1[1] * (1 - ratio) + color2[1] * ratio)
-            b = int(color1[2] * (1 - ratio) + color2[2] * ratio)
-            return (r, g, b)
         
-        def get_current_color(current_time):
-
-            time_intervals = [(4, (255, 218, 185)),    # Morning
-                  (8, (255, 240, 165)),    # Late Morning
-                  (12, (173, 216, 230)),    # Afternoon
-                  (16, (255, 192, 203)),   # Evening
-                  (20, (47, 79, 79))]      # Night
-
-            # Find the current time interval
-            for i in range(len(time_intervals) - 1):
-                if time_intervals[i][0] <= current_time < time_intervals[i + 1][0]:
-                    start_time, start_color = time_intervals[i]
-                    end_time, end_color = time_intervals[i + 1]
-                    # Calculate ratio of time elapsed in the current interval
-                    ratio = (current_time - start_time) / (end_time - start_time)
-                    return interpolate_color(start_color, end_color, ratio)
-
-            # If current time is beyond the defined intervals, return last color
-            return time_intervals[-1][1]
-
-        time = self.world.time_of_day
-        
-        self.screen.fill(get_current_color(time[1]))
+        self.screen.fill((190,214,197))
 
         # If-else for debugging. Will always toggle sprites off/on.
         if self.debug_mode:
@@ -229,7 +96,7 @@ class Simulation:
                         self.screen.blit(grass_plant.sprite, grass_plant.resource_position)
         
         font = pg.font.Font(None, 36)
-        text = font.render(f"Day: {self.world.time_of_day[0]} Time: {self.world.time_of_day[1]}:{self.world.time_of_day[2]}:{self.world.time_of_day[3]}", 1, (255, 255, 255))
+        text = font.render(f"Year: {self.world.time_of_day[0]}", 1, (255, 255, 255))
         self.screen.blit(text, (10, 10))
 
     def log_population(self) -> None:
@@ -259,25 +126,33 @@ class Simulation:
             if resource.resource_type_id == 1:
                 grass_count += len(resource.dynamic_resource_map)
 
-        
-        self.organism_population_over_time["Fox"].append(fox_count)
-        self.organism_population_over_time["Owl"].append(owl_count)
-        self.organism_population_over_time["Frog"].append(frog_count)
-        self.organism_population_over_time["Snake"].append(snake_count)
-        self.organism_population_over_time["Hawk"].append(hawk_count)
-        self.organism_population_over_time["Small Bird"].append(small_bird_count)
-        self.organism_population_over_time["Rabbit"].append(rabbit_count)
-        self.organism_population_over_time["Grass Hopper"].append(grass_hopper_count)
-        self.organism_population_over_time["Mouse"].append(mouse_count)
-        self.organism_population_over_time["Grass"].append(grass_count)
+        if "Fox" in self.organism_population_over_time or fox_count > 0:
+            self.organism_population_over_time["Fox"].append(fox_count)
+        if "Owl" in self.organism_population_over_time or owl_count > 0:
+            self.organism_population_over_time["Owl"].append(owl_count)
+        if "Frog" in self.organism_population_over_time or frog_count > 0:
+            self.organism_population_over_time["Frog"].append(frog_count)
+        if "Snake" in self.organism_population_over_time or snake_count > 0:
+            self.organism_population_over_time["Snake"].append(snake_count)
+        if "Hawk" in self.organism_population_over_time or hawk_count > 0:
+            self.organism_population_over_time["Hawk"].append(hawk_count)
+        if "Small Bird" in self.organism_population_over_time or small_bird_count > 0:
+            self.organism_population_over_time["Small Bird"].append(small_bird_count)
+        if "Rabbit" in self.organism_population_over_time or rabbit_count > 0:
+            self.organism_population_over_time["Rabbit"].append(rabbit_count)
+        if "Grass Hopper" in self.organism_population_over_time or grass_hopper_count > 0:
+            self.organism_population_over_time["Grass Hopper"].append(grass_hopper_count)
+        if "Mouse" in self.organism_population_over_time or mouse_count > 0:
+            self.organism_population_over_time["Mouse"].append(mouse_count)
+        if "Grass" in self.organism_population_over_time or grass_count > 0:
+            self.organism_population_over_time["Grass"].append(grass_count)
     
     def plot_population(self) -> None:
+        
         plt.figure(figsize=(10, 5))
         for species, population in self.organism_population_over_time.items():
             plt.plot(population, label=species)
-        if species in self.starting_species_names:
-                plt.plot(population, label=species)
-        plt.xlabel("Day")
+        plt.xlabel("Year")
         plt.ylabel("Population")
         plt.title("Population Over Time")
         plt.legend()
@@ -288,9 +163,7 @@ class Simulation:
         for species, population in self.organism_population_over_time.items():
             if species != "Grass Hopper":
                 plt.plot(population, label=species)
-            if species in self.starting_species_names:
-                plt.plot(population, label=species)
-        plt.xlabel("Day")
+        plt.xlabel("Year")
         plt.ylabel("Population")
         plt.title("Population Over Time (Excluding Grass Hopper)")
         plt.legend()
@@ -301,11 +174,20 @@ class Simulation:
         for species, population in self.organism_population_over_time.items():
             if species != "Grass":
                 plt.plot(population, label=species)
-            if species in self.starting_species_names:
-                plt.plot(population, label=species)
-        plt.xlabel("Day")
+        plt.xlabel("Year")
         plt.ylabel("Population")
         plt.title("Population Over Time (Excluding Grass)")
+        plt.legend()
+        plt.show()
+
+        #plot with only grass and grasshopper
+        plt.figure(figsize=(10, 5))
+        for species, population in self.organism_population_over_time.items():
+            if species == "Grass" or species == "Grass Hopper":
+                plt.plot(population, label=species)
+        plt.xlabel("Year")
+        plt.ylabel("Population")
+        plt.title("Population Over Time (Grass and Grass Hopper)")
         plt.legend()
         plt.show()
             
@@ -322,7 +204,112 @@ class Simulation:
         plt.title("Utility Cause of Deaths")
         plt.show()
 
+    #Organism Types: 1 = Fox, 2 = Owl, 3 = Frog, 4 = Snake, 5 = Hawk, 6 = Small Bird, 7 = Rabbit, 8 = Grass Hopper, 9 = Mouse, 10 = Utility
+    def spawn_organism(self, species_id: int) -> None:
 
+        #utility class is a special class that is used to track the cause of death for all organisms
+        #it is not a real organism and is not displayed on the screen
+        #it is embedded into the organism map so that it can be accessed by all organisms to report their cause of death
+        if species_id == 10:
+            utility = Utility(self.organism_map)
+            self.organism_map["utility"] = utility
+            return
+
+        def get_unique_animal_id() -> int:
+            return len(self.organism_map) + 1
+
+        x = random.randint(0, self.screen_x_resolution)
+        y = random.randint(0, self.screen_y_resolution)
+        position = [x, y]
+        animal_id = get_unique_animal_id()
+        new_organism = None
+
+        if species_id == 1:
+            new_organism = Fox(position, animal_id, self.world.static_resource_map, self.organism_map)
+            self.organism_population_over_time["Fox"] = []
+        elif species_id == 2:
+            new_organism = Owl(position, animal_id, self.world.static_resource_map, self.organism_map)
+            self.organism_population_over_time["Owl"] = []
+        elif species_id == 3:
+            new_organism = Frog(position, animal_id, self.world.static_resource_map, self.organism_map)
+            self.organism_population_over_time["Frog"] = []
+        elif species_id == 4:
+            new_organism = Snake(position, animal_id, self.world.static_resource_map, self.organism_map)
+            self.organism_population_over_time["Snake"] = []
+        elif species_id == 5:
+            new_organism = Hawk(position, animal_id, self.world.static_resource_map, self.organism_map)
+            self.organism_population_over_time["Hawk"] = []
+        elif species_id == 6:
+            new_organism = SmallBird(position, animal_id, self.world.static_resource_map, self.organism_map)
+            self.organism_population_over_time["Small Bird"] = []
+        elif species_id == 7:
+            new_organism = Rabbit(position, animal_id, self.world.static_resource_map, self.organism_map)
+            self.organism_population_over_time["Rabbit"] = []
+        elif species_id == 8:
+            new_organism = GrassHopper(position, animal_id, self.world.static_resource_map, self.organism_map)
+            self.organism_population_over_time["Grass Hopper"] = []
+        elif species_id == 9:
+            new_organism = Mouse(position, animal_id, self.world.static_resource_map, self.organism_map)
+            self.organism_population_over_time["Mouse"] = []
+        else:
+            print("Invalid Species ID")
+
+        #if the species is not in the extinction timer then add it to the timer
+        self.extinction_timers[species_id] = 0
+
+        #add the new organism to the organism map
+        self.organism_map[animal_id] = new_organism
+
+        #if the organism has a random start then randomize its starting values
+        if new_organism.random_start:
+            new_organism.randomize_start()
+        
+    def update_all_Objects(self) -> None:
+
+        #update all organisms in the simulation
+        copyof_organism_map = self.organism_map.copy()
+        for organism in copyof_organism_map.values():
+            
+            if isinstance(organism, Utility):
+                continue
+
+            organism.update()
+
+        #call the world update function which updates all the resources in the simulation
+        self.world.update()
+
+        #check if the day has changed and update the once a day functions
+        if self.world.time_of_day[0] != self.current_day:
+
+            print(f"New Year: {self.world.time_of_day[0]}")
+
+            #if the extinction timer hasnt been started then start a timer
+            #this will be overruled later if the species is still alive
+            for key in self.extinction_timers:
+                if self.extinction_timers[key] == 0:
+                    self.extinction_timers[key] = self.current_day + 7 #7 Days until respawn
+                
+
+            for organism in self.organism_map.values():
+                if isinstance(organism, Utility):
+                    continue
+
+                #if the species is still alive then reset the extinction timer
+                #this species will not need to be respawned yet
+                if organism.species_id in self.extinction_timers:
+                    self.extinction_timers[organism.species_id] = 0
+            
+            #if the extinction timer has been reached then respawn the species
+            for key, value in self.extinction_timers.items():
+                if value == self.current_day:
+                    print(f"Respawning Species {key}")
+                    for _ in range(6):
+                        self.spawn_organism(key)
+
+
+            self.log_population()
+            self.current_day = self.world.time_of_day[0]
+ 
     #test world generation and basic organism spawning and movement
     def test_one(self) -> None:
 
@@ -364,10 +351,7 @@ class Simulation:
         for i in range(10):
             self.spawn_organism(9)
         
-        for organism in self.organism_map.values():
-            if organism.random_start:
-                organism.randomize_start()
-
+        #spawn utility class
         self.spawn_organism(10)
         
 
@@ -426,10 +410,7 @@ class Simulation:
         for i in range(60):
             self.spawn_organism(9)
 
-        for organism in self.organism_map.values():
-            if organism.random_start:
-                organism.randomize_start()
-
+        #spawn utility class
         self.spawn_organism(10)
         
 
@@ -495,10 +476,6 @@ class Simulation:
         for i in range(10):
             self.spawn_organism(9)
 
-        for organism in self.organism_map.values():
-            if organism.random_start:
-                organism.randomize_start()
-
         self.spawn_organism(10)
         
 
@@ -561,10 +538,6 @@ class Simulation:
         for i in range(10):
             self.spawn_organism(9)
 
-        for organism in self.organism_map.values():
-            if organism.random_start:
-                organism.randomize_start()
-
         self.spawn_organism(10)
         
 
@@ -593,10 +566,6 @@ class Simulation:
         # self.spawn_organism(1)
 
         self.spawn_organism(5)
-        
-        for organism in self.organism_map.values():
-            if organism.random_start:
-                organism.randomize_start()
 
         self.spawn_organism(10)
         
@@ -623,15 +592,10 @@ class Simulation:
 
         self.spawn_organism(5)
         
-        for organism in self.organism_map.values():
-            if organism.random_start:
-                organism.randomize_start()
-
         self.spawn_organism(10)
         
         self.log_population()
             
-    
     def version_demonstration(self) -> None:
         self.debug_mode = False
 
@@ -685,11 +649,7 @@ class Simulation:
         for i in range(20):
             self.spawn_organism(9)
 
-
-        for organism in self.organism_map.values():
-            if organism.random_start:
-                organism.randomize_start()
-
+        #spawn utility class
         self.spawn_organism(10)
         
         self.log_population()
@@ -747,11 +707,6 @@ class Simulation:
         for i in range(60):
             self.spawn_organism(9)
 
-
-        for organism in self.organism_map.values():
-            if organism.random_start:
-                organism.randomize_start()
-
         self.spawn_organism(10)
         
         self.log_population()
@@ -780,11 +735,6 @@ class Simulation:
         #rabbit
         for i in range(100):
             self.spawn_organism(7)
-
-
-        for organism in self.organism_map.values():
-            if organism.random_start:
-                organism.randomize_start()
 
         self.spawn_organism(10)
         
@@ -815,16 +765,10 @@ class Simulation:
         for i in range(1000):
             self.spawn_organism(8)
 
-
-        for organism in self.organism_map.values():
-            if organism.random_start:
-                organism.randomize_start()
-
         self.spawn_organism(10)
         
         self.log_population()
         
-
     def snake_and_mouse_test(self) -> None:
         self.debug_mode = True
 
@@ -849,11 +793,6 @@ class Simulation:
         #mouse
         for i in range(100):
             self.spawn_organism(9)
-
-
-        for organism in self.organism_map.values():
-            if organism.random_start:
-                organism.randomize_start()
 
         self.spawn_organism(10)
         
@@ -886,20 +825,25 @@ class Simulation:
         for i in range(10):
             self.spawn_organism(9)
 
-        for organism in self.organism_map.values():
-            if organism.random_start:
-                organism.randomize_start()
-
         self.spawn_organism(10)
         
 
         self.log_population()
-
-
-
-
-        
+ 
     def run_simulation(self) -> None:
+
+        option = input("Please Select Additional Options:\n\n1. Normal Speed\n2. 2x Speed\n3. Max Speed\n\nPlease Select Option: ")
+
+        if option == "1":
+            tick_rate = 30
+        elif option == "2":
+            tick_rate = 60
+        elif option == "3":
+            tick_rate = math.inf
+        else:
+            print("Invalid Option Selected. Running Simulation at Normal Speed.")
+            tick_rate = 30
+
         running = True
         while running:
             for event in pg.event.get():
@@ -908,8 +852,8 @@ class Simulation:
             
             self.update_all_Objects()
             self.draw_all_objects()
+            self.clock.tick(tick_rate)
             pg.display.flip()
-            self.clock.tick(math.inf)
         self.plot_population()
 
 

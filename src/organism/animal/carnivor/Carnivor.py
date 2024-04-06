@@ -6,22 +6,6 @@ sys.path.append("src/organism/animal")
 from Animal import Animal
 from typing import List, Any
 
-class colors:
-    RED = '\033[91m'
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    BLUE = '\033[94m'
-    MAGENTA = '\033[95m'
-    CYAN = '\033[96m'
-    WHITE = '\033[97m'
-    RESET = '\033[0m'
-    BLACK = '\033[30m'
-    
-
-# Colorizing function
-def colorize(text, color):
-    return f"{color}{text}{colors.RESET}"
-
 class Carnivor(Animal):
 
     def __init__(self, organism_position: List[float], animal_id: int, all_known_static_resources: Any,  all_known_organisms: Any):
@@ -87,7 +71,94 @@ class Carnivor(Animal):
         self.potential_predators = None
         self.visited_static_resources = []
 
+    # This function serves to begin the food detection process
+    # It will detect food in the sight range of the organism and begin the stalking process if found
+    # It will also cause the organism to wander to different static resources if no food is found in its vacinity
+    # It will also cause the organism to wander if all static resources have been visited
+    def begin_hunting(self):
+
+        # Failsafe to prevent target being in stalker mode despite not having a target
+        if self.current_target is None or not self.is_current_target_organism:
+            self.stalking = False
+
+        # Used to detect food and begin stalking if food is found
+        if self.detect_food():
+            self.begin_stalking()
+            self.stalking = True
+            self.visited_static_resources = []
+        
+        # Used to wander to different static resources if no food is found in the vacinity
+        elif len(self.visited_static_resources) != len(self.all_known_static_resources):
+
+            if self.is_current_target_static():
+                self.move_towards_specific_resource(self.current_target)
+                return
+            else:
+                for resource in self.all_known_static_resources.values():
+                    if resource not in self.visited_static_resources:
+                        self.move_towards_specific_resource(resource)
+                        return
+        
+        # Used to wander if all static resources have been visited
+        else:
+            self.wander()
+            self.visited_static_resources = [] # Reset the visited static resources list
+
+    # This function serves to begin the consumption process of food
+    # Once an organism is detected the organism will move towards the organism
+    # If the organism is out of the sight range of the organism, the organism will move towards the future position of the organism
+    # If the organism is in the sight range of the organism, the organism will move towards the current position of the organism
+    # Once the organism is in the feeding range of the organism, the organism will eat the organism
+    # Speed will change depending on the strategy currently being used
+    def begin_stalking(self):
+
+        if self.current_target is None or not self.is_current_target_organism:
+            self.stalking = False
+            return
+        
+        if self.current_target.alive_status == False:
+            self.current_target = None
+            self.stalking = False
+            return
+        
+        distance = ((self.organism_position[0] - self.current_target.organism_position[0])**2 + (self.organism_position[1] - self.current_target.organism_position[1])**2)**0.5
+
+        if distance <= self.feeding_range:
+            self.eat_food()
+            return
+        
+        if distance > self.sight_range:
+            self.current_target = None
+            self.stalking = False
+            return
+        
+        target_position = np.array(self.current_target.organism_position)
+        target_view_range = self.current_target.sight_range
+        target_current_direction = np.array(self.current_target.current_direction)
+        target_current_speed = self.current_target.min_speed
+        target_remaining_ticks = self.current_target.progress_left_on_decision
+
+        if distance > target_view_range:
+            target_future_position = target_position + (target_current_direction * target_current_speed * target_remaining_ticks)
+            angle = math.atan2(target_future_position[1] - self.organism_position[1], target_future_position[0] - self.organism_position[0])
+            self.current_direction = [math.cos(angle), math.sin(angle)]
+            self.stalking = True
+
+        if distance <= target_view_range or self.current_target.in_danger:
+            angle = math.atan2(target_position[1] - self.organism_position[1], target_position[0] - self.organism_position[0])
+            self.current_direction = [math.cos(angle), math.sin(angle)]
+            self.needs_for_speed = True
+            self.stalking = False
+
+    # This function serves to check if the current task can be completed during the current decision cycle
+    # If the task is in range, the function will call the appropriate function to complete the task
+    # This serves to correct the issue with the previous implementation 
+    # Where the organism would become out of range of the task before being able to make a decision to complete the task
+    # This function is generally light weight computationally speaking since it is called every tick 
+    # Rather then every 50 like the decision making function
+    # Refer to the herbivore implementation for a more detailed line by line explanation
     def check_if_current_task_in_range(self) -> None:
+
 
         if self.is_absolute_need():
             self.progress_left_on_decision = 0
@@ -134,6 +205,51 @@ class Carnivor(Animal):
             else:
                 pass
 
+    # This function serves to detect prey in the sight range of the organism
+    # It targets the closest organism in the sight range of the organism
+    # Its generally very heavy computationally speaking since it scans through all organisms in the simulation
+    # In the future, this function can be optimized by using a quad tree data structure to store the organisms
+    def detect_food(self) -> bool:
+        potential_food = [None,None]
+        for organism in self.all_known_organisms.values():
+
+            if organism.hidden:
+                continue
+
+            if organism.species_id in self.consumable_organisms:
+                distance = ((self.organism_position[0] - organism.organism_position[0])**2 + (self.organism_position[1] - organism.organism_position[1])**2)**0.5
+                if distance <= self.sight_range:
+
+                    if potential_food[0] is None:
+                        potential_food = [distance, organism]
+
+                    if potential_food[0] > distance:
+                        potential_food = [distance, organism]
+        
+        if potential_food[1] is None:
+            return False
+
+        self.current_target = potential_food[1]
+        return True
+
+    # Similar to the herbivore implementation, this function serves to check if the organism is at the center of the resource
+    # Used to determine if the organism has been to this resource before
+    def is_at_center_of_resource(self) -> bool:
+        if self.is_current_target_static():
+            distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
+            if distance < self.feeding_range:
+                return True
+        else:
+            print("Something went wrong in is_at_center_of_resource()")
+
+    # This function serves to make a decision for the organism
+    # It is the main brain of the organism
+    # It is called once every decision_duration which is currently set to 50 ticks
+    # It follows a decision tree structure to determine the best course of action for the organism based on priority
+    # It starts by checking if the organism is alive, then if it is in danger, then if it needs sleep, food, or water
+    # If none of these conditions are met, the organism will check if it is ready to mate
+    # If thats not true, the organism will wander around
+    # Refer to the herbivore implementation for a more detailed line by line explanation
     def make_decision(self) -> None:
 
         self.is_absolute_need()
@@ -169,8 +285,6 @@ class Carnivor(Animal):
             self.needs_for_speed = False
 
         if self.progress_left_on_decision == 0:
-
-            #print(colorize(f"{self.name}#{self.animal_id} Making Decision:", colors.WHITE), end=" ")
 
             # first layer of decision making: Check alive status
 
@@ -220,7 +334,6 @@ class Carnivor(Animal):
                 self.current_task = True
             
             if self.needs_sleep:
-                #print(colorize("Needs Sleep", colors.YELLOW))
                 if self.safe_place is not None:
                     self.move_towards_specific_resource(self.safe_place)
                     distance = ((self.organism_position[0] - self.safe_place.resource_position[0])**2 + (self.organism_position[1] - self.safe_place.resource_position[1])**2)**0.5
@@ -236,7 +349,6 @@ class Carnivor(Animal):
                     return
             
             if self.needs_food:
-                #print(colorize("Needs Food", colors.GREEN))
 
                 if self.stalking:
                     self.begin_stalking()
@@ -250,7 +362,6 @@ class Carnivor(Animal):
                 
            
             if self.needs_water:
-                #print(colorize("Needs Water", colors.BLUE))
 
                 water_id = 2
 
@@ -275,7 +386,6 @@ class Carnivor(Animal):
                 self.current_task = True
 
             if self.ready_to_mate:
-                #print(colorize("Looking for Mate", colors.MAGENTA))
 
                 if self.current_target is None:
                     self.wander()
@@ -301,109 +411,15 @@ class Carnivor(Animal):
         else:
             self.progress_left_on_decision -= 1
 
-    def detect_food(self) -> bool:
-        potential_food = [None,None]
-        for organism in self.all_known_organisms.values():
-
-            if organism.hidden:
-                continue
-
-            if organism.species_id in self.consumable_organisms:
-                distance = ((self.organism_position[0] - organism.organism_position[0])**2 + (self.organism_position[1] - organism.organism_position[1])**2)**0.5
-                if distance <= self.sight_range:
-
-                    if potential_food[0] is None:
-                        potential_food = [distance, organism]
-
-                    if potential_food[0] > distance:
-                        potential_food = [distance, organism]
-        
-        if potential_food[1] is None:
-            return False
-
-        self.current_target = potential_food[1]
-        return True
+    # override this function in the child class
+    def procreate(self) -> Any:
+        pass
     
-    def begin_stalking(self):
 
-        if self.current_target is None or not self.is_current_target_organism:
-            self.stalking = False
-            return
-        
-        if self.current_target.alive_status == False:
-            self.current_target = None
-            self.stalking = False
-            return
-        
-        distance = ((self.organism_position[0] - self.current_target.organism_position[0])**2 + (self.organism_position[1] - self.current_target.organism_position[1])**2)**0.5
-
-        if distance <= self.feeding_range:
-            self.eat_food()
-            return
-        
-        if distance > self.sight_range:
-            #print(colorize(f"{self.name}#{self.animal_id} Target Escaped", colors.RED))
-            self.current_target = None
-            self.stalking = False
-            return
-        
-        target_position = np.array(self.current_target.organism_position)
-        target_view_range = self.current_target.sight_range
-        target_current_direction = np.array(self.current_target.current_direction)
-        target_current_speed = self.current_target.min_speed
-        target_remaining_ticks = self.current_target.progress_left_on_decision
-
-        if distance > target_view_range:
-            #print(colorize(f"{self.name}#{self.animal_id} Out of Target's Sight", colors.RED))
-            target_future_position = target_position + (target_current_direction * target_current_speed * target_remaining_ticks)
-            angle = math.atan2(target_future_position[1] - self.organism_position[1], target_future_position[0] - self.organism_position[0])
-            self.current_direction = [math.cos(angle), math.sin(angle)]
-            self.stalking = True
-
-        if distance <= target_view_range or self.current_target.in_danger:
-            #print(colorize(f"{self.name}#{self.animal_id} In Target's Sight", colors.RED))
-            angle = math.atan2(target_position[1] - self.organism_position[1], target_position[0] - self.organism_position[0])
-            self.current_direction = [math.cos(angle), math.sin(angle)]
-            self.needs_for_speed = True
-            self.stalking = False
     
-    def begin_hunting(self):
 
-        #print(colorize(f"{self.name}#{self.animal_id} Beginning Hunting", colors.RED))
-
-        if self.current_target is None or not self.is_current_target_organism:
-            self.stalking = False
-
-        if self.detect_food():
-            #print(colorize(f"{self.name}#{self.animal_id} Detected Food", colors.RED))
-            self.begin_stalking()
-            self.stalking = True
-            self.visited_static_resources = []
-        
-        elif len(self.visited_static_resources) != len(self.all_known_static_resources):
-
-            if self.is_current_target_static():
-                self.move_towards_specific_resource(self.current_target)
-                #print(colorize(f"{self.name}#{self.animal_id} Moving Towards Resource", colors.RED))
-                return
-            else:
-                for resource in self.all_known_static_resources.values():
-                    if resource not in self.visited_static_resources:
-                        self.move_towards_specific_resource(resource)
-                        #print(colorize(f"{self.name}#{self.animal_id} Moving Towards Resource", colors.RED))
-                        return
-        
-        else:
-            self.wander()
-            self.visited_static_resources = []
     
-    def is_at_center_of_resource(self) -> bool:
-        if self.is_current_target_static():
-            distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
-            if distance < self.feeding_range:
-                return True
-        else:
-            "Something went wrong in is_at_center_of_resource()"
+
 
             
 

@@ -1,28 +1,14 @@
 import sys
 import random
-sys.path.append("src/maplogic")
-sys.path.append("src/organism/animal")
-from Animal import Animal
-from maplogic.GrassPlant import GrassPlant
-from maplogic.StaticResource import StaticResource
-from typing import List, Any
 import math
 
-class colors:
-    RED = '\033[91m'
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    BLUE = '\033[94m'
-    MAGENTA = '\033[95m'
-    CYAN = '\033[96m'
-    WHITE = '\033[97m'
-    RESET = '\033[0m'
-    BLACK = '\033[30m'
-    
+sys.path.append("src/maplogic")
+sys.path.append("src/organism/animal")
 
-# Colorizing function
-def colorize(text, color):
-    return f"{color}{text}{colors.RESET}"
+from Animal import Animal
+from maplogic.GrassPlant import GrassPlant
+from typing import List, Any
+
 
 class Herbivor(Animal):
     
@@ -89,17 +75,25 @@ class Herbivor(Animal):
         self.visited_static_resources = []
 
 
-
+    # This function serves to check if the current task can be completed during the current decision cycle
+    # If the task is in range, the function will call the appropriate function to complete the task
+    # This serves to correct the issue with the previous implementation 
+    # Where the organism would become out of range of the task before being able to make a decision to complete the task
+    # This function is generally light weight computationally speaking since it is called every tick 
+    # Rather then every 50 like the decision making function
     def check_if_current_task_in_range(self) -> None:
 
+        # If organism passes absolute need threshold allow it to make a decision immediately
         if self.is_absolute_need():
             self.progress_left_on_decision = 0
             return
 
+        # If the organism is in danger, allow it to make a decision immediately to run away
         if self.in_danger:
             self.run_away_from_threats()
             return
 
+        # If the organism needs sleep and is at the safe place, allow it to sleep
         if self.needs_sleep and self.current_target is not None:
             distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
             if distance < self.current_target.resource_radius:
@@ -110,6 +104,7 @@ class Herbivor(Animal):
                 self.move_towards_specific_resource(self.current_target)
                 return
 
+        # If the organism needs food and is at the food source, allow it to eat
         if self.needs_food and self.current_target is not None:
             if self.is_current_target_static():
                 
@@ -124,7 +119,6 @@ class Herbivor(Animal):
                         self.move_towards_grass_plants(self.current_target)
                         return
                     
-
                 else:
                     self.detect_grass_plants()
                     self.move_towards_grass_plants(self.current_target)
@@ -138,7 +132,7 @@ class Herbivor(Animal):
                     self.move_towards_grass_plants(self.current_target)
                     return
 
-                
+        # If the organism needs water and is at the water source, allow it to drink
         if self.needs_water and self.current_target is not None:
             distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
             distance -= self.current_target.resource_radius
@@ -147,6 +141,7 @@ class Herbivor(Animal):
             else:
                 pass
 
+        # If the organism is ready to mate and is at the mate, allow it to mate
         if self.ready_to_mate and self.current_target is not None:
 
             if not self.is_current_target_organism():
@@ -158,6 +153,71 @@ class Herbivor(Animal):
             else:
                 pass
 
+    # This function serves to detect grass plants within the sight range of the organism
+    # It is called when the organism is in need of food
+    # It will set the current target to the nearest grass plant within the sight range
+    # If no grass plants are within the sight range, the function will return False
+    def detect_grass_plants(self) -> bool:
+        if self.is_current_target_static():
+            resource_map = self.current_target.dynamic_resource_map
+            for resource in resource_map.values():
+                pos = resource.resource_position
+                distance = ((self.organism_position[0] - pos[0])**2 + (self.organism_position[1] - pos[1])**2)**0.5
+                if distance < self.sight_range:
+                    self.current_target = resource
+                    return True
+                
+            return False
+        else:
+            print(f"Something has gone seriously wrong {self.name}{self.animal_id} Current target: {self.current_target}")
+    
+    # This function serves to check the current target of the organism is grass and not someting else
+    # This function is used as a failsafe to ensure the organism is targeting the correct resource 
+    def is_current_target_grass_plants(self) -> bool:
+        if isinstance(self.current_target, GrassPlant):
+            return True
+        return False
+
+    # This function serves to check if the organism is within the grass lands
+    # Behavior is different if the organism is inside the static resource or not
+    def is_within_grass_lands(self) -> bool:
+        if self.is_current_target_static():
+            distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
+            if distance < self.current_target.resource_radius:
+                return True
+        else:
+            for resource in self.all_known_static_resources.values():
+                if resource.resource_type_id == 1:
+                    distance = ((self.organism_position[0] - resource.resource_position[0])**2 + (self.organism_position[1] - resource.resource_position[1])**2)**0.5
+                    if distance < resource.resource_radius:
+                        self.current_target = resource
+                        return True
+        return False
+
+    # This function serves to check if the organism is at the center of the grass lands
+    # Behavior is different if the organism is at the center of the static resource or not
+    # This is because if the organism is at the center of the static resource and still has not found any grass plants
+    # It should move to a new static resource since this one currently has no food
+    def is_at_grass_lands_center(self) -> bool:
+        if self.is_current_target_static():
+            distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
+            if distance < 20:
+                return True
+        else:
+            for resource in self.all_known_static_resources.values():
+                if resource.resource_type_id == 1:
+                    distance = ((self.organism_position[0] - resource.resource_position[0])**2 + (self.organism_position[1] - resource.resource_position[1])**2)**0.5
+                    if distance < 20:
+                        return True
+        return False
+
+    # This function serves to make a decision for the organism
+    # It is the main brain of the organism
+    # It is called once every decision_duration which is currently set to 50 ticks
+    # It follows a decision tree structure to determine the best course of action for the organism based on priority
+    # It starts by checking if the organism is alive, then if it is in danger, then if it needs sleep, food, or water
+    # If none of these conditions are met, the organism will check if it is ready to mate
+    # If thats not true, the organism will wander around
     def make_decision(self) -> None:
 
         self.is_absolute_need()
@@ -173,14 +233,18 @@ class Herbivor(Animal):
 
         if self.progress_left_on_decision == 0:
 
-            #print(colorize(f"{self.name}#{self.animal_id} Making Decision:", colors.WHITE), end=" ")
-
-            # first layer of decision making: Check alive status
-            
-            # second layer of decision making: Check if the organism is in danger
-
+            #disable hide as the organism is now making a decision can be reenabled if needed
             if self.hidden:
                 self.hidden = False
+
+            # first layer of decision making: Check alive status
+            if not self.alive_status:
+                self.die("not sure why") # This should never be called but is here as a failsafe
+                return
+            
+            # second layer of decision making: Check if the organism is in danger
+            # this layer can be overridden by absolute needs
+            # if absolute needs are not met it will overrule all previous decisions
 
             self.detect_threats()
             if self.current_threat is not None and not self.absolute_need:
@@ -227,7 +291,8 @@ class Herbivor(Animal):
                 self.current_task = True
             
             if self.needs_sleep:
-                #print(colorize("Needs Sleep", colors.YELLOW))
+
+                #if the organism has a safe place to sleep at, move towards it
                 if self.safe_place is not None:
                     self.move_towards_specific_resource(self.safe_place)
                     distance = ((self.organism_position[0] - self.safe_place.resource_position[0])**2 + (self.organism_position[1] - self.safe_place.resource_position[1])**2)**0.5
@@ -243,8 +308,9 @@ class Herbivor(Animal):
                     return
             
             if self.needs_food:
-                #print(colorize("Needs Food", colors.GREEN))
 
+                # pick a random food source within the consumable resources to target
+                # currently only grass plants are available so this is redundant
                 food_id = random.choice(self.consumable_resources)
 
                 if self.is_current_target_grass_plants():
@@ -280,7 +346,6 @@ class Herbivor(Animal):
 
             
             if self.needs_water:
-                #print(colorize("Needs Water", colors.BLUE))
 
                 water_id = 2
 
@@ -308,7 +373,6 @@ class Herbivor(Animal):
                 self.current_task = True
 
             if self.ready_to_mate:
-                #print(colorize("Looking for Mate", colors.MAGENTA))
 
                 if self.current_target is None:
                     self.wander()
@@ -334,57 +398,15 @@ class Herbivor(Animal):
         else:
             self.progress_left_on_decision -= 1
 
+    # This function serves to move the organism towards a living grass plant
+    # It is called when the organism is in need of food
+    # Grass should be detected by the organism before this function is called
     def move_towards_grass_plants(self, grass_plants: Any) -> None:
         
         angle = math.atan2(grass_plants.resource_position[1] - self.organism_position[1], grass_plants.resource_position[0] - self.organism_position[0])
         self.current_direction = [math.cos(angle), math.sin(angle)]
     
-    def detect_grass_plants(self) -> bool:
-        if self.is_current_target_static():
-            resource_map = self.current_target.dynamic_resource_map
-            for resource in resource_map.values():
-                pos = resource.resource_position
-                distance = ((self.organism_position[0] - pos[0])**2 + (self.organism_position[1] - pos[1])**2)**0.5
-                if distance < self.sight_range:
-                    self.current_target = resource
-                    return True
-                
-            return False
-        else:
-            print(f"Something has gone seriously wrong {self.name}{self.animal_id} Current target: {self.current_target}")
-            
-    def is_current_target_grass_plants(self) -> bool:
-        if isinstance(self.current_target, GrassPlant):
-            return True
-        return False
-
-    def is_within_grass_lands(self) -> bool:
-        if self.is_current_target_static():
-            distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
-            if distance < self.current_target.resource_radius:
-                return True
-        else:
-            for resource in self.all_known_static_resources.values():
-                if resource.resource_type_id == 1:
-                    distance = ((self.organism_position[0] - resource.resource_position[0])**2 + (self.organism_position[1] - resource.resource_position[1])**2)**0.5
-                    if distance < resource.resource_radius:
-                        self.current_target = resource
-                        return True
-        return False
-
-    def is_at_grass_lands_center(self) -> bool:
-        if self.is_current_target_static():
-            distance = ((self.organism_position[0] - self.current_target.resource_position[0])**2 + (self.organism_position[1] - self.current_target.resource_position[1])**2)**0.5
-            if distance < 20:
-                return True
-        else:
-            for resource in self.all_known_static_resources.values():
-                if resource.resource_type_id == 1:
-                    distance = ((self.organism_position[0] - resource.resource_position[0])**2 + (self.organism_position[1] - resource.resource_position[1])**2)**0.5
-                    if distance < 20:
-                        return True
-        return False
-    
+    # override this function in the child class
     def procreate(self) -> Any:
         pass
 

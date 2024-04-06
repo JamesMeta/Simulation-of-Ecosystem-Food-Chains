@@ -3,8 +3,6 @@ import sys
 import random
 sys.path.append("src/organism/animal/carnivor")
 from Carnivor import Carnivor
-from Carnivor import colors
-from Carnivor import colorize
 
 class SmallBird(Carnivor):
     
@@ -93,7 +91,6 @@ class SmallBird(Carnivor):
                         y = self.organism_position[1] 
                         position = [x, y]
                         new_animal = SmallBird(position, animal_id, self.all_known_static_resources, self.all_known_organisms)
-                        print(colorize(f"{self.name} {self.animal_id} has procreated with {self.name} {self.current_target.animal_id} to create {self.name} {animal_id}", colors.CYAN))
                         self.all_known_organisms[animal_id] = new_animal
                         new_animal.procreate_cool_down = self.max_procreation_cool_down
 

@@ -3,7 +3,7 @@ import random
 sys.path.append("src/maplogic")
 from maplogic.StaticResource import StaticResource
 from maplogic.GrassPlant import GrassPlant
-from typing import List, Any
+from typing import List
 
 class GrassLands(StaticResource):
 
@@ -17,26 +17,22 @@ class GrassLands(StaticResource):
         self.dynamic_resource_map = {}
         self.screen_resolutions = [1820, 980]
 
-        self.spawn_grass()
-        self.spawn_grass()
-        self.spawn_grass()
-        self.spawn_grass()
-        self.spawn_grass()
-        self.spawn_grass()
-        self.spawn_grass()
-        self.spawn_grass()
-        self.spawn_grass()
-        self.spawn_grass()
-        self.spawn_grass()
-        self.spawn_grass()
+        # Spawn initial grass
+        for _ in range(20):
+            self.spawn_grass()
 
     
     def spawn_grass(self) -> None:
 
+        # Get unique grass id
+        # This function needs to find a value that isnt used in the dynamic_resource_map
+        # It cannot rely on the length of the dynamic_resource_map as the keys are not guaranteed to be sequential
+        # This is because the grass plants can die and be removed from the map
         def get_unique_grass_id() -> int:
             for i in range(1, len(self.dynamic_resource_map) + 2):
                 if i not in self.dynamic_resource_map:
                     return i
+                
         x,y = random.randint(self.resource_position[0] - self.resource_radius, self.resource_position[0] + self.resource_radius), random.randint(self.resource_position[1] - self.resource_radius, self.resource_position[1] + self.resource_radius)
         while x < 0 or x > self.screen_resolutions[0] or y < 0 or y > self.screen_resolutions[1]:
             x = random.randint(self.resource_position[0] - self.resource_radius, self.resource_position[0] + self.resource_radius)
@@ -47,6 +43,8 @@ class GrassLands(StaticResource):
         new_grass = GrassPlant(grass_id, position)
         self.dynamic_resource_map[grass_id] = new_grass
 
+    # Update the grasslands
+    # This function will update the grasslands by checking if any grass plants have died
     def update(self) -> None:
 
         current_capacity = 0
@@ -60,7 +58,19 @@ class GrassLands(StaticResource):
         if self.mass <= 0:
             self.alive_status = False
 
+        # If the grasslands are empty, increase the max capacity
+        # There clearly isnt enough room for growth
+        if current_capacity == 0:
+            self.max_capacity += 1
+        
+        # If the grasslands are full, decrease the max capacity
+        # There clearly is too much room for growth
+        if current_capacity == self.max_capacity:
+            self.max_capacity -= 1
+
         self.current_regen += 1
+
+        # If the grasslands are not full and the regen rate has been met, spawn a new grass plant
         if current_capacity < self.max_capacity and self.current_regen >= self.regen_rate:
             self.current_regen = 0
             current_capacity += 1

@@ -1,6 +1,9 @@
-from typing import List, Any
+from typing import List
 
-
+# StaticResource class
+# This class is the parent class for all static resources in the simulation
+# Static resources are resources that do not move and are not consumed
+# Static resources are used to generate dynamic resources and guide the movement of animals
 class StaticResource:
 
     def __init__(self, resource_id: int, resource_position: List[float], resource_radius: float, resource_type_id: int):

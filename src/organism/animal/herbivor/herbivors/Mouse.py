@@ -3,8 +3,6 @@ import random
 sys.path.append("src/organism/animal/herbivor")
 from Herbivor import Herbivor
 from typing import List, Any
-from Herbivor import colors
-from Herbivor import colorize
 
 class Mouse(Herbivor):
 
@@ -93,7 +91,6 @@ class Mouse(Herbivor):
             y = self.organism_position[1] 
             position = [x, y]
             new_animal = Mouse(position, animal_id, self.all_known_static_resources, self.all_known_organisms)
-            print(colorize(f"{self.name} {self.animal_id} has procreated with {self.name} {self.current_target.animal_id} to create {self.name} {animal_id}", colors.CYAN))
             self.all_known_organisms[animal_id] = new_animal
             new_animal.procreate_cool_down = 60480
 
