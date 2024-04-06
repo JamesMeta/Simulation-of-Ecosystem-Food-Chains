@@ -148,6 +148,10 @@ class Herbivor(Animal):
                 pass
 
         if self.ready_to_mate and self.current_target is not None:
+
+            if not self.is_current_target_organism():
+                return
+            
             distance = ((self.organism_position[0] - self.current_target.organism_position[0])**2 + (self.organism_position[1] - self.current_target.organism_position[1])**2)**0.5
             if distance <= self.feeding_range:
                 self.procreate()
