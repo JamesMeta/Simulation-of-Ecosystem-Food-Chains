@@ -25,17 +25,18 @@ class Organism:
         self.all_known_organisms = {}
         self.gender = None
         self.alive_status = True
+        self.name = None
 
         # carnivore = 0, herbivore = 1
         self.dietary_classification = None
     
-    def die(self) -> None:
+    def die(self, cause_of_death) -> None:
 
         if self.alive_status == False:
             return 
 
         self.alive_status = False
-        print(colorize(f"Organism {self.animal_id} has died.", colors.RED))
+        print(colorize(f"Organism {self.name} #{self.animal_id} has died due to {cause_of_death}", colors.RED))
         del self.all_known_organisms[self.animal_id]
     
 

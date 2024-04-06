@@ -213,6 +213,17 @@ class Simulation:
         plt.legend()
         plt.show()
 
+        #plot without grasshopper
+        plt.figure(figsize=(10, 5))
+        for species, population in self.organism_population_over_time.items():
+            if species != "Grass Hopper":
+                plt.plot(population, label=species)
+        plt.xlabel("Day")
+        plt.ylabel("Population")
+        plt.title("Population Over Time (Excluding Grass Hopper)")
+        plt.legend()
+        plt.show()
+
 
  
     def test_one(self) -> None:
@@ -263,12 +274,52 @@ class Simulation:
         self.world.spawn_resource(2, 100, [800, 800], grass)
         self.world.spawn_resource(3, 100, [1020, 680], water)
         self.world.spawn_resource(4, 100, [1020, 200], forest)
+        self.world.spawn_resource(5, 100, [300, 450], forest)
+        self.world.spawn_resource(6, 100, [250, 800], water)
+        self.world.spawn_resource(7, 100, [1500, 100], grass)
+        self.world.spawn_resource(8, 100, [1250, 500], grass)
+        self.world.spawn_resource(9, 100, [1750, 800], water)
 
-        
-        self.spawn_organism(7)
-        self.spawn_organism(7)
+        #fox
+        for i in range(5):
+            self.spawn_organism(1) 
 
-        self.spawn_organism(1)
+        #owl
+        for i in range(5):
+            self.spawn_organism(2) 
+
+        #frog
+        for i in range(100):
+            self.spawn_organism(3) 
+
+        #snake
+        for i in range(20):
+            self.spawn_organism(4) 
+
+        #hawk
+        for i in range(5):
+            self.spawn_organism(5) 
+
+        #small bird
+        for i in range(80):
+            self.spawn_organism(6) 
+
+        #rabbit
+        for i in range(20):
+            self.spawn_organism(7) 
+
+        #grass hopper
+        for i in range(1000):
+            self.spawn_organism(8) 
+
+        #mouse
+        for i in range(60):
+            self.spawn_organism(9)
+
+        for organism in self.organism_map.values():
+            if organism.random_start:
+                organism.randomize_start()
+
         
 
         self.log_population()
@@ -347,7 +398,7 @@ class Simulation:
             self.update_all_Objects()
             self.draw_all_objects()
             pg.display.flip()
-            self.clock.tick(30)
+            self.clock.tick(3000)
         self.plot_population()
 
 

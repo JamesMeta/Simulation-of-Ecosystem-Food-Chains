@@ -76,12 +76,6 @@ class Rabbit(Herbivor):
                         self.color = "grey"
                         self.radius = 10
 
-                if self.random_start:
-                    self.hunger = random.randint(0, self.max_hunger)
-                    self.thirst = random.randint(0, self.max_thirst)
-                    self.exhaustion = random.randint(0, self.max_exhaustion)
-                    self.procreate_cool_down = random.randint(0, self.procreate_cool_down)
-
 
     def procreate(self) -> Any:
 

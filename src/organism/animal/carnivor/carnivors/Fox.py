@@ -49,6 +49,7 @@ class Fox(Carnivor):
 
                 self.name = "Fox"
                 self.species_id = 1
+                self.max_procreation_cool_down = 181440
                 self.procreate_cool_down = 181440     #ticks
                 self.max_hunger = 60480               #ticks
                 self.max_thirst = 25920               #ticks
@@ -66,13 +67,44 @@ class Fox(Carnivor):
                 self.potential_predators = [-1]        # species_id
                 self.decision_duration = 50         #ticks
                 self.metabolism_constant = 0.125
+                self.litter_size = [3,4,5,6,7]
                 
+                all_grass_lands = [resource for resource in all_known_static_resources.values() if resource.resource_type_id == 1]
+                self.safe_place = random.choice(all_grass_lands)
+
                 if self.debug_mode:
                         self.color = "orange"
                         self.radius = 10
+        
+        def procreate(self) -> Any:
 
-                if self.random_start:
-                    self.hunger = random.randint(0, self.max_hunger)
-                    self.thirst = random.randint(0, self.max_thirst)
-                    self.exhaustion = random.randint(0, self.max_exhaustion)
-                    self.procreate_cool_down = random.randint(0, self.procreate_cool_down)
+                def get_unique_animal_id() -> int:
+                        for i in range(1, len(self.all_known_organisms) + 2):
+                                if i not in self.all_known_organisms:
+                                        return i
+
+                        if self.gender == 0:
+                                return
+                
+                for i in range(random.choice(self.litter_size)):
+                        animal_id = get_unique_animal_id()
+                        x = self.organism_position[0] 
+                        y = self.organism_position[1] 
+                        position = [x, y]
+                        new_animal = Fox(position, animal_id, self.all_known_static_resources, self.all_known_organisms)
+                        print(colorize(f"{self.name} {self.animal_id} has procreated with {self.name} {self.current_target.animal_id} to create {self.name} {animal_id}", colors.CYAN))
+                        self.all_known_organisms[animal_id] = new_animal
+                        new_animal.procreate_cool_down = self.max_procreation_cool_down
+
+                self.procreate_cool_down = self.max_procreation_cool_down
+                self.ready_to_mate = False
+                self.current_task = False
+
+                
+
+                self.current_target.current_target = None
+                self.current_target.current_task = False
+                self.current_target.ready_to_mate = False
+                self.current_target.procreate_cool_down = self.max_procreation_cool_down
+        
+                self.current_target = None

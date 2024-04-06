@@ -141,10 +141,10 @@ class Herbivor(Animal):
     def make_decision(self) -> None:
 
         if self.hunger > self.max_hunger:
-            self.die()
+            self.die("starvation")
         
         if self.thirst > self.max_thirst:
-            self.die()
+            self.die("dehydration")
 
         if self.current_task:
             self.check_if_current_task_in_range()
@@ -199,7 +199,7 @@ class Herbivor(Animal):
             if self.needs_sleep:
                 #print(colorize("Needs Sleep", colors.YELLOW))
                 if self.safe_place is not None:
-                    self.move_towards_resource(self.safe_place.resource_type_id)
+                    self.move_towards_specific_resource(self.safe_place)
                     distance = ((self.organism_position[0] - self.safe_place.resource_position[0])**2 + (self.organism_position[1] - self.safe_place.resource_position[1])**2)**0.5
                     if distance < self.safe_place.resource_radius:
                         self.sleep()

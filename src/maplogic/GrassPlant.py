@@ -25,7 +25,7 @@ class GrassPlant():
         if self.hp <= 0:
             self.alive_status = False
         
-    def die(self) -> None:
+    def die(self, cause_of_death) -> None:
         self.alive_status = False
 
 

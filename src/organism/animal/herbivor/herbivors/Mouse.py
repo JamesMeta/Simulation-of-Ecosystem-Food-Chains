@@ -68,15 +68,13 @@ class Mouse(Herbivor):
                 self.litter_size = [4,5,6,7]
                 self.metabolism_constant = 0.2
                 
+                all_grass_lands = [resource for resource in all_known_static_resources.values() if resource.resource_type_id == 1]
+                self.safe_place = random.choice(all_grass_lands)
+
                 if self.debug_mode:
                     self.color = "darkgrey"
                     self.radius = 3
                 
-                if self.random_start:
-                    self.hunger = random.randint(0, self.max_hunger)
-                    self.thirst = random.randint(0, self.max_thirst)
-                    self.exhaustion = random.randint(0, self.max_exhaustion)
-                    self.procreate_cool_down = random.randint(0, self.procreate_cool_down)
 
 
     def procreate(self) -> Any:

@@ -99,6 +99,12 @@ class Animal(Organism):
         self.visited_static_resources = []
         
 
+    def randomize_start(self) -> None:
+        self.hunger = random.randint(0, self.min_hunger)
+        self.thirst = random.randint(0, self.min_thirst)
+        self.exhaustion = random.randint(0, self.max_exhaustion)
+        self.procreate_cool_down = random.randint(0, self.procreate_cool_down)
+
     def drink_water(self) -> None:
         #print(colorize("Drinking", colors.BLUE))
         self.thirst = 0
@@ -159,10 +165,10 @@ class Animal(Organism):
         one_in_four = random.randint(1, 2)
         if one_in_four == 1:
             self.current_direction = [random.uniform(-1, 1), random.uniform(-1, 1)]
-            print(colorize("Wandering", colors.BLACK))
+            #print(colorize("Wandering", colors.BLACK))
         else:
             self.current_direction = [0, 0]
-            print(colorize("Not Moving", colors.BLACK))
+            #print(colorize("Not Moving", colors.BLACK))
 
     def sleep(self) -> None:
         #print(colorize("Sleeping", colors.YELLOW))
@@ -289,7 +295,7 @@ class Animal(Organism):
         self.organism_position[1] += self.current_direction[1]*self.max_speed
         
     def kill_organism(self, organism: Any) -> None:
-        organism.die()
+        organism.die("Killed by predator")
 
     def make_decision(self) -> None:
         pass
