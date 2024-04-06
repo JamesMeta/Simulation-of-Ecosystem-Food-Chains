@@ -239,7 +239,10 @@ class Animal(Organism):
     # the organism will be removed from the simulation
     # the cause of death will be counted
     def kill_organism(self, organism: Any) -> None:
-        organism.die("predation")
+        if organism.species_id == self.species_id:
+            organism.die("cannibalism")
+        else:
+            organism.die("predation")
 
     #Animal sprite loading handler.
     def load_sprite(self) -> None:

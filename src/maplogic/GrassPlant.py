@@ -9,6 +9,7 @@ class GrassPlant():
         self.alive_status = True
         self.radius = 5
         self.resource_type_id = 1
+        self.species_id = -1
         self.mass = 0.020
 
         #Spriteloader variables

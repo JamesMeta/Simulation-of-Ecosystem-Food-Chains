@@ -13,6 +13,7 @@ class Utility:
             "starvation": 0,
             "predation": 0,
             "dehydration": 0,
+            "cannibalism": 0,
         }
     
 

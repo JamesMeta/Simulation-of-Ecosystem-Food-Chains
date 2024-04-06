@@ -236,9 +236,13 @@ class Carnivor(Animal):
     #this will override all other needs except for sleep
     #predators will nolonger scare the animal whether for the better or for the very very worse...
     def is_absolute_need(self):
-        if self.hunger > self.max_hunger * 0.8:
+        if self.hunger > self.max_hunger * 0.95:
             self.absolute_need = True
             self.consumable_organisms.append(self.species_id)
+            return True
+        
+        if self.hunger > self.max_hunger * 0.8:
+            self.absolute_need = True
             return True
         
         if self.thirst > self.max_thirst * 0.8:
