@@ -226,31 +226,40 @@ class Simulation:
 
         if species_id == 1:
             new_organism = Fox(position, animal_id, self.world.static_resource_map, self.organism_map)
-            self.organism_population_over_time["Fox"] = []
+            if "Fox" not in self.organism_population_over_time:
+                self.organism_population_over_time["Fox"] = []
         elif species_id == 2:
             new_organism = Owl(position, animal_id, self.world.static_resource_map, self.organism_map)
-            self.organism_population_over_time["Owl"] = []
+            if "Owl" not in self.organism_population_over_time:
+                self.organism_population_over_time["Owl"] = []
         elif species_id == 3:
             new_organism = Frog(position, animal_id, self.world.static_resource_map, self.organism_map)
-            self.organism_population_over_time["Frog"] = []
+            if "Frog" not in self.organism_population_over_time:
+                self.organism_population_over_time["Frog"] = []
         elif species_id == 4:
             new_organism = Snake(position, animal_id, self.world.static_resource_map, self.organism_map)
-            self.organism_population_over_time["Snake"] = []
+            if "Snake" not in self.organism_population_over_time:
+                self.organism_population_over_time["Snake"] = []
         elif species_id == 5:
             new_organism = Hawk(position, animal_id, self.world.static_resource_map, self.organism_map)
-            self.organism_population_over_time["Hawk"] = []
+            if "Hawk" not in self.organism_population_over_time:
+                self.organism_population_over_time["Hawk"] = []
         elif species_id == 6:
             new_organism = SmallBird(position, animal_id, self.world.static_resource_map, self.organism_map)
-            self.organism_population_over_time["Small Bird"] = []
+            if "Small Bird" not in self.organism_population_over_time:
+                self.organism_population_over_time["Small Bird"] = []
         elif species_id == 7:
             new_organism = Rabbit(position, animal_id, self.world.static_resource_map, self.organism_map)
-            self.organism_population_over_time["Rabbit"] = []
+            if "Rabbit" not in self.organism_population_over_time:
+                self.organism_population_over_time["Rabbit"] = []
         elif species_id == 8:
             new_organism = GrassHopper(position, animal_id, self.world.static_resource_map, self.organism_map)
-            self.organism_population_over_time["Grass Hopper"] = []
+            if "Grass Hopper" not in self.organism_population_over_time:
+                self.organism_population_over_time["Grass Hopper"] = []
         elif species_id == 9:
             new_organism = Mouse(position, animal_id, self.world.static_resource_map, self.organism_map)
-            self.organism_population_over_time["Mouse"] = []
+            if "Mouse" not in self.organism_population_over_time:
+                self.organism_population_over_time["Mouse"] = []
         else:
             print("Invalid Species ID")
 
@@ -729,11 +738,11 @@ class Simulation:
         self.world.spawn_resource(9, 100, [1750, 800], water)
 
         #fox
-        for i in range(10):
+        for i in range(15):
             self.spawn_organism(1)
         
         #rabbit
-        for i in range(100):
+        for i in range(120):
             self.spawn_organism(7)
 
         self.spawn_organism(10)
@@ -851,9 +860,9 @@ class Simulation:
                     running = False
             
             self.update_all_Objects()
-            self.draw_all_objects()
-            self.clock.tick(tick_rate)
-            pg.display.flip()
+            #self.draw_all_objects()
+            #self.clock.tick(tick_rate)
+            #pg.display.flip()
         self.plot_population()
 
 

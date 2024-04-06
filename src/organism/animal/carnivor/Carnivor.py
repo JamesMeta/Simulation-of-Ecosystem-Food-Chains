@@ -216,6 +216,10 @@ class Carnivor(Animal):
             if organism.hidden:
                 continue
 
+            if organism.species_id == self.species_id:
+                if organism.gender != self.gender:
+                    continue
+
             if organism.species_id in self.consumable_organisms:
                 distance = ((self.organism_position[0] - organism.organism_position[0])**2 + (self.organism_position[1] - organism.organism_position[1])**2)**0.5
                 if distance <= self.sight_range:

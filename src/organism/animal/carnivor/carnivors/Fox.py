@@ -47,9 +47,9 @@ class Fox(Carnivor):
 
                 self.name = "Fox"
                 self.species_id = 1
-                self.max_procreation_cool_down = 40000
-                self.procreate_cool_down = 40000     #ticks
-                self.max_hunger = 6480               #ticks
+                self.max_procreation_cool_down = 30000
+                self.procreate_cool_down = 30000     #ticks
+                self.max_hunger = 7480               #ticks
                 self.max_thirst = 25920               #ticks
                 self.max_exhaustion = 17280           #ticks
                 self.min_hunger = 4080 
