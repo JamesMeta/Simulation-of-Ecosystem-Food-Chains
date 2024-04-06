@@ -327,10 +327,12 @@ class Carnivor(Animal):
     def begin_stalking(self):
 
         if self.current_target is None or not self.is_current_target_organism:
+            self.stalking = False
             return
         
         if self.current_target.alive_status == False:
             self.current_target = None
+            self.stalking = False
             return
         
         distance = ((self.organism_position[0] - self.current_target.organism_position[0])**2 + (self.organism_position[1] - self.current_target.organism_position[1])**2)**0.5

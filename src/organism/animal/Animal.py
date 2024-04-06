@@ -231,7 +231,7 @@ class Animal(Organism):
 
     def detect_threats(self) -> None:
         for organism in self.all_known_organisms.values():
-            if organism.species_id not in self.potential_predators or not organism.alive_status or organism.needs_sleep or organism.hidden:
+            if organism.species_id not in self.potential_predators or not organism.alive_status or organism.needs_sleep or organism.hidden or not organism.needs_food:
                 continue
             threat_position = organism.organism_position
             distance = ((self.organism_position[0] - threat_position[0])**2 + (self.organism_position[1] - threat_position[1])**2)**0.5

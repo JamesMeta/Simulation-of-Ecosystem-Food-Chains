@@ -303,6 +303,11 @@ class Simulation:
                 plt.plot(population, label=species)
             if species in self.starting_species_names:
                 plt.plot(population, label=species)
+        plt.xlabel("Day")
+        plt.ylabel("Population")
+        plt.title("Population Over Time (Excluding Grass)")
+        plt.legend()
+        plt.show()
             
 
         #plot utility cause of deaths
