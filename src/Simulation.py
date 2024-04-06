@@ -726,15 +726,15 @@ class Simulation:
         water = 2
         forest = 3
 
-        self.world.spawn_resource(1, 225, [875, 175], grass)
-        self.world.spawn_resource(2, 100, [1450, 950], grass)
-        self.world.spawn_resource(3, 275, [1700, 500], forest)
-        self.world.spawn_resource(4, 125, [300, 450], forest)
-        self.world.spawn_resource(5, 300, [150, 1000], water)
-        self.world.spawn_resource(6, 300, [300, 1000], water)
-        self.world.spawn_resource(7, 300, [450, 1000], water)
-        self.world.spawn_resource(8, 300, [600, 1000], water)
-        self.world.spawn_resource(9, 300, [750, 1000], water)
+        self.world.spawn_resource(1, 100, [500, 200], grass)
+        self.world.spawn_resource(2, 100, [800, 800], grass)
+        self.world.spawn_resource(3, 100, [1020, 680], water)
+        self.world.spawn_resource(4, 100, [1020, 200], forest)
+        self.world.spawn_resource(5, 100, [300, 450], forest)
+        self.world.spawn_resource(6, 100, [250, 800], water)
+        self.world.spawn_resource(7, 100, [1500, 100], grass)
+        self.world.spawn_resource(8, 100, [1250, 500], grass)
+        self.world.spawn_resource(9, 100, [1750, 800], water)
 
         #fox
         for i in range(10):
