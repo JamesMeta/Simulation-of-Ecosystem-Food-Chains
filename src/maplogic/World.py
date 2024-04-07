@@ -11,11 +11,9 @@ class World:
 
         self.time_of_day = [1,12,0,0] # [day, hour, minute, second] ticks in day = 24*60*6 = 8640
 
-        self.choice = input("Would you like a safe max capacity for the grasslands? This will help improve performance (y/n): ")
 
-        if self.choice == "n":
-            self.cap = int(input("Enter the max capacity for the grasslands: "))
-            self.cap2 = int(input("Enter the regen rate for the grasslands (50 is default 1 is instantanious): "))
+        self.max_cap = 500
+        self.regen_rate_cap = 10
 
     
 
@@ -42,13 +40,9 @@ class World:
 
         if resource_type_id == 1:
             resource = GrassLands(resource_id, resource_position, resource_radius, resource_type_id)
-            
-            if self.choice == "y":
-                resource.max_capacity = 200
 
-            if self.choice == "n":
-                resource.max_capacity = self.cap
-                resource.regen_rate = self.cap2
+            resource.max_capacity = self.max_cap
+            resource.regen_rate = self.regen_rate_cap
 
         else:
             resource = StaticResource(resource_id, resource_position, resource_radius, resource_type_id)

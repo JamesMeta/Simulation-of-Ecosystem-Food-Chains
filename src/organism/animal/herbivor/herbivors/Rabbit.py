@@ -47,11 +47,11 @@ class Rabbit(Herbivor):
 
                 self.name = "Rabbit"
                 self.species_id = 7
-                self.max_procreation_cool_down = 26528
-                self.procreate_cool_down = 26528      # ticks
-                self.max_hunger = 8640                # ticks
-                self.max_thirst = 8640                # ticks
-                self.max_exhaustion = 4320            # ticks
+                self.max_procreation_cool_down = 16528
+                self.procreate_cool_down = 16528      # ticks
+                self.max_hunger = 18640                # ticks
+                self.max_thirst = 18640                # ticks
+                self.max_exhaustion = 8320            # ticks
                 self.min_hunger = 1440                # ticks
                 self.min_thirst = 1440                # ticks
                 self.max_speed = 4                        # pixels per tick
@@ -59,12 +59,12 @@ class Rabbit(Herbivor):
                 self.mass = 1
                 self.sight_range = 200                # pixels
                 self.feeding_range = 5                # pixels (not provided in the stats, so keeping it the same as before)
-                self.sleep_duration = 720             # ticks (sleep_lengths converted to ticks)
+                self.sleep_duration = 720            # ticks (sleep_lengths converted to ticks)
                 self.detection_multiplier = 1         # constant
                 self.consumable_resources = [1]       # species_id
                 self.potential_predators = [1,5]        # species_id
                 self.decision_duration = 50          # ticks
-                self.litter_size = [4,5,6,7,8,9]
+                self.litter_size = [6,7,8,9]
                 self.metabolism_constant = 0.05
 
                 all_forests = [resource for resource in all_known_static_resources.values() if resource.resource_type_id == 3]

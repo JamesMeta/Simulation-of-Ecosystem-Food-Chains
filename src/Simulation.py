@@ -1,4 +1,3 @@
-
 #import all necessary libraries and classes
 import pygame as pg
 import random
@@ -44,6 +43,8 @@ class Simulation:
         self.world = World()
 
         self.current_day = 1
+        self.end_day = 100
+        self.predator_prey_test = False
 
         self.organism_population_over_time = {
             "Grass": []
@@ -121,7 +122,7 @@ class Simulation:
                 grass_hopper_count += 1
             elif isinstance(organism, Mouse):
                 mouse_count += 1
-        
+
         for resource in self.world.static_resource_map.values():
             if resource.resource_type_id == 1:
                 grass_count += len(resource.dynamic_resource_map)
@@ -146,6 +147,12 @@ class Simulation:
             self.organism_population_over_time["Mouse"].append(mouse_count)
         if "Grass" in self.organism_population_over_time or grass_count > 0:
             self.organism_population_over_time["Grass"].append(grass_count)
+
+        for species, population in self.organism_population_over_time.items():
+            if len(population) >= 2:
+                print(f"{species} Saw a {population[-1] - population[-2]} Change in Population")
+        
+
     
     def plot_population(self) -> None:
         
@@ -155,17 +162,6 @@ class Simulation:
         plt.xlabel("Year")
         plt.ylabel("Population")
         plt.title("Population Over Time")
-        plt.legend()
-        plt.show()
-
-        #plot without grasshopper
-        plt.figure(figsize=(10, 5))
-        for species, population in self.organism_population_over_time.items():
-            if species != "Grass Hopper":
-                plt.plot(population, label=species)
-        plt.xlabel("Year")
-        plt.ylabel("Population")
-        plt.title("Population Over Time (Excluding Grass Hopper)")
         plt.legend()
         plt.show()
 
@@ -180,18 +176,40 @@ class Simulation:
         plt.legend()
         plt.show()
 
-        #plot with only grass and grasshopper
-        plt.figure(figsize=(10, 5))
-        for species, population in self.organism_population_over_time.items():
-            if species == "Grass" or species == "Grass Hopper":
-                plt.plot(population, label=species)
-        plt.xlabel("Year")
-        plt.ylabel("Population")
-        plt.title("Population Over Time (Grass and Grass Hopper)")
-        plt.legend()
-        plt.show()
-            
+        #plot grass, sum of herbivors, and sum of carnivors
 
+
+        total_sum_producers = 0
+        total_sum_primary_consumers = 0
+        total_sum_secondary_consumers = 0
+        total_sum_tertiary_consumers = 0
+
+        for resource in self.world.static_resource_map.values():
+            if resource.resource_type_id == 1:
+                total_sum_producers += resource.lifetime_population
+
+        for keys, values in self.organism_population_over_time.items():
+            
+            if keys == "Grass":
+                pass
+            elif keys == "Grass Hopper" or keys == "Mouse" or keys == "Rabbit":
+                total_sum_primary_consumers += sum(values)
+            elif keys == "Small Bird" or keys == "Frog" or keys == "Snake":
+                total_sum_secondary_consumers += sum(values)
+            elif keys == "Fox" or keys == "Owl" or keys == "Hawk":
+                total_sum_tertiary_consumers += sum(values)
+
+            
+        colors = ['blue', 'green', 'red', 'purple']
+        labels = ['Producers', 'Primary Consumers', 'Secondary Consumers', 'Tertiary Consumers']
+        values = [total_sum_producers, total_sum_primary_consumers, total_sum_secondary_consumers, total_sum_tertiary_consumers]
+        plt.bar(labels, values, color=colors)
+        plt.xlabel("Population Type")
+        plt.ylabel("Population")
+        plt.title("Population Total Over 10 Years (By Trophic Level)")
+        plt.yscale('log')
+        plt.show()
+        
         #plot utility cause of deaths
         utility = self.organism_map["utility"]
         deaths = utility.count_deaths
@@ -296,7 +314,7 @@ class Simulation:
             #this will be overruled later if the species is still alive
             for key in self.extinction_timers:
                 if self.extinction_timers[key] == 0:
-                    self.extinction_timers[key] = self.current_day + 7 #7 Days until respawn
+                    self.extinction_timers[key] = self.current_day + 12 #12 Days until respawn
                 
 
             for organism in self.organism_map.values():
@@ -312,7 +330,7 @@ class Simulation:
             for key, value in self.extinction_timers.items():
                 if value == self.current_day:
                     print(f"Respawning Species {key}")
-                    for _ in range(6):
+                    for _ in range(10):
                         self.spawn_organism(key)
 
 
@@ -608,6 +626,8 @@ class Simulation:
     def version_demonstration(self) -> None:
         self.debug_mode = False
 
+        self.end_day = 4
+
         grass = 1
         water = 2
         forest = 3
@@ -666,9 +686,135 @@ class Simulation:
     def version_test(self) -> None:
         self.debug_mode = True
 
+        self.end_day = 10
+
         grass = 1
         water = 2
         forest = 3
+
+        self.world.spawn_resource(1, 225, [875, 175], grass)
+        self.world.spawn_resource(2, 100, [1450, 950], grass)
+        self.world.spawn_resource(3, 275, [1700, 500], forest)
+        self.world.spawn_resource(4, 125, [300, 450], forest)
+        self.world.spawn_resource(5, 300, [150, 1000], water)
+        self.world.spawn_resource(6, 300, [300, 1000], water)
+        self.world.spawn_resource(7, 300, [450, 1000], water)
+        self.world.spawn_resource(8, 300, [600, 1000], water)
+        self.world.spawn_resource(9, 300, [750, 1000], water)
+
+        #fox
+        for i in range(3):
+            self.spawn_organism(1) 
+
+        #owl
+        for i in range(2):
+            self.spawn_organism(2) 
+
+        #frog
+        for i in range(10):
+            self.spawn_organism(3) 
+
+        #snake
+        for i in range(2):
+            self.spawn_organism(4) 
+
+        #hawk
+        for i in range(1):
+            self.spawn_organism(5) 
+
+        #small bird
+        for i in range(12):
+            self.spawn_organism(6) 
+
+        #rabbit
+        for i in range(20):
+            self.spawn_organism(7) 
+
+        #grass hopper
+        for i in range(120):
+            self.spawn_organism(8) 
+
+        #mouse
+        for i in range(20):
+            self.spawn_organism(9)
+
+        #spawn utility class
+        self.spawn_organism(10)
+        
+        self.log_population()
+
+    def fox_and_rabbit_test(self) -> None:
+        self.debug_mode = True
+
+        self.predator_prey_test = True
+        self.end_day = 80
+
+        grass = 1
+        water = 2
+        forest = 3
+
+        self.world.spawn_resource(1, 100, [500, 200], grass)
+        self.world.spawn_resource(2, 100, [800, 800], grass)
+        self.world.spawn_resource(3, 100, [1020, 680], water)
+        self.world.spawn_resource(4, 100, [1020, 200], forest)
+        self.world.spawn_resource(5, 100, [300, 450], forest)
+        self.world.spawn_resource(6, 100, [250, 800], water)
+        self.world.spawn_resource(7, 100, [1500, 100], grass)
+        self.world.spawn_resource(8, 100, [1250, 500], grass)
+        self.world.spawn_resource(9, 100, [1750, 800], water)
+
+        #fox
+        for i in range(50):
+            self.spawn_organism(1)
+        
+        #rabbit
+        for i in range(500):
+            self.spawn_organism(7)
+
+        self.spawn_organism(10)
+        
+        self.log_population()
+
+    def no_predators_test(self) -> None:
+
+        self.debug_mode = True
+
+        self.end_day = 50
+
+        grass = 1
+        water = 2
+        forest = 3
+
+        self.world.spawn_resource(1, 100, [500, 200], grass)
+        self.world.spawn_resource(2, 100, [800, 800], grass)
+        self.world.spawn_resource(3, 100, [1020, 680], water)
+        self.world.spawn_resource(4, 100, [1020, 200], forest)
+        self.world.spawn_resource(5, 100, [300, 450], forest)
+        self.world.spawn_resource(6, 100, [250, 800], water)
+        self.world.spawn_resource(7, 100, [1500, 100], grass)
+        self.world.spawn_resource(8, 100, [1250, 500], grass)
+        self.world.spawn_resource(9, 100, [1750, 800], water)
+
+        #rabbit
+        for i in range(10):
+            self.spawn_organism(7) 
+
+        self.spawn_organism(10)
+        
+
+        self.log_population()
+ 
+    def trophic_levels_test(self) -> None:
+        self.debug_mode = True
+
+        self.end_day = 10
+
+        grass = 1
+        water = 2
+        forest = 3
+
+        self.world.max_cap = 5000
+        self.world.regen_rate_cap = 5
 
         self.world.spawn_resource(1, 100, [500, 200], grass)
         self.world.spawn_resource(2, 100, [800, 800], grass)
@@ -693,11 +839,11 @@ class Simulation:
             self.spawn_organism(3) 
 
         #snake
-        for i in range(10):
+        for i in range(20):
             self.spawn_organism(4) 
 
         #hawk
-        for i in range(4):
+        for i in range(5):
             self.spawn_organism(5) 
 
         #small bird
@@ -705,143 +851,25 @@ class Simulation:
             self.spawn_organism(6) 
 
         #rabbit
-        for i in range(100):
+        for i in range(20):
             self.spawn_organism(7) 
 
         #grass hopper
-        for i in range(2000):
-            self.spawn_organism(8) 
-
-        #mouse
-        for i in range(150):
-            self.spawn_organism(9)
-
-        self.spawn_organism(10)
-        
-        self.log_population()
-
-    def fox_and_rabbit_test(self) -> None:
-        self.debug_mode = True
-
-        grass = 1
-        water = 2
-        forest = 3
-
-        self.world.spawn_resource(1, 100, [500, 200], grass)
-        self.world.spawn_resource(2, 100, [800, 800], grass)
-        self.world.spawn_resource(3, 100, [1020, 680], water)
-        self.world.spawn_resource(4, 100, [1020, 200], forest)
-        self.world.spawn_resource(5, 100, [300, 450], forest)
-        self.world.spawn_resource(6, 100, [250, 800], water)
-        self.world.spawn_resource(7, 100, [1500, 100], grass)
-        self.world.spawn_resource(8, 100, [1250, 500], grass)
-        self.world.spawn_resource(9, 100, [1750, 800], water)
-
-        #fox
-        for i in range(15):
-            self.spawn_organism(1)
-        
-        #rabbit
-        for i in range(120):
-            self.spawn_organism(7)
-
-        self.spawn_organism(10)
-        
-        self.log_population()
-
-    def frog_and_grass_hopper_test(self) -> None:
-        self.debug_mode = True
-
-        grass = 1
-        water = 2
-        forest = 3
-
-        self.world.spawn_resource(1, 225, [875, 175], grass)
-        self.world.spawn_resource(2, 100, [1450, 950], grass)
-        self.world.spawn_resource(3, 275, [1700, 500], forest)
-        self.world.spawn_resource(4, 125, [300, 450], forest)
-        self.world.spawn_resource(5, 300, [150, 1000], water)
-        self.world.spawn_resource(6, 300, [300, 1000], water)
-        self.world.spawn_resource(7, 300, [450, 1000], water)
-        self.world.spawn_resource(8, 300, [600, 1000], water)
-        self.world.spawn_resource(9, 300, [750, 1000], water)
-
-        #frog
-        for i in range(50):
-            self.spawn_organism(3)
-        
-        #grasshopper
         for i in range(1000):
-            self.spawn_organism(8)
-
-        self.spawn_organism(10)
-        
-        self.log_population()
-        
-    def snake_and_mouse_test(self) -> None:
-        self.debug_mode = True
-
-        grass = 1
-        water = 2
-        forest = 3
-
-        self.world.spawn_resource(1, 225, [875, 175], grass)
-        self.world.spawn_resource(2, 100, [1450, 950], grass)
-        self.world.spawn_resource(3, 275, [1700, 500], forest)
-        self.world.spawn_resource(4, 125, [300, 450], forest)
-        self.world.spawn_resource(5, 300, [150, 1000], water)
-        self.world.spawn_resource(6, 300, [300, 1000], water)
-        self.world.spawn_resource(7, 300, [450, 1000], water)
-        self.world.spawn_resource(8, 300, [600, 1000], water)
-        self.world.spawn_resource(9, 300, [750, 1000], water)
-
-        #snake
-        for i in range(10):
-            self.spawn_organism(4)
-        
-        #mouse
-        for i in range(100):
-            self.spawn_organism(9)
-
-        self.spawn_organism(10)
-        
-        self.log_population()
-
-    def no_predators_test(self) -> None:
-        grass = 1
-        water = 2
-        forest = 3
-
-        self.world.spawn_resource(1, 100, [500, 200], grass)
-        self.world.spawn_resource(2, 100, [800, 800], grass)
-        self.world.spawn_resource(3, 100, [1020, 680], water)
-        self.world.spawn_resource(4, 100, [1020, 200], forest)
-        self.world.spawn_resource(5, 100, [300, 450], forest)
-        self.world.spawn_resource(6, 100, [250, 800], water)
-        self.world.spawn_resource(7, 100, [1500, 100], grass)
-        self.world.spawn_resource(8, 100, [1250, 500], grass)
-        self.world.spawn_resource(9, 100, [1750, 800], water)
-
-        #rabbit
-        for i in range(10):
-            self.spawn_organism(7) 
-
-        #grass hopper
-        for i in range(10):
             self.spawn_organism(8) 
 
         #mouse
-        for i in range(10):
+        for i in range(60):
             self.spawn_organism(9)
 
         self.spawn_organism(10)
         
 
         self.log_population()
- 
+
     def run_simulation(self) -> None:
 
-        option = input("Please Select Additional Options:\n\n1. Normal Speed\n2. 2x Speed\n3. Max Speed\n\nPlease Select Option: ")
+        option = input("\nPlease Select Additional Options:\n\n1. Normal Speed\n2. 2x Speed\n3. Max Speed\n\nPlease Select Option: ")
 
         if option == "1":
             tick_rate = 30
@@ -853,16 +881,21 @@ class Simulation:
             print("Invalid Option Selected. Running Simulation at Normal Speed.")
             tick_rate = 30
 
+        print("\nRunning Simulation switch to the pygame window to view the simulation")
+
         running = True
         while running:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     running = False
             
+            if self.current_day > self.end_day:
+                running = False
+            
             self.update_all_Objects()
-            #self.draw_all_objects()
-            #self.clock.tick(tick_rate)
-            #pg.display.flip()
+            self.draw_all_objects()
+            self.clock.tick(tick_rate)
+            pg.display.flip()
         self.plot_population()
 
 
@@ -870,10 +903,10 @@ if __name__ == "__main__":
     
     
 
-    print("Running Simulation")
+    print("\nRunning Simulation")
     print("1. Demonstration Version")
-    print("2. Test Version")
-    print("3. Specific Tests")
+    print("2. All Species No Heavy Graphics Test (performance mode)")
+    print("3. Specific Tests (1-3)")
     print("4. Pre-Alpha Tests")
     option = input("Select Model to Run: ")
 
@@ -884,27 +917,23 @@ if __name__ == "__main__":
         sim = Simulation()
         sim.version_test()
     elif option == "3":
-        print("1. Fox and Rabbit Test")
-        print("2. Frog and Grass Hopper Test")
-        print("3. Snake and Mouse Test")
-        print("4. No Predators Test")
+        print("\n1. Predator Prey Test")
+        print("2. Carrying Capacity Test")
+        print("3. Trophic Levels Test")
         test_option = input("Select Test to Run: ")
         if test_option == "1":
             sim = Simulation()
             sim.fox_and_rabbit_test()
         elif test_option == "2":
             sim = Simulation()
-            sim.frog_and_grass_hopper_test()
+            sim.no_predators_test()
         elif test_option == "3":
             sim = Simulation()
-            sim.snake_and_mouse_test()
-        elif test_option == "4":
-            sim = Simulation()
-            sim.no_predators_test()
+            sim.trophic_levels_test()
         else:
             print("Invalid Test Option")
     elif option == "4":
-        print("The following tests are prototype test environments some of which may not be fully functional as critical components have been redesigned")
+        print("\nThe following tests are prototype test environments some of which may not be fully functional as critical components have been redesigned")
         print("1. Test One")
         print("2. Test Two")
         print("3. Test Three")

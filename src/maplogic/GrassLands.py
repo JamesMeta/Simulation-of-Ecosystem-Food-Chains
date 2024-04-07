@@ -16,6 +16,7 @@ class GrassLands(StaticResource):
         self.alive_status = True
         self.dynamic_resource_map = {}
         self.screen_resolutions = [1820, 980]
+        self.lifetime_population = 0
 
         # Spawn initial grass
         for _ in range(20):
@@ -42,6 +43,7 @@ class GrassLands(StaticResource):
         grass_id = get_unique_grass_id()
         new_grass = GrassPlant(grass_id, position)
         self.dynamic_resource_map[grass_id] = new_grass
+        self.lifetime_population += 1
 
     # Update the grasslands
     # This function will update the grasslands by checking if any grass plants have died
@@ -78,6 +80,21 @@ class GrassLands(StaticResource):
             self.spawn_grass()
             self.spawn_grass()
             self.spawn_grass()
+            self.spawn_grass()
+            self.spawn_grass()
+            self.spawn_grass()
+            self.spawn_grass()
+        
+            self.spawn_grass()
+            self.spawn_grass()
+            self.spawn_grass()
+            self.spawn_grass()
+        
+            self.spawn_grass()
+            self.spawn_grass()
+            self.spawn_grass()
+            self.spawn_grass()
+        
         
 
 

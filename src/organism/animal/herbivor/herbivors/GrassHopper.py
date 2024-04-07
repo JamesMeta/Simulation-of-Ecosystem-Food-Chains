@@ -49,7 +49,7 @@ class GrassHopper(Herbivor):
                 self.name = "Grasshopper"
                 self.species_id = 8
                 self.max_procreation_cool_down = 35360
-                self.procreate_cool_down = 35360      # ticks
+                self.procreate_cool_down = 45360      # ticks
                 self.max_hunger = 25920               # ticks
                 self.max_thirst = 8640                # ticks
                 self.max_exhaustion = 8640            # ticks
@@ -65,7 +65,7 @@ class GrassHopper(Herbivor):
                 self.consumable_resources = [1]       # species_id
                 self.potential_predators = [3,6]        # species_id
                 self.decision_duration = 100          # ticks
-                self.litter_size = [7,8,9,10,11,12,13]
+                self.litter_size = [5,6,7,8,9,10]
                 self.metabolism_constant = 16
                 
                 all_grass_lands = [resource for resource in all_known_static_resources.values() if resource.resource_type_id == 1]
