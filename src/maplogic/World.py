@@ -11,10 +11,6 @@ class World:
 
         self.time_of_day = [1,12,0,0] # [day, hour, minute, second] ticks in day = 24*60*6 = 8640
 
-
-        self.max_cap = 500
-        self.regen_rate_cap = 10
-
     
 
     # Update the time of day
@@ -40,9 +36,6 @@ class World:
 
         if resource_type_id == 1:
             resource = GrassLands(resource_id, resource_position, resource_radius, resource_type_id)
-
-            resource.max_capacity = self.max_cap
-            resource.regen_rate = self.regen_rate_cap
 
         else:
             resource = StaticResource(resource_id, resource_position, resource_radius, resource_type_id)

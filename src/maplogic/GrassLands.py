@@ -9,9 +9,9 @@ class GrassLands(StaticResource):
 
     def __init__(self, resource_id: int, resource_position: List[float], resource_radius: float, resource_type_id: int):
         super().__init__(resource_id, resource_position, resource_radius, resource_type_id)
-        self.regen_rate = 50
+        self.regen_rate = 100
         self.current_regen = 0
-        self.max_capacity = 200
+        self.max_capacity = 100
         self.mass = 1
         self.alive_status = True
         self.dynamic_resource_map = {}
@@ -76,20 +76,6 @@ class GrassLands(StaticResource):
         if current_capacity < self.max_capacity and self.current_regen >= self.regen_rate:
             self.current_regen = 0
             current_capacity += 1
-            self.spawn_grass()
-            self.spawn_grass()
-            self.spawn_grass()
-            self.spawn_grass()
-            self.spawn_grass()
-            self.spawn_grass()
-            self.spawn_grass()
-            self.spawn_grass()
-        
-            self.spawn_grass()
-            self.spawn_grass()
-            self.spawn_grass()
-            self.spawn_grass()
-        
             self.spawn_grass()
             self.spawn_grass()
             self.spawn_grass()
