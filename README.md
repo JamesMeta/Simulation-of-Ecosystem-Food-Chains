@@ -21,7 +21,7 @@ James Mata, Clayton Cotter-Wasmund
 
 ### Abstract
 
-This report is a summary of the full report you can view with the included pdf file. This project simulates an ecosystem centered around food web interactions, capturing biological relationships in a local environment. 
+This report is a summary of the full report you can view with the included pdf file. This project simulates an ecosystem centered around food web interactions, capturing biological relationships in a local environment.
 
 ### Repository
 
@@ -41,15 +41,15 @@ Simply run the Simulation.exe executable located in the root folder for the repo
 
 The goal of the project was to simulate an ecosystem with multiple intertwined food webs, and see if said ecosystem was able to reach sustainable levels that mimic natural ecological processes. Among the considered outcomes was:
 
-![Population Graph](\images\Picture1.png) 
- 
+![Screenshot](/images/Picture1.png)
+
 **Figure 1:** Population graphs of carnivores and herbivores relating to predation, primarily the result- ing wave forms and how they compare to observed phase syn- chronizations.
 
-![Reproductive Survival](\images\Picture2.png)  
+![Screenshot](/images/Picture2.png)
 
 **Figure 2:** Reproductive survival numbers that are regulated by the carrying capacity of the environment.
 
-![Trophic Levels](\images\Picture3.png)  
+![Screenshot](/images/Picture3.png)
 
 **Figure 3:** Population analysis of food chains / trophic levels. In the terms of environmental science this would be biomass distributions.
 
@@ -61,13 +61,13 @@ The inspiration for this project came from our appreciation for nature and inter
 
 ### A. Equilinox
 
-![Equilinox Logo](\images\Picture4.png)  
+![Screenshot](\images\Picture4.png)
 
 **Figure 4:** Equilinox is a relaxing nature simulation game where players create and nurture ecosystems.
 
 ### B. BYJU Food Web
 
-![BYJU Food Web](\images\Picture5.png)  
+![Screenshot](\images\Picture5.png)
 
 **Figure 5:** This food web includes all four trophic levels, with one producer (grass), and multiple primary (rabbit, mouse, grasshopper), secondary (small bird, frog, snake), and tertiary (hawk, fox, owl) consumers.
 
@@ -85,22 +85,22 @@ Key logic points include resource prioritization based on threshold levels, with
 
 Our project aimed to validate the ecosystem simulation through various tests and observations.
 
-![Predation Graph](\images\Picture6.png)  
-![Predation Graph](\images\Picture7.png)
+![Screenshot](\images\Picture6.png)  
+![Screenshot](\images\Picture7.png)
 
 **Figures 6-7:** Predation relationship between rabbits and foxes, showing proportionality between population fluctuations.
 
 Carrying capacity tests were conducted to understand how the ecosystem adjusted to resource availability, reflecting natural behavior patterns.
 
-![Carrying Capacity](\images\Picture8.png)  
-![Carrying Capacity](\images\Picture9.png)
- 
+![Screenshot](\images\Picture8.png)  
+![Screenshot](\images\Picture9.png)
+
 **Figures 8-9:** Demonstration of the carrying capacity phenomenon in a simulation with only rabbits and grass.
 
 The interaction between trophic levels was also tested, examining the flow of energy and biomass distribution within the ecosystem.
 
-![Biomass Distribution](\images\Picture10.png)  
-![Trophic Scale](\images\Picture11.png)  
+![Screenshot](\images\Picture10.png)  
+![Screenshot](\images\Picture11.png)  
 **Figures 10-11:** Biomass distribution across different trophic levels, demonstrating realistic energy flow.
 
 ---
