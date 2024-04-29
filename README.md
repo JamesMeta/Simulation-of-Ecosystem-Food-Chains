@@ -14,6 +14,8 @@ runme:
 
 **Food Web Simulation**
 
+![Screenshot](/images/Picture0.png)
+
 **Authors:**
 James Mata, Clayton Cotter-Wasmund
 
