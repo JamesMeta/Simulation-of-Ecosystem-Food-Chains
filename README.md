@@ -61,13 +61,13 @@ The inspiration for this project came from our appreciation for nature and inter
 
 ### A. Equilinox
 
-![Screenshot](\images\Picture4.png)
+![Screenshot](/images/Picture4.png)
 
 **Figure 4:** Equilinox is a relaxing nature simulation game where players create and nurture ecosystems.
 
 ### B. BYJU Food Web
 
-![Screenshot](\images\Picture5.png)
+![Screenshot](/images/Picture5.png)
 
 **Figure 5:** This food web includes all four trophic levels, with one producer (grass), and multiple primary (rabbit, mouse, grasshopper), secondary (small bird, frog, snake), and tertiary (hawk, fox, owl) consumers.
 
@@ -85,22 +85,22 @@ Key logic points include resource prioritization based on threshold levels, with
 
 Our project aimed to validate the ecosystem simulation through various tests and observations.
 
-![Screenshot](\images\Picture6.png)  
-![Screenshot](\images\Picture7.png)
+![Screenshot](/images/Picture6.png)  
+![Screenshot](/images/Picture7.png)
 
 **Figures 6-7:** Predation relationship between rabbits and foxes, showing proportionality between population fluctuations.
 
 Carrying capacity tests were conducted to understand how the ecosystem adjusted to resource availability, reflecting natural behavior patterns.
 
-![Screenshot](\images\Picture8.png)  
-![Screenshot](\images\Picture9.png)
+![Screenshot](/images/Picture8.png)  
+![Screenshot](/images/Picture9.png)
 
 **Figures 8-9:** Demonstration of the carrying capacity phenomenon in a simulation with only rabbits and grass.
 
 The interaction between trophic levels was also tested, examining the flow of energy and biomass distribution within the ecosystem.
 
-![Screenshot](\images\Picture10.png)  
-![Screenshot](\images\Picture11.png)  
+![Screenshot](/images/Picture10.png)  
+![Screenshot](/images/Picture11.png)  
 **Figures 10-11:** Biomass distribution across different trophic levels, demonstrating realistic energy flow.
 
 ---
